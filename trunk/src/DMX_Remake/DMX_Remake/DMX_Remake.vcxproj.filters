@@ -110,14 +110,5 @@
     <ClCompile Include="..\..\source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\loadpng\loadpng.c">
-      <Filter>External Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\lib\loadpng\regpng.c">
-      <Filter>External Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\lib\loadpng\savepng.c">
-      <Filter>External Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
