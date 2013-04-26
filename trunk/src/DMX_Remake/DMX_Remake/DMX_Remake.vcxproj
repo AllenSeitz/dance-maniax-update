@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A8D1503A-D533-4888-ADAE-1F6F0AC667B6}</ProjectGuid>
+    <RootNamespace>DMX_Remake</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>DMX_Debug</TargetName>
+    <IncludePath>D:\svn\dmx\trunk\lib\allegro\include;D:\svn\dmx\trunk\lib\fmodapi375win\api\inc;D:\svn\dmx\trunk\lib\libpng\include\libpng12;D:\svn\dmx\trunk\lib\libpng\include;D:\svn\dmx\trunk\lib\loadpng;D:\svn\dmx\trunk\src\headers;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\svn\dmx\trunk\lib\allegro\lib;D:\svn\dmx\trunk\lib\fmodapi375win\api\lib;D:\svn\dmx\trunk\lib\libpng\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetName>DMX</TargetName>
+    <IncludePath>D:\svn\dmx\trunk\lib\allegro\include;D:\svn\dmx\trunk\lib\fmodapi375win\api\inc;D:\svn\dmx\trunk\lib\libpng\include\libpng12;D:\svn\dmx\trunk\lib\libpng\include;D:\svn\dmx\trunk\lib\loadpng;D:\svn\dmx\trunk\src\headers;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\svn\dmx\trunk\lib\allegro\lib;D:\svn\dmx\trunk\lib\fmodapi375win\api\lib;D:\svn\dmx\trunk\lib\libpng\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_MBCS;DMXDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>alleg.lib;fmodvc.lib;winmm.lib;libpng.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>alleg.lib;fmodvc.lib;winmm.lib;libpng.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\headers\bookManager.h" />
+    <ClInclude Include="..\..\headers\common.h" />
+    <ClInclude Include="..\..\headers\dwi_read.h" />
+    <ClInclude Include="..\..\headers\gameplayRendering.h" />
+    <ClInclude Include="..\..\headers\gameStateManager.h" />
+    <ClInclude Include="..\..\headers\inputManager.h" />
+    <ClInclude Include="..\..\headers\scoreManager.h" />
+    <ClInclude Include="..\..\headers\songwheelMode.h" />
+    <ClInclude Include="..\..\headers\specialEffects.h" />
+    <ClInclude Include="..\..\headers\videoManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\lib\loadpng\loadpng.c" />
+    <ClCompile Include="..\..\..\lib\loadpng\regpng.c" />
+    <ClCompile Include="..\..\..\lib\loadpng\savepng.c" />
+    <ClCompile Include="..\..\source\attractMode.cpp" />
+    <ClCompile Include="..\..\source\bookManager.cpp" />
+    <ClCompile Include="..\..\source\common.cpp" />
+    <ClCompile Include="..\..\source\dwi_read.cpp" />
+    <ClCompile Include="..\..\source\gameoverMode.cpp" />
+    <ClCompile Include="..\..\source\gameplayMode.cpp" />
+    <ClCompile Include="..\..\source\gameplayRendering.cpp" />
+    <ClCompile Include="..\..\source\inputManager.cpp" />
+    <ClCompile Include="..\..\source\loginMode.cpp" />
+    <ClCompile Include="..\..\source\main.cpp" />
+    <ClCompile Include="..\..\source\menuMode.cpp" />
+    <ClCompile Include="..\..\source\nonstopMode.cpp" />
+    <ClCompile Include="..\..\source\render_ddr.cpp" />
+    <ClCompile Include="..\..\source\render_dm.cpp" />
+    <ClCompile Include="..\..\source\render_dmx.cpp" />
+    <ClCompile Include="..\..\source\resultsMode.cpp" />
+    <ClCompile Include="..\..\source\ScoreManager.cpp" />
+    <ClCompile Include="..\..\source\songwheelMode.cpp" />
+    <ClCompile Include="..\..\source\specialEffects.cpp" />
+    <ClCompile Include="..\..\source\VideoManager.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
