@@ -107,6 +107,7 @@ struct AL_POINT
 #define INVALID_SONG_ID        4003
 #define PLAYER_PREFS_LOST 5001
 #define PLAYER_SCORES_LOST 5002
+#define UPDATE_FAILED 6001
 
 void globalError(long errorCode, char* errorInfo);
 void songIndexError(int id);

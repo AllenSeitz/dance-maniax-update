@@ -402,6 +402,8 @@ public:
 		case 5000: return "UNSPECIFIC PLAYER DATA ERROR";
 		case PLAYER_PREFS_LOST: return "PLAYER RECORD LOST";
 		case PLAYER_SCORES_LOST: return "PLAYER SCORE DATA LOST";
+		case 6000: return "UNSPECIFIC UPDATE ERROR";
+		case UPDATE_FAILED: return "FAILED TO START UPDATE PROCESS";
 		}
 		return "(no error description)";
 	}
