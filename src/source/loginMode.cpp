@@ -124,7 +124,7 @@ void renderLoginMessage(int xcoord, char* string);
 //
 //
 
-void temporaryNonstopModeEasterEgg();
+void temporaryNonstopModeEasterEgg(int songid);
 // precondition: called before pin entry
 // postcondition: leaves the login mode and jumps directly or almost directly to gameplay
 
@@ -471,7 +471,19 @@ void mainLoginLoop(UTIME dt)
 			// EASTER EGG: if P1 enters their name as "PARA" then launch the first nonstop course
 			if ( isUse[0] && tempNames[0][0] == 'P' && tempNames[0][1] == 'A' && tempNames[0][2] == 'R' && tempNames[0][3] == 'A' )
 			{
-				temporaryNonstopModeEasterEgg();
+				temporaryNonstopModeEasterEgg(405);
+			}
+			// TESTING: why not allow the xmixes to be playable with their DDR charts? kind of weird but hey its four columns
+			if ( isUse[0] && tempNames[0][0] == 'X' && tempNames[0][1] == 'M' && tempNames[0][2] == 'I' && tempNames[0][3] == 'X' )
+			{
+				switch ( tempNames[0][4] )
+				{
+				case '1': temporaryNonstopModeEasterEgg(400); break;
+				case '2': temporaryNonstopModeEasterEgg(401); break;
+				case '3': temporaryNonstopModeEasterEgg(402); break;
+				case '4': temporaryNonstopModeEasterEgg(403); break;
+				default: temporaryNonstopModeEasterEgg(404); break;
+				}
 			}
 		}
 	}
@@ -1003,7 +1015,7 @@ int getIndexOfPrevName(char* name)
 }
 
 // TODO: make more than one of these courses, and make nonstop mode select them
-void temporaryNonstopModeEasterEgg()
+void temporaryNonstopModeEasterEgg(int songid)
 {
 	gs.g_currentGameMode = GAMEPLAY;
 	gs.g_gameModeTransition = 1;
@@ -1012,8 +1024,8 @@ void temporaryNonstopModeEasterEgg()
 	{
 		sm.player[side].resetData();
 		sm.player[side].isLoggedIn = false;						// do not log in or save scores
-		memcpy(sm.player[side].displayName, "PPP+DMX", 8);		// set placeholder name
-		gs.player[side].stagesPlayed[0] = 400;				// song id for the Para megamix
+		memcpy(sm.player[side].displayName, "SPECIAL", 8);		// set placeholder name
+		gs.player[side].stagesPlayed[0] = songid;				// song id for the Para megamix
 		gs.player[side].stagesLevels[0] = gs.isDoubles ? DOUBLE_WILD : SINGLE_WILD;
 		gs.player[side].stagesPlayed[1] = 0;				// a blank songid will end the set early
 	}
