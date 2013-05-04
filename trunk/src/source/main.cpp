@@ -493,6 +493,13 @@ void mainErrorLoop(UTIME dt)
 	textprintf_centre(rm.m_backbuf, font, 320, 300, makecol(255,255,255), "PLEASE PRESS TEST BUTTON");
 	textprintf_centre(rm.m_backbuf, font, 320, 410, makecol(255,255,255), "time = %d", accumulate/1000);
 
+	// nevermind? no one is coming to the rescue? just carry on after 10 minutes
+	if ( accumulate/1000 > 600 ) 
+	{
+		gs.g_currentGameMode = MAINMENU;
+		gs.g_gameModeTransition = 1;
+	}
+
 	rm.flip();
 }
 
