@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <process.h>
 #include <string>
 
 // none of these old libraries are built for 64 bit
@@ -132,6 +133,7 @@ void firstCautionLoop();
 void mainCautionLoop(UTIME dt);
 
 void renderCreditsDisplay();
+void getUpdateAndRestart();
 
 // operator menus
 void renderInputTest();
@@ -579,6 +581,15 @@ void renderCreditsDisplay()
 	blit(rm.m_backbuf, screen, 0, 460, 0, (y-4), 640, 480);
 }
 
+// update.bat is exepected to relaunch this program. The point is that this program may be modified.
+void getUpdateAndRestart()
+{
+	if ( _execl("update.bat", "update.bat", NULL) == -1 )
+	{
+		globalError(UPDATE_FAILED, "please reboot the machine");
+	}
+}
+
 void firstOperatorLoop()
 {
 	bm.forceBookkeepingSave();
@@ -870,7 +881,11 @@ void mainOperatorLoop(UTIME dt)
 				if ( testMenuSubIndex == 3 ) // change player pin
 				{
 				}
-				if ( testMenuSubIndex == 4 )
+				if ( testMenuSubIndex == 4 ) // update software
+				{
+					getUpdateAndRestart();
+				}
+				if ( testMenuSubIndex == 5 )
 				{
 					testMenuMainIndex = 0;
 					testMenuSubIndex = -1;
@@ -878,11 +893,11 @@ void mainOperatorLoop(UTIME dt)
 			}
 			if ( im.getKeyState(MENU_RIGHT_1P) == JUST_DOWN || im.getKeyState(MENU_SERVICE) == JUST_DOWN )
 			{
-				testMenuSubIndex = (testMenuSubIndex + 1) % 5;
+				testMenuSubIndex = (testMenuSubIndex + 1) % 6;
 			}
 			if ( im.getKeyState(MENU_LEFT_1P) == JUST_DOWN )
 			{
-				testMenuSubIndex = (testMenuSubIndex - 1 + 5) % 5;
+				testMenuSubIndex = (testMenuSubIndex - 1 + 6) % 6;
 			}
 
 			break;
@@ -1465,7 +1480,8 @@ void renderDataOptions()
 	textprintf(rm.m_backbuf, font, 50, 130, testMenuSubIndex == 1 ? RED : WHITE, "RESET PREVIOUS LOGIN LIST");
 	textprintf(rm.m_backbuf, font, 50, 160, testMenuSubIndex == 2 ? RED : WHITE, "DELETE PLAYER");
 	textprintf(rm.m_backbuf, font, 50, 190, testMenuSubIndex == 3 ? RED : WHITE, "MODIFY PLAYER PIN");
-	textprintf(rm.m_backbuf, font, 50, 340, testMenuSubIndex == 4 ? RED : WHITE, "EXIT");
+	textprintf(rm.m_backbuf, font, 50, 220, testMenuSubIndex == 4 ? RED : WHITE, "UPDATE SOFTWARE");
+	textprintf(rm.m_backbuf, font, 50, 340, testMenuSubIndex == 5 ? RED : WHITE, "EXIT");
 
 	textprintf(rm.m_backbuf, font, 50, 400, makecol(196, 255, 255), "PRESS 1P LEFT / RIGHT = select item");
 	//textprintf(rm.m_backbuf, font, 50, 420, makecol(196, 255, 255), "PRESS 2P LEFT / RIGHT = modify setting");
