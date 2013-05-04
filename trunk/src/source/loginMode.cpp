@@ -124,6 +124,10 @@ void renderLoginMessage(int xcoord, char* string);
 //
 //
 
+void temporaryNonstopModeEasterEgg();
+// precondition: called before pin entry
+// postcondition: leaves the login mode and jumps directly or almost directly to gameplay
+
 void saveRecentNames();
 void loadRecentNames();
 // precondition: none, but the file recent_players.bin is used
@@ -457,11 +461,18 @@ void mainLoginLoop(UTIME dt)
 				currentStatusP2 = LOGIN_PIN_ENTRY;
 			}
 
+			// if neither player is choosing to login then end the login mode early
 			isDone[0] = isDone[1] = false;
 			if ( !isUse[0] && !isUse[1] )
 			{
 				endLoginMode();
-			}		
+			}
+
+			// EASTER EGG: if P1 enters their name as "PARA" then launch the first nonstop course
+			if ( isUse[0] && tempNames[0][0] == 'P' && tempNames[0][1] == 'A' && tempNames[0][2] == 'R' && tempNames[0][3] == 'A' )
+			{
+				temporaryNonstopModeEasterEgg();
+			}
 		}
 	}
 	else // after the name entry screen P1 and P2 can each be doing their own thing
@@ -989,4 +1000,21 @@ int getIndexOfPrevName(char* name)
 		}
 	}
 	return i;
+}
+
+// TODO: make more than one of these courses, and make nonstop mode select them
+void temporaryNonstopModeEasterEgg()
+{
+	gs.g_currentGameMode = GAMEPLAY;
+	gs.g_gameModeTransition = 1;
+
+	for ( int side = 0; side < 2; side++ )
+	{
+		sm.player[side].resetData();
+		sm.player[side].isLoggedIn = false;						// do not log in or save scores
+		memcpy(sm.player[side].displayName, "PPP+DMX", 8);		// set placeholder name
+		gs.player[side].stagesPlayed[0] = 400;				// song id for the Para megamix
+		gs.player[side].stagesLevels[0] = gs.isDoubles ? DOUBLE_WILD : SINGLE_WILD;
+		gs.player[side].stagesPlayed[1] = 0;				// a blank songid will end the set early
+	}
 }

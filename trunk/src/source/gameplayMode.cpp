@@ -463,7 +463,8 @@ void doChartLogic(UTIME dt, int p)
 				numBonusStages = checkForExtraStages();
 			}
 
-			if ( gs.currentStage >= gs.numSongsPerSet + numBonusStages ) // if failing were possible in DMX, make sure that the bestStatus is at least CLEARED
+			bool shortList = gs.player[0].stagesPlayed[gs.currentStage] <= 0;				// true when, for any reason, not enough songs were picked to fill the setlist
+			if ( (gs.currentStage >= gs.numSongsPerSet + numBonusStages) || shortList )		// if failing were possible in DMX, make sure that the bestStatus is at least CLEARED
 			{
 				if ( fullComboAnimStep > 0 ) // let the full combo animation play out on the way to the results
 				{
