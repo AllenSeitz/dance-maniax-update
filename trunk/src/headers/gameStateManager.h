@@ -268,8 +268,18 @@ public:
 		currentSongSample = FSOUND_Sample_Load(FSOUND_UNMANAGED, filename, FSOUND_NORMAL | FSOUND_MPEGACCURATE, 0, 0);
 		if ( currentSongSample == NULL )
 		{
-			allegro_message("Unable to load song %s!", filename);
+			// try again as an ogg
+			filename[15] = 'o';
+			filename[16] = 'g';
+			filename[17] = 'g';
+			currentSongSample = FSOUND_Sample_Load(FSOUND_UNMANAGED, filename, FSOUND_NORMAL, 0, 0);
+
+			if ( currentSongSample == NULL )
+			{
+				globalError(UNABLE_TO_LOAD_AUDIO, filename);
+			}
 		}
+
 		currentSong = songID;
 		currentSongLength = 0; // TODO: figure out how to calculate the length of a stream? or just look it up
 	}
@@ -398,6 +408,7 @@ public:
 		case 4000: return "UNSPECIFIC SONG DATA ERROR";
 		case SONG_DATA_INCOMPLETE: return "SONG DATA INCOMPLETE";
 		case ERROR_DECODING_VIDEO: return "VIDEO DECODE ERROR";
+		case UNABLE_TO_LOAD_AUDIO: return "AUDIO DECODE ERROR";
 		case INVALID_SONG_ID: return "INVALID SONG ID";
 		case 5000: return "UNSPECIFIC PLAYER DATA ERROR";
 		case PLAYER_PREFS_LOST: return "PLAYER RECORD LOST";
