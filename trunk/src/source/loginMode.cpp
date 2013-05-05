@@ -1019,6 +1019,7 @@ void temporaryNonstopModeEasterEgg(int songid)
 {
 	gs.g_currentGameMode = GAMEPLAY;
 	gs.g_gameModeTransition = 1;
+	gs.currentStage = 0;
 
 	for ( int side = 0; side < 2; side++ )
 	{
