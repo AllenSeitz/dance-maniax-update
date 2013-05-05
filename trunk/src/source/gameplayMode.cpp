@@ -241,7 +241,7 @@ void mainGameplayLoop(UTIME dt)
 	}
 
 	// check for the player changing their speed-mod at the start of the song
-	if ( gs.player[0].timeElapsed < 10000 )
+	//if ( gs.player[0].timeElapsed < 10000 )
 	{
 		if ( gs.player[0].speedMod > 10 && im.getKeyState(MENU_LEFT_1P) == JUST_DOWN )
 		{
