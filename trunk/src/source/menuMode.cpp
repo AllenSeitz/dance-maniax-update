@@ -55,7 +55,7 @@ UTIME modeMovingTimer = 0;
 int modesY = 118;
 int modesDirection = 0; // -1 = up, 1 = down, 0 = stationary
 
-const int MOD_LIMITS[4] = { 6, 2, 2, 3 }; // how many options are in each row
+const int MOD_LIMITS[4] = { 6, 2, 2, 2 }; // how many options are in each row
 const int SPEED_MOD_EFFECTS[10] = { 10, 15, 20, 25, 30, 50, 80, 5, 3 };
 
 const int MODE_Y_TOP = 118;
@@ -68,7 +68,8 @@ const int MOD_BREAKS[4][8] =
 	{ 0, 40, 80, 122, 164, 206, 248, 290 },
 	{ 0, 80, 215, 290 },
 	{ 0, 51, 145, 290 },
-	{ 0, 41, 120, 201, 290 }
+	//{ 0, 41, 120, 201, 290 } // off hidden sudden stealth
+	{ 0, 128, 226, 290 }, // center left right
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -200,6 +201,7 @@ void mainMenuLoop(UTIME dt)
 
 	bool noDouble = !gs.isFreeplay && !gs.isDoublePremium && gs.numCoins < gs.numCoinsPerCredit*2;
 	bool noVersus = !gs.isFreeplay && !gs.isVersusPremium && gs.numCoins < gs.numCoinsPerCredit*2;
+	int numModRows = gs.isDoubles || gs.isVersus ? 3 : 4; // only show the last modifier (which side) for singles play
 
 	// check input
 	if ( currentRow == 0 && modesDirection == 0 )
@@ -299,7 +301,7 @@ void mainMenuLoop(UTIME dt)
 	{
 		if ( playersChoice < 2 ) // one player playing alone
 		{
-			if ( p1row < 4 )
+			if ( p1row < numModRows )
 			{
 				if ( im.getKeyState(MENU_LEFT_1P) == JUST_DOWN || im.getKeyState(MENU_LEFT_2P) == JUST_DOWN )
 				{
@@ -329,11 +331,11 @@ void mainMenuLoop(UTIME dt)
 				}
 				else
 				{
-					if ( p1row < 4 )
+					if ( p1row < numModRows )
 					{
 						em.playSample(SFX_START_BUTTON);
 					}
-					p1row = p1row == 4 ? 4 : p1row + 1; // done modifiers! advance to login
+					p1row = p1row == numModRows ? numModRows : p1row + 1; // done modifiers! advance to login
 				}
 			}
 		}
@@ -345,7 +347,7 @@ void mainMenuLoop(UTIME dt)
 			{
 				int *prow = (i == 0 ? &p1row : &p2row);
 
-				if ( *prow < 4 )
+				if ( *prow < numModRows )
 				{
 					if ( im.getKeyState(keys[i][0]) == JUST_DOWN ) // left // MAJOR ERROR HERE // TODO: remember what it was and fix it
 					{
@@ -374,11 +376,11 @@ void mainMenuLoop(UTIME dt)
 					}
 					else
 					{
-						if ( *prow < 4 )
+						if ( *prow < numModRows )
 						{
 							em.playSample(SFX_START_BUTTON);
 						}
-						*prow = *prow == 4 ? 4 : *prow + 1; // done modifiers! wait for other player
+						*prow = *prow == numModRows ? numModRows : *prow + 1; // done modifiers! wait for other player
 					}
 				}
 			}			
@@ -400,7 +402,7 @@ void mainMenuLoop(UTIME dt)
 	}
 
 	// are we done with the main menu?
-	if ( (playersChoice < 2 && p1row > 3) || (playersChoice == 2 && p1row > 3 && p2row > 3) )
+	if ( (playersChoice < 2 && p1row >= numModRows) || (playersChoice == 2 && p1row >= numModRows && p2row >= numModRows) )
 	{
 		// set mode
 		gs.currentGameType = modeChoice;
@@ -418,6 +420,8 @@ void mainMenuLoop(UTIME dt)
 				}
 			}
 			gs.player[side].arrangeModifier = mods[side][2];
+
+			/*
 			if ( mods[side][3] == 1 )
 			{
 				gs.player[side].hiddenModifier = 0xFF;
@@ -429,6 +433,20 @@ void mainMenuLoop(UTIME dt)
 			if ( mods[side][3] == 3 )
 			{
 				gs.player[side].stealthModifier = true;
+			}
+			*/
+		}
+
+		// the side option is only available when playing alone
+		if ( gs.isSingles() )
+		{
+			if ( mods[0][3] == 1 )
+			{
+				gs.player[0].centerLeft = true;
+			}
+			if ( mods[0][3] == 2 )
+			{
+				gs.player[0].centerRight = true;
 			}
 		}
 
@@ -526,18 +544,21 @@ void renderMenuLoop()
 			renderMods(172, 200, 0, mods[0][0], p1row);
 			renderMods(172, 260, 1, mods[0][1], p1row);
 			renderMods(172, 320, 2, mods[0][2], p1row);
-			renderMods(172, 380, 3, mods[0][3], p1row);
+			if ( gs.isSingles() )
+			{
+				renderMods(172, 380, 3, mods[0][3], p1row);
+			}
 		}
 		else // render one set of mods for each player
 		{
 			renderMods(12, 200, 0, mods[0][0], p1row);
 			renderMods(12, 260, 1, mods[0][1], p1row);
 			renderMods(12, 320, 2, mods[0][2], p1row);
-			renderMods(12, 380, 3, mods[0][3], p1row);
+			//renderMods(12, 380, 3, mods[0][3], p1row);
 			renderMods(332, 200, 0, mods[1][0], p2row);
 			renderMods(332, 260, 1, mods[1][1], p2row);
 			renderMods(332, 320, 2, mods[1][2], p2row);
-			renderMods(332, 380, 3, mods[1][3], p2row);
+			//renderMods(332, 380, 3, mods[1][3], p2row);
 		}
 	}
 
@@ -545,11 +566,11 @@ void renderMenuLoop()
 	if ( playersChoice == 2 )
 	{
 		int xoff = (timeRemaining%2000) < 1000 ? (timeRemaining%2000) / 50 : 20 - ((timeRemaining%2000 - 1000) / 50);
-		if ( p1row > 3 )
+		if ( p1row >= 3 )
 		{
 			renderArtistString("Wait...", 12+xoff, 410, 180, 32);
 		}
-		if ( p2row > 3 )
+		if ( p2row >= 3 )
 		{
 			renderArtistString("Wait...", 332+xoff, 410, 180, 32);
 		}
