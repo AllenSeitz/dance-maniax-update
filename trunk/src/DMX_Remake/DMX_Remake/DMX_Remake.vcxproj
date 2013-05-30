@@ -38,13 +38,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>DMX_Debug</TargetName>
-    <IncludePath>C:\svn\dmx\trunk\lib\allegro-4.4.2-msvc-10.0\include;C:\svn\dmx\trunk\lib\fmodapi375win\api\inc;C:\svn\dmx\trunk\lib\libpng\include\libpng12;C:\svn\dmx\trunk\lib\libpng\include;C:\svn\dmx\trunk\lib\loadpng;C:\svn\dmx\trunk\src\headers;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\svn\dmx\trunk\lib\allegro-4.4.2-msvc-10.0\lib;C:\svn\dmx\trunk\lib\fmodapi375win\api\lib;C:\svn\dmx\trunk\lib\libpng\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\svn\dmx\trunk\lib\allegro-4.4.2-msvc-10.0\include;D:\svn\dmx\trunk\lib\fmodapi375win\api\inc;D:\svn\dmx\trunk\lib\libpng\include\libpng12;D:\svn\dmx\trunk\lib\libpng\include;D:\svn\dmx\trunk\lib\loadpng;D:\svn\dmx\trunk\src\headers;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\svn\dmx\trunk\lib\allegro-4.4.2-msvc-10.0\lib;D:\svn\dmx\trunk\lib\fmodapi375win\api\lib;D:\svn\dmx\trunk\lib\libpng\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>DMX</TargetName>
-    <IncludePath>C:\svn\dmx\trunk\lib\allegro-4.4.2-msvc-10.0\include;C:\svn\dmx\trunk\lib\fmodapi375win\api\inc;C:\svn\dmx\trunk\lib\libpng\include\libpng12;C:\svn\dmx\trunk\lib\libpng\include;C:\svn\dmx\trunk\lib\loadpng;C:\svn\dmx\trunk\src\headers;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\svn\dmx\trunk\lib\allegro-4.4.2-msvc-10.0\lib;C:\svn\dmx\trunk\lib\fmodapi375win\api\lib;C:\svn\dmx\trunk\lib\libpng\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\svn\dmx\trunk\lib\allegro-4.4.2-msvc-10.0\include;D:\svn\dmx\trunk\lib\fmodapi375win\api\inc;D:\svn\dmx\trunk\lib\libpng\include\libpng12;D:\svn\dmx\trunk\lib\libpng\include;D:\svn\dmx\trunk\lib\loadpng;D:\svn\dmx\trunk\src\headers;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\svn\dmx\trunk\lib\allegro-4.4.2-msvc-10.0\lib;D:\svn\dmx\trunk\lib\fmodapi375win\api\lib;D:\svn\dmx\trunk\lib\libpng\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
