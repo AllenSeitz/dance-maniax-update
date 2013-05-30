@@ -46,6 +46,7 @@ public:
 	bool isSolo;                // should not be used in this program
 	bool isDoubles; 
 	bool isVersus;
+	bool isSingles() { return !isDoubles && !isVersus; }
 	int  currentStage;
 	int  numCoins;
 	int  currentGameType;		// 0 = nonstop, 1 = free, 2 = mission
@@ -116,6 +117,9 @@ public:
 		unsigned char hiddenModifier;   // 8 bits for which columns are on hidden
 		bool stealthModifier;           // special rendering mode
 		char arrangeModifier;           // 1 = mirror, 2 = upside-down
+		bool centerLeft;				// play singles on the left side
+		bool centerRight;				// play singles on the right side
+		bool isCenter() { return !centerLeft && !centerRight; }
 
 		// segment choosing logic
 		int stagesPlayed[7];			// stages picked by the player
@@ -189,6 +193,8 @@ public:
 			hiddenModifier = 0;
 			stealthModifier = false;
 			arrangeModifier = 0;
+			centerLeft = false;
+			centerRight = false;
 		}
 
 		void resetStages()

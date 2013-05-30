@@ -962,9 +962,20 @@ void loadNextSong()
 		p1maxscore = readDWI(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
 		p2maxscore = readDWI2P(&gs.player[1].currentChart, &gs.player[1].freezeArrows, gs.player[1].stagesPlayed[gs.currentStage], gs.player[1].stagesLevels[gs.currentStage]);
 	}
-	else if ( !gs.isDoubles && !gs.isVersus ) // single, center play
+	else if ( gs.isSingles() )
 	{
-		p1maxscore = readDWICenter(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
+		if ( gs.player[0].centerLeft )
+		{
+			p1maxscore = readDWI(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
+		}
+		else if ( gs.player[0].centerRight )
+		{
+			p1maxscore = readDWI2P(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
+		}
+		else
+		{
+			p1maxscore = readDWICenter(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
+		}
 	}
 	else
 	{

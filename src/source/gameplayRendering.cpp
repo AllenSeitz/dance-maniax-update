@@ -83,7 +83,7 @@ int getNumColumns()
 	{
 		numColumns += 2;
 	}
-	if ( gs.isDoubles )
+	if ( gs.isDoubles || gs.isVersus )
 	{
 		numColumns += 4;
 	}
@@ -649,9 +649,20 @@ void renderGameplay()
 	{
 		centered_x = getColumnOffsetX_DDR(p==0 ? 0 : 4) + 128;
 	}
-	if ( gs.isDoubles || (!gs.isDoubles && !gs.isVersus) )
+	if ( gs.isDoubles || (gs.isSingles() && gs.player[0].isCenter()) )
 	{
 		centered_x = 320;
+	}
+	if ( gs.isSingles() )
+	{
+		if ( gs.player[0].centerLeft )
+		{
+			int centered_x = getColumnOffsetX_DMX(0) + 64;
+		}
+		else if ( gs.player[0].centerRight )
+		{
+			int centered_x = getColumnOffsetX_DMX(4) + 64;
+		}
 	}
 
 	// usually the combo goes behind the chart
@@ -752,7 +763,7 @@ void renderGameplay()
 		{
 			xadd = 66;
 		}
-		if ( gs.isVersus )
+		if ( gs.isVersus || gs.player[0].centerLeft || gs.player[0].centerRight )
 		{
 			xadd = 1;
 		}

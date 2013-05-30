@@ -52,9 +52,9 @@ int getColumnOffsetX_DDR(int column)
 	{
 		x = 64 + column*64; // center the 8 arrows
 	}
-	else if ( gs.isVersus )
+	else if ( gs.isVersus || gs.player[0].centerLeft || gs.player[0].centerRight )
 	{
-		if ( column < 4 )
+		if ( column < 4 || gs.player[0].centerLeft )
 		{
 			x = 32 + column*64; // 1P
 		}

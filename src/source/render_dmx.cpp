@@ -41,7 +41,15 @@ extern BITMAP* m_dmxFireworks[2][6][16];
 //////////////////////////////////////////////////////////////////////////////
 int getColumnOffsetX_DMX(int column)
 {
-	if ( gs.isVersus )
+	if ( gs.player[0].centerLeft )
+	{
+		return 96 + 32*column;
+	}
+	else if ( gs.player[0].centerRight )
+	{
+		return 414 + 32*column;
+	}
+	else if ( gs.isVersus )
 	{
 		if ( column < 4 )
 		{
@@ -66,10 +74,10 @@ int getColumnOffsetX_DMX(int column)
 		case 4: swapcol = 5; break;
 		case 5: swapcol = 4; break;
 		}
-		return 192 + 32*swapcol; // render one player in the center
+		return 192 + 32*swapcol; // render player1 in the center
 	}
 
-	//return 256 + 32*column; // render one player in the center
+	//return 256 + 32*column; // render player1 in the center
 }
 
 int getLeftmostColumnX_DMX(int player)
@@ -82,7 +90,15 @@ int getLeftmostColumnX_DMX(int player)
 	{
 		return getColumnOffsetX_DMX(player*4);
 	}
-	return getColumnOffsetX_DMX(3);
+	else if ( gs.player[0].isCenter() )
+	{
+		return getColumnOffsetX_DMX(3);
+	}
+	else if ( gs.player[0].centerRight )
+	{
+		return getColumnOffsetX_DMX(4);
+	}
+	return getColumnOffsetX_DMX(0); // singles play, left side
 }
 
 int getColorOfColumn(int column)
@@ -185,7 +201,7 @@ void renderDMXNote(int player, struct ARROW n, int y)
 			leftX = getColumnOffsetX_DMX(4);
 		}
 	}
-	if ( !gs.isDoubles && !gs.isVersus )
+	if ( gs.isSingles() && gs.player[0].isCenter() )
 	{
 		leftX = getColumnOffsetX_DMX(1);
 		rightX = getColumnOffsetX_DMX(6) +34-1;
@@ -429,9 +445,20 @@ void renderOverFrameDMX()
 void renderStepZoneDMX(int player)
 {
 	int startColumn = player == 0 ? 0 : 4;
-	if ( !gs.isDoubles && !gs.isVersus )
+	if ( gs.isSingles() )
 	{
-		startColumn = 2; // center play
+		if ( gs.player[0].centerLeft )
+		{
+			startColumn = 0;
+		}
+		else if ( gs.player[1].centerRight )
+		{
+			startColumn = 4;
+		}
+		else
+		{
+			startColumn = 2; // center play
+		}
 	}
 	int endColumn = gs.isDoubles ? 8 : startColumn+4;
 
@@ -456,7 +483,7 @@ void renderStepZoneDMX(int player)
 		int color = getColorOfColumn(i);
 		if ( im.isKeyDown(i) )
 		{
-			hitcolor = color == 0 ? 0xBF600000 : 0xBF000060;
+			hitcolor = color == 0 ? 0x8A600000 : 0x8A000060;
 		}
 		renderStepLaneDMX(x, hitcolor, outlineColor);
 		masked_blit(m_stepZoneSourceDMX[color], rm.m_backbuf, blink*34, 0, x, (gs.player[player].isColumnReversed(i) ? DMX_STEP_ZONE_REV_Y-34 : DMX_STEP_ZONE_Y), 34, 38);
