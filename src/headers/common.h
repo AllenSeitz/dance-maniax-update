@@ -85,7 +85,8 @@ struct AL_POINT
 #define FAILURE 15
 #define PLAYERSELECT 16
 #ifdef DMXDEBUG
-	#define FIRST_GAME_MODE SONGWHEEL
+	//#define FIRST_GAME_MODE SONGWHEEL
+	#define FIRST_GAME_MODE GAMEPLAY
 	//#define FIRST_GAME_MODE PLAYERSELECT
 	//#define FIRST_GAME_MODE ATTRACT
 #else
@@ -159,6 +160,8 @@ public:
 	BITMAP* m_nameFont[3];
 
 	BITMAP* m_temp64; // used for rendering effects on arrows
+
+	bool useAlphaLanes;
 
 	int currentPage;
 
