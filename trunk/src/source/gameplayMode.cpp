@@ -174,7 +174,9 @@ void firstGameplayLoop()
 		gs.player[1].stagesPlayed[0] = gs.player[1].stagesPlayed[1] = gs.player[1].stagesPlayed[2] = 101;
 		gs.player[1].stagesLevels[0] = gs.player[1].stagesLevels[1] = gs.player[1].stagesLevels[2] = SINGLE_WILD;
 		gs.isDoubles = false;
-		gs.isVersus = true;
+		//gs.isVersus = true;
+		gs.player[0].centerRight = true;
+		autoplay = true;
 	}
 	clear_keybuf(); // also for debug
 

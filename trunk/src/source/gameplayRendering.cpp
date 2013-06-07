@@ -657,11 +657,11 @@ void renderGameplay()
 	{
 		if ( gs.player[0].centerLeft )
 		{
-			int centered_x = getColumnOffsetX_DMX(0) + 64;
+			centered_x = getColumnOffsetX_DMX(0) + 64;
 		}
 		else if ( gs.player[0].centerRight )
 		{
-			int centered_x = getColumnOffsetX_DMX(4) + 64;
+			centered_x = getColumnOffsetX_DMX(4) + 64;
 		}
 	}
 
@@ -758,16 +758,22 @@ void renderGameplay()
 
 	if ( fullComboP1 )
 	{
-		int xadd = 65;
 		if ( gs.isDoubles )
 		{
-			xadd = 66;
+			renderFullComboAnim(getColumnOffsetX_DMX(0)+66, fullComboAnimTimer, fullComboAnimStep);
 		}
-		if ( gs.isVersus || gs.player[0].centerLeft || gs.player[0].centerRight )
+		else if ( gs.player[0].centerRight )
 		{
-			xadd = 1;
+			renderFullComboAnim(getColumnOffsetX_DMX(4)+1, fullComboAnimTimer, fullComboAnimStep);
 		}
-		renderFullComboAnim(getColumnOffsetX_DMX(0)+xadd, fullComboAnimTimer, fullComboAnimStep);
+		else if ( gs.isVersus || gs.player[0].centerLeft )
+		{
+			renderFullComboAnim(getColumnOffsetX_DMX(0)+1, fullComboAnimTimer, fullComboAnimStep);
+		}
+		else 
+		{
+			renderFullComboAnim(getColumnOffsetX_DMX(0)+65, fullComboAnimTimer, fullComboAnimStep);
+		}
 	}
 	if ( fullComboP2 )
 	{
