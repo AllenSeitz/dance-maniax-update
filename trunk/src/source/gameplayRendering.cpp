@@ -67,6 +67,7 @@ BITMAP* m_dmxFevers[8];
 BITMAP* m_comboDMX;
 BITMAP* m_judgementsDMX;
 BITMAP* m_dmxFireworks[2][6][16];
+BITMAP* m_dmxTransLane;
 
 // the timer is global - it is also used on other menus
 BITMAP* m_time;
@@ -412,6 +413,7 @@ void loadGameplayGraphics()
 		m_leftSideHalo[color][1] = loadImage(lFilename);
 		m_rightSideHalo[color][1] = loadImage(rFilename);
 	}
+	m_dmxTransLane = loadImage("DATA/gameplay/dmx/trans_lane.tga");
 
 	m_judgementsDMX = loadImage("DATA/gameplay/dmx/judgements.tga");
 	for ( color = 0; color < 6; color++ )

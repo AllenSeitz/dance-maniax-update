@@ -35,6 +35,7 @@ extern BITMAP* m_leftSideHalo[3][2];
 extern BITMAP* m_rightSideHalo[3][2];
 extern BITMAP* m_judgementsDMX;
 extern BITMAP* m_dmxFireworks[2][6][16];
+extern BITMAP* m_dmxTransLane;
 
 //////////////////////////////////////////////////////////////////////////////
 // functions
@@ -467,7 +468,7 @@ void renderStepZoneDMX(int player)
 	{
 		int x = getColumnOffsetX_DMX(i);
 		int blink = gs.player[player].stepZoneBlinkTimer > 0 ? 0 : 1;	// pick the state of the step zone
-		int hitcolor = 0x8A000000;
+		int hitcolor = 0xCA000000;
 		int outlineColor = 0xFFB4B4B4;
 		if ( blink == 1 )
 		{
@@ -484,7 +485,7 @@ void renderStepZoneDMX(int player)
 		int color = getColorOfColumn(i);
 		if ( im.isKeyDown(i) )
 		{
-			hitcolor = color == 0 ? 0x8A600000 : 0x8A000060;
+			hitcolor = color == 0 ? 0xCA600000 : 0xCA000060;
 		}
 		renderStepLaneDMX(x, hitcolor, outlineColor);
 		masked_blit(m_stepZoneSourceDMX[color], rm.m_backbuf, blink*34, 0, x, (gs.player[player].isColumnReversed(i) ? DMX_STEP_ZONE_REV_Y-34 : DMX_STEP_ZONE_Y), 34, 38);
@@ -498,9 +499,35 @@ void renderStepLaneDMX(int x, int bgColor, int outlineColor)
 	line(rm.m_backbuf, x+32, 40, x+32, 434, outlineColor);
 	line(rm.m_backbuf, x+33, 40, x+33, 434, outlineColor);
 
-	//drawing_mode(DRAW_MODE_TRANS, NULL, 0, 0);
-	rectfill(rm.m_backbuf, x+2, 26, x+31, 444, bgColor);
-	//set_alpha_blender(); // the game assumes the graphics are left in this mode
+	if ( rm.useAlphaLanes )
+	{
+		// if this worked without killing the fps, that would be nice
+		//*
+		drawing_mode(DRAW_MODE_TRANS, NULL, 0, 0);
+		rectfill(rm.m_backbuf, x+2, 26, x+31, 444, bgColor);
+		drawing_mode(DRAW_MODE_SOLID, NULL, 0, 0);
+		set_alpha_blender(); // the game assumes the graphics are left in this mode
+		//*/
+
+		// this was actually pretty good (the asset was a solid black rectangle)
+		/*
+		set_trans_blender(0,0,0,128);
+		draw_trans_sprite(rm.m_backbuf, m_dmxTransLane, x+2, 26);
+		set_alpha_blender(); // the game assumes the graphics are left in this mode
+		//*/
+
+		// try this instead?
+		/*
+		int quad[8] = 	{ x+2,26,  x+2,444,  x+31,444,  x+31,26  };
+		drawing_mode(DRAW_MODE_TRANS, NULL, 0, 0);
+		polygon(rm.m_backbuf, 4, quad, bgColor);
+		set_alpha_blender(); // the game assumes the graphics are left in this mode
+		//*/
+	}
+	else
+	{
+		rectfill(rm.m_backbuf, x+2, 26, x+31, 444, bgColor);
+	}
 }
 
 void renderDMXCombo(int combo, int time, int centerX, int color)

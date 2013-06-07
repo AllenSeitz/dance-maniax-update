@@ -20,6 +20,8 @@ void RenderingManager::Initialize()
 {
 	register_bitmap_file_type("png", load_png, NULL); // needed for certain asset loading
 
+	useAlphaLanes = false;
+
 	// set up double buffering
 	m_backbuf1 = create_system_bitmap(640, 480);
 	m_backbuf2 = create_system_bitmap(640, 480);
