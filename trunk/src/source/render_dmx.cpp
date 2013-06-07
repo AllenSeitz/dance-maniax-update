@@ -468,8 +468,9 @@ void renderStepZoneDMX(int player)
 	{
 		int x = getColumnOffsetX_DMX(i);
 		int blink = gs.player[player].stepZoneBlinkTimer > 0 ? 0 : 1;	// pick the state of the step zone
-		int hitcolor = 0xCA000000;
+		int hitcolor = 0x7F000000;
 		int outlineColor = 0xFFB4B4B4;
+		const int fadeOutLength = 100;
 		if ( blink == 1 )
 		{
 			static int colors[3] = { makeacol(41, 239, 115, 255), makeacol(239, 101, 190, 255), makeacol(76, 0, 190, 255) };
@@ -485,7 +486,16 @@ void renderStepZoneDMX(int player)
 		int color = getColorOfColumn(i);
 		if ( im.isKeyDown(i) )
 		{
-			hitcolor = color == 0 ? 0xCA600000 : 0xCA000060;
+			hitcolor = color == 0 ? 0xEECC0000 : 0xEE0000CC;
+		}
+		else if ( im.getReleaseLength(i) <= fadeOutLength )
+		{
+			int a = getValueFromRange(0xFF, 0x7F, im.getReleaseLength(i) * 100/ fadeOutLength);
+			if ( i ==4 )
+			{
+				al_trace("%d\r\n", a);
+			}
+			hitcolor = color == 0 ? makeacol32(0xFF, 0, 0, a) : makeacol32(0, 0, 0xFF, a);
 		}
 		renderStepLaneDMX(x, hitcolor, outlineColor);
 		masked_blit(m_stepZoneSourceDMX[color], rm.m_backbuf, blink*34, 0, x, (gs.player[player].isColumnReversed(i) ? DMX_STEP_ZONE_REV_Y-34 : DMX_STEP_ZONE_Y), 34, 38);
