@@ -318,10 +318,11 @@ void processChartString(std::vector<struct BEAT_NOTE> *chart, char* string, int 
 	chart->push_back(endmarker);
 }
 
+// NOTE: currently only used for calculating the end time of hold notes
 UTIME getMillisecondsAtBeat(float targetBeat, std::vector<struct BEAT_NOTE> *chart, int startIndex, UTIME startTime, float currentTimePerBeat)
 {
 	UTIME retval = startTime;
-	float timePerBeat = currentTimePerBeat;
+	float msPerBeat = currentTimePerBeat;
 	float lastBeatProcessed = chart->at(startIndex).beat;
 	float overshoot = 0;
 	unsigned int i = 0;
@@ -346,7 +347,8 @@ UTIME getMillisecondsAtBeat(float targetBeat, std::vector<struct BEAT_NOTE> *cha
 
 		if ( chart->at(i).type == BPM_CHANGE )
 		{
-			retval += ((chart->at(i).beat - lastBeatProcessed) * timePerBeat);
+			retval += ((chart->at(i).beat - lastBeatProcessed) * msPerBeat);
+			msPerBeat = BPM_TO_MSEC(chart->at(i).param);
 			lastBeatProcessed = chart->at(i).beat;
 		}
 		if ( chart->at(i).type == SCROLL_STOP )
@@ -360,7 +362,7 @@ UTIME getMillisecondsAtBeat(float targetBeat, std::vector<struct BEAT_NOTE> *cha
 		i--;
 	}
 
-	retval += ((chart->at(i).beat - lastBeatProcessed - overshoot) * timePerBeat);
+	retval += ((chart->at(i).beat - lastBeatProcessed - overshoot) * msPerBeat);
 	return retval;
 }
 
