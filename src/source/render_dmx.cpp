@@ -47,7 +47,7 @@ int getColumnOffsetX_DMX(int column)
 	}
 	else if ( gs.player[0].centerRight )
 	{
-		return 414 + 32*column;
+		return 414 + 32*(column-4); // versus play columns 0-7
 	}
 	else if ( gs.isVersus )
 	{
@@ -80,6 +80,7 @@ int getColumnOffsetX_DMX(int column)
 	//return 256 + 32*column; // render player1 in the center
 }
 
+// only used by renderBatteryLives()
 int getLeftmostColumnX_DMX(int player)
 {
 	if ( gs.isDoubles )
@@ -193,10 +194,10 @@ void renderDMXNote(int player, struct ARROW n, int y)
 	int x = getColumnOffsetX_DMX(n.columns[0]);
 	int leftX = getColumnOffsetX_DMX(0);
 	int rightX = getColumnOffsetX_DMX(3) + 34-1;
-	if ( gs.isDoubles || (gs.isVersus && player == 1) )
+	if ( gs.isDoubles || (gs.isVersus && player == 1) || gs.player[0].centerRight )
 	{
 		rightX = getColumnOffsetX_DMX(7) + 34-1;
-		if ( (gs.isVersus && player == 1) )
+		if ( (gs.isVersus && player == 1) || gs.player[0].centerRight )
 		{
 			leftX = getColumnOffsetX_DMX(4);
 		}
@@ -451,7 +452,7 @@ void renderStepZoneDMX(int player)
 		{
 			startColumn = 0;
 		}
-		else if ( gs.player[1].centerRight )
+		else if ( gs.player[0].centerRight )
 		{
 			startColumn = 4;
 		}
