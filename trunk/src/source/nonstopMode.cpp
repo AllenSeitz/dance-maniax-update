@@ -50,6 +50,9 @@ BITMAP* m_titleAreaNonstop = NULL;
 BITMAP* m_nonstopStars = NULL;
 BITMAP* m_orbs[20];
 //BITMAP* m_rings;
+extern BITMAP* m_miniStatus;
+
+BITMAP* m_currentText;
 
 // taken directly from the original game
 /*
@@ -71,6 +74,14 @@ const int BANNER_ANIM_LENGTH = 500;
 const int SCROLL_ANIM_LENGTH = 250;
 
 void renderNonstopTitleArea(int percent);
+//
+//
+
+void renderHighScores(int x, int player);
+//
+//
+
+void loadCurrentText();
 //
 //
 
@@ -119,6 +130,10 @@ void firstNonstopLoop()
 		}
 		//m_rings = loadImage("DATA/menus/rings.tga");
 	}
+	if ( m_miniStatus == NULL )
+	{
+		m_miniStatus = loadImage("DATA/songwheel/mini_status.tga");
+	}
 
 	// show only songs which are marked as being nonstops
 	if ( nonstops != NULL )
@@ -150,6 +165,7 @@ void firstNonstopLoop()
 
 	// begin mode
 	timeRemaining = 30999;
+	loadCurrentText();
 
 	em.playSample(SFX_COURSE_APPEAR);
 	gs.loadSong(BGM_DEMO);
@@ -217,6 +233,7 @@ void mainNonstopLoop(UTIME dt)
 			bannerAnimationTimer = BANNER_ANIM_LENGTH;
 			currentCourseIndex = currentCourseIndex <= 0 ? numVisibleCourses-1 : currentCourseIndex - 1;
 			em.playSample(SFX_COURSE_PREVIEW_LOAD);
+			loadCurrentText();
 		}
 		if ( (im.isKeyDown(MENU_RIGHT_1P) || im.isKeyDown(MENU_RIGHT_2P)) && currentlyMovingDirection == 0 )
 		{
@@ -225,6 +242,7 @@ void mainNonstopLoop(UTIME dt)
 			bannerAnimationTimer = BANNER_ANIM_LENGTH;
 			currentCourseIndex = currentCourseIndex >= numVisibleCourses-1 ? 0 : currentCourseIndex + 1;
 			em.playSample(SFX_COURSE_PREVIEW_LOAD);
+			loadCurrentText();
 		}
 	}
 
@@ -236,9 +254,23 @@ void mainNonstopLoop(UTIME dt)
 	// render the banner and the text
 	int percent = 100 - (bannerAnimationTimer*100 / BANNER_ANIM_LENGTH);
 	renderNonstopTitleArea(percent);
+	renderHighScores(0, 0);
+	renderHighScores(320, 1);
+
+	// render the fancy course text area
+	percent = 100 - (bannerAnimationTimer*100 / BANNER_ANIM_LENGTH);
+	if ( m_currentText != NULL )
+	{
+		blit(m_currentText, rm.m_backbuf, 0, 0, 240, 234, 400, getValueFromRange(1, 150, percent));
+	}
+
+	// render the COURSE 1/6 display
+	char numCoursesString[256] = "";
+	sprintf_s(numCoursesString, "COURSE: %d / %d", currentCourseIndex + 1, NUM_COURSES);
+	renderBoldString(numCoursesString, 400, 10, 500, false);
 
 	renderTimeRemaining(5, 42);
-	draw_trans_sprite(rm.m_backbuf, m_courseHelp, 0, 460-64);
+	//draw_trans_sprite(rm.m_backbuf, m_courseHelp, 0, 460-64);
 
 	if ( fadeAnimTimer > 0 )
 	{
@@ -298,4 +330,39 @@ void renderNonstopTitleArea(int percent)
 		bpm[2] = (displayBPM / 1 % 10) + '0';
 		renderBoldString(bpm, 527, 203, 100, false);
 	}
+}
+
+void renderHighScores(int x, int side)
+{
+	int chartIndex = gs.isDoubles ? getChartIndexFromType(DOUBLE_WILD) : getChartIndexFromType(SINGLE_WILD);
+	char buffer[10] = "";
+
+	if ( !sm.player[side].isLoggedIn )
+	{
+		return;
+	}
+
+	int offset = 20;
+	for ( int i = 0; i < 8; i++ )
+	{
+		renderNameLetter(sm.player[side].displayName[i], x+offset, 400, side+1);
+		offset += 32;
+	}
+
+	int allTimeIndex = songID_to_listID(nonstops[currentCourseIndex].songID);
+	_itoa_s(sm.player[side].allTime[allTimeIndex][chartIndex].getScore(), buffer, 9, 10);
+	addLeadingZeros(buffer, 7);
+	renderBoldString((unsigned char *)buffer, x+20, 430, 330, false, 2);
+	masked_blit(m_miniStatus, rm.m_backbuf, 0, sm.player[side].allTime[allTimeIndex][chartIndex].status * 32, x+120, 423, 40, 32);
+}
+
+void loadCurrentText()
+{
+	char bfilename[] = "DATA/banners/ns_0000.tga";
+	int c = nonstops[currentCourseIndex].songID;
+	bfilename[16] = (c/1000)%10 + '0';
+	bfilename[17] = (c/100)%10 + '0';
+	bfilename[18] = (c/10)%10 + '0';
+	bfilename[19] = c%10 + '0';
+	m_currentText = load_bitmap(bfilename, NULL); // fine if it is null
 }
