@@ -226,6 +226,7 @@ int main()
 	em.initialize();
 
 	loadGameplayGraphics();	// these stay loaded the ENTIRE program
+
 	if ( fileExists("alphalanes") )
 	{
 		rm.useAlphaLanes = true; // temporary for testing
