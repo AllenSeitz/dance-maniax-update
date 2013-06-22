@@ -42,6 +42,7 @@ extern "C" {
 //////////////////////////////////////////////////////////////////////////////
 SongEntry* songs; // used globally
 int NUM_SONGS = 0;
+int NUM_COURSES = 0;
 int* songIDs;
 std::string* songTitles;
 std::string* songArtists;
@@ -1053,7 +1054,7 @@ int loadSongDB()
 		allegro_message("Unexpected version number in song_db.csv: found %d expected 1", verNum);
 		return -1;
 	}
-
+	
 	fscanf_s(fp, "%[,] ", &sanityCheck, 32); // get rid of those commas
 
 	songIDs = (int *)malloc(sizeof(int) * NUM_SONGS);
@@ -1061,6 +1062,7 @@ int loadSongDB()
 	songArtists = new std::string[NUM_SONGS];
 	movieScripts = new std::string[NUM_SONGS];
 	songs = (SongEntry *)malloc(sizeof(SongEntry) * NUM_SONGS);
+	NUM_COURSES = 0;
 
 	// now read a bunch of lines that look like:
 	// -> 101,BROKEN MY HEART,NAOKI feat.PAULA TERRY,brok.seq,4,0,7,0,6,0,6,0,1,0,0
@@ -1088,6 +1090,11 @@ int loadSongDB()
 		songs[i].initialize(id, minbpm, maxbpm, sm, sw, dm, dw, version); // BROKEN MY HEART
 		songs[i].unlockFlag = flag;
 		songs[i].isNew = isNew == 1;
+
+		if ( version == 101 )
+		{
+			NUM_COURSES++;
+		}
 	}
 
 	return 0;
