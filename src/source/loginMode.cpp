@@ -469,22 +469,24 @@ void mainLoginLoop(UTIME dt)
 			}
 
 			// EASTER EGG: if P1 enters their name as "PARA" then launch the first nonstop course
+			/*
 			if ( isUse[0] && tempNames[0][0] == 'P' && tempNames[0][1] == 'A' && tempNames[0][2] == 'R' && tempNames[0][3] == 'A' )
 			{
-				temporaryNonstopModeEasterEgg(405);
+				temporaryNonstopModeEasterEgg(390);
 			}
 			// TESTING: why not allow the xmixes to be playable with their DDR charts? kind of weird but hey its four columns
 			if ( isUse[0] && tempNames[0][0] == 'X' && tempNames[0][1] == 'M' && tempNames[0][2] == 'I' && tempNames[0][3] == 'X' )
 			{
 				switch ( tempNames[0][4] )
 				{
-				case '1': temporaryNonstopModeEasterEgg(400); break;
-				case '2': temporaryNonstopModeEasterEgg(401); break;
-				case '3': temporaryNonstopModeEasterEgg(402); break;
-				case '4': temporaryNonstopModeEasterEgg(403); break;
-				default: temporaryNonstopModeEasterEgg(404); break;
+				case '1': temporaryNonstopModeEasterEgg(385); break;
+				case '2': temporaryNonstopModeEasterEgg(386); break;
+				case '3': temporaryNonstopModeEasterEgg(387); break;
+				case '4': temporaryNonstopModeEasterEgg(388); break;
+				default: temporaryNonstopModeEasterEgg(389); break;
 				}
 			}
+			//*/
 		}
 	}
 	else // after the name entry screen P1 and P2 can each be doing their own thing
