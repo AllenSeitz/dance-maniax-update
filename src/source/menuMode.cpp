@@ -18,6 +18,9 @@ extern BookManager bm;
 extern unsigned long int frameCounter;
 extern unsigned long int totalGameTime;
 
+extern int NUM_SONGS;
+extern int NUM_COURSES; 
+
 extern UTIME timeRemaining;
 extern void renderTimeRemaining(int xc, int yc);
 extern void playTimeLowSFX(UTIME dt);
@@ -516,8 +519,12 @@ void renderMenuLoop()
 	}
 	else
 	{
-		char numStagesDesc[] = "3 stages + ext";
-		numStagesDesc[0] = gs.numSongsPerSet + '0';
+		//char numStagesDesc[] = "3 stages + ext";
+		//numStagesDesc[0] = gs.numSongsPerSet + '0';
+		char numSongsDesc[16] = "";
+		char numCoursesDesc[16] = "";
+		sprintf_s(numSongsDesc, "%d+ songs", /*NUM_SONGS*/ 40); // TODO: fix this
+		sprintf_s(numCoursesDesc, "%d courses", NUM_COURSES);
 
 		sx = currentRow > 1 ? 420 : 210;
 		if ( modeChoice == 0 )
@@ -525,7 +532,7 @@ void renderMenuLoop()
 			sx = currentRow == 1 && shouldBlink ? 0 : 210;
 		}
 		masked_blit(m_mainModes, rm.m_backbuf, sx, 0*32,  40, modesY-1, 210, 32);
-		renderArtistString(numStagesDesc, 74, modesY+25, 200, 32);
+		renderArtistString(numCoursesDesc, 74+24, modesY+25, 200, 32);
 
 		sx = currentRow > 1 ? 420 : 210;
 		if ( modeChoice == 1 )
@@ -533,7 +540,7 @@ void renderMenuLoop()
 			sx = currentRow == 1 && shouldBlink ? 0 : 210;
 		}
 		masked_blit(m_mainModes, rm.m_backbuf, sx, 1*32, 390, modesY-1, 210, 32);
-		renderArtistString(numStagesDesc, 424, modesY+25, 200, 32);
+		renderArtistString(numSongsDesc, 424+24, modesY+25, 200, 32);
 	}
 
 	// render the modifers
