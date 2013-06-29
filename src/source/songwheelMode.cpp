@@ -193,12 +193,12 @@ bool isSongAvailable(int index)
 		}
 	}
 
-	if ( (gs.isDoubles && songs[index].mildDouble == 0 && songs[index].wildDouble == 0) || (!gs.isDoubles && songs[index].mildSingle == 0 && songs[index].mildSingle == 0) )
+	if ( (gs.isDoubles && songs[index].mildDouble == 0 && songs[index].wildDouble == 0) || (!gs.isDoubles && songs[index].mildSingle == 0 && songs[index].wildSingle == 0) )
 	{
 		return false;
 	}
 
-	return songs[index].version != 0 && (earnedIt || allsongsDebug);
+	return songs[index].version != 0 && songs[index].version < 100 && (earnedIt || allsongsDebug);
 }
 
 void killPreviewClip()
