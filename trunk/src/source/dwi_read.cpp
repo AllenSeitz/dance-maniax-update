@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 #include "common.h"
+#include "dwi_read.h"
 
 // these are only written to by readNextTag(). This is cleaner than 5 reference parameters
 char tagName[32];
@@ -379,8 +380,8 @@ int readDWI(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 
 	if ( fopen_s(&fp, filename, "rt") != 0 )
 	{
-		allegro_message("Unable to open %s", filename);
-		return 0;
+		// as a fall back, open a memory dump of a chart (legacy chart data)
+		return readXSQ(chart, holds, songID, chartType);
 	}
 
 	// fix any potential bugs regarding data from one chart accidentally merging into the next chart
