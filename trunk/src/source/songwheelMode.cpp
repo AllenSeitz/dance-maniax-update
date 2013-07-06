@@ -7,6 +7,8 @@
 #include "ScoreManager.h"
 #include "songwheelMode.h"
 
+#include "gameplayRendering.h" // for renderGrade()
+
 extern GameStateManager gs;
 extern RenderingManager rm;
 extern InputManager im;
@@ -23,6 +25,7 @@ extern unsigned long int frameCounter;
 extern unsigned long int totalGameTime;
 extern volatile UTIME last_utime;
 extern bool allsongsDebug;
+
 
 //////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -146,7 +149,8 @@ extern BITMAP* m_time;
 extern BITMAP* m_timeDigits[2];
 BITMAP* m_menu[3];
 BITMAP* m_musicSelect;
-BITMAP* m_miniStatus;
+//BITMAP* m_miniStatus;
+BITMAP* m_statusStars;
 BITMAP* m_new;
 BITMAP* m_versions;
 
@@ -224,7 +228,8 @@ void firstSongwheelLoop()
 		m_menu[1] = loadImage("DATA/songwheel/menu_wild.tga");
 		m_menu[2] = loadImage("DATA/songwheel/menu_cancel.tga");
 		m_musicSelect = loadImage("DATA/songwheel/music_select.tga");
-		m_miniStatus = loadImage("DATA/songwheel/mini_status.tga");
+		//m_miniStatus = loadImage("DATA/songwheel/mini_status.tga");
+		m_statusStars = loadImage("DATA/songwheel/status_stars.tga");
 		m_new = loadImage("DATA/songwheel/new.tga");
 		m_versions = loadImage("DATA/songwheel/versions.tga");
 	}
@@ -1032,14 +1037,36 @@ void renderLoginStats(int x, int side)
 	}
 
 	int allTimeIndex = songID_to_listID(songlist[songwheelIndex].songID);
+	int whichFrame = displayBPMTimer > 1000 ? (displayBPMTimer-1000)/125 : 0;
+	int mildColor = 6, wildColor = 6;
+
+	if ( sm.player[side].allTime[allTimeIndex][mildIndex].getFullComboType() != 0 )
+	{
+		mildColor = sm.player[side].allTime[allTimeIndex][mildIndex].getFullComboType() + 1;
+	}
+	if ( sm.player[side].allTime[allTimeIndex][wildIndex].getFullComboType() != 0 )
+	{
+		wildColor = sm.player[side].allTime[allTimeIndex][wildIndex].getFullComboType() + 1;
+	}
+
 	_itoa_s(sm.player[side].allTime[allTimeIndex][mildIndex].getScore(), buffer, 9, 10);
 	addLeadingZeros(buffer, 7);
 	renderBoldString((unsigned char *)buffer, x+20, 440, 320, false, 1);
-	masked_blit(m_miniStatus, rm.m_backbuf, 0, sm.player[side].allTime[allTimeIndex][mildIndex].status * 32, x+120, 433, 40, 32);
+	//masked_blit(m_miniStatus, rm.m_backbuf, 0, sm.player[side].allTime[allTimeIndex][mildIndex].status * 32, x+120, 433, 40, 32);
+	if ( sm.player[side].allTime[allTimeIndex][mildIndex].status >= STATUS_CLEARED )
+	{
+		renderGrade(sm.player[side].allTime[allTimeIndex][mildIndex].grade, x+120, 433-8);
+	}
+	masked_blit(m_statusStars, rm.m_backbuf, whichFrame * 40, mildColor * 32, x+120+20, 433, 40, 32);
 	_itoa_s(sm.player[side].allTime[allTimeIndex][wildIndex].getScore(), buffer, 9, 10);
 	addLeadingZeros(buffer, 7);
 	renderBoldString((unsigned char *)buffer, x+180, 440, 320, false, 2);
-	masked_blit(m_miniStatus, rm.m_backbuf, 0, sm.player[side].allTime[allTimeIndex][wildIndex].status * 32, x+280, 433, 40, 32);
+	//masked_blit(m_miniStatus, rm.m_backbuf, 0, sm.player[side].allTime[allTimeIndex][wildIndex].status * 32, x+280, 433, 40, 32);
+	if ( sm.player[side].allTime[allTimeIndex][wildIndex].status >= STATUS_CLEARED )
+	{
+		renderGrade(sm.player[side].allTime[allTimeIndex][wildIndex].grade, x+280, 433-8);
+	}
+	masked_blit(m_statusStars, rm.m_backbuf, whichFrame * 40, wildColor * 32, x+280+20, 433, 40, 32);
 }
 
 void updatePreview(UTIME dt)
