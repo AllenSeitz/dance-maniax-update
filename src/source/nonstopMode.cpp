@@ -50,7 +50,7 @@ BITMAP* m_titleAreaNonstop = NULL;
 BITMAP* m_nonstopStars = NULL;
 BITMAP* m_orbs[20];
 //BITMAP* m_rings;
-extern BITMAP* m_miniStatus;
+BITMAP* m_miniStatus;
 
 BITMAP* m_currentText;
 

@@ -147,9 +147,9 @@ void renderStageDisplay();
 // precondition: gs.currentStage is 0-6 or the game is in the demo loop
 // postcondition: renders a bitmap, top center, telling the player the stage number
 
-void renderGrade(int player);
-// precondition: gs.player[player] is crrently tracking the grade
-// postcondition: grade is rendered to the screen
+void renderGrade(int grade, int x, int y);
+// precondition: grade is a valid grade enumeration
+// postcondition: the letter grade is rendered to the screen
 
 void renderSpeedMod(int scrollRate, int speedMod, int x, int y);
 //

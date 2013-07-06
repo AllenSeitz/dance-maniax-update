@@ -545,7 +545,7 @@ static char boldTextWidths[] =
 	10, 7,  13, 14, 9,  14, 14, 14, 14, 14,
 	10, 14, 14, 7,  8,  13, 8,  21, 14, 14,
 	14, 14, 11, 14, 9,  14, 12, 19, 13, 13,
-	10, 10, 10, 13, 24, 24, 24, 24, 24, 24,
+	10, 10, 10, 13, 13, 24, 24, 24, 24, 24,
 };
 
 void renderBoldString(const unsigned char* string, int x, int y, int maxWidth, bool fixedWidth, int color)

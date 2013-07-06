@@ -497,9 +497,8 @@ void renderStageDisplay()
 	}
 }
 
-void renderGrade(int player)
+void renderGrade(int grade, int x, int y)
 {
-	int grade = sm.player[player].currentSet[gs.currentStage].calculateGrade();
 	int sy = 48 * grade; // F,E,D,C,...,A,AA (S),AAA (SS)
 
 	int color = 0; // yellow/green/blue/red
@@ -517,7 +516,7 @@ void renderGrade(int player)
 	}
 	int sx = 48 * color;
 
-	masked_blit(m_grades, rm.m_backbuf, sx, sy, player == 0 ? 6 : 586, 0, 48, 48);
+	masked_blit(m_grades, rm.m_backbuf, sx, sy, x, y, 48, 48);
 }
 
 void renderSpeedMod(int scrollRate, int speedMod, int x, int y)
@@ -742,7 +741,8 @@ void renderGameplay()
 	renderStageDisplay();
 	for ( int i = 0; i < (gs.isVersus ? 2 : 1); i++ )
 	{
-		renderGrade(i);
+		int grade = sm.player[i].currentSet[gs.currentStage].calculateGrade();
+		renderGrade(grade, i == 0 ? 6 : 586, 0);
 		renderScoreNumber(sm.player[i].currentSet[gs.currentStage].getScore(), i == 0 ? 32 : 426, 444, 7);
 	}
 

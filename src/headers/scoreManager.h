@@ -83,6 +83,25 @@ struct SONG_RECORD
 		return status;
 	}
 
+	int SONG_RECORD::getFullComboType()
+	{
+		calculateStatus(); // intentional side effect, set status now just in case (status is theoretically read-only by design anyway)
+
+		if ( status == STATUS_PERFECT )
+		{
+			return 3;
+		}
+		if ( status != STATUS_FULLCOMBO )
+		{
+			return 0;
+		}
+		if ( goods > 0 )
+		{
+			return 1;
+		}
+		return 2; // full combo with greats
+	}
+
 	int SONG_RECORD::calculateGrade()
 	{
 		if ( maxPoints == 0 )
