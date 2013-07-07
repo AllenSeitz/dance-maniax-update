@@ -1029,7 +1029,7 @@ void renderLoginStats(int x, int side)
 		return;
 	}
 
-	int offset = 20;
+	int offset = 5;
 	for ( int i = 0; i < 8; i++ )
 	{
 		renderNameLetter(sm.player[side].displayName[i], x+offset, 410, side+1);
@@ -1051,22 +1051,23 @@ void renderLoginStats(int x, int side)
 
 	_itoa_s(sm.player[side].allTime[allTimeIndex][mildIndex].getScore(), buffer, 9, 10);
 	addLeadingZeros(buffer, 7);
-	renderBoldString((unsigned char *)buffer, x+20, 440, 320, false, 1);
+	renderBoldString((unsigned char *)buffer, x+5, 440, 320, false, 1);
 	//masked_blit(m_miniStatus, rm.m_backbuf, 0, sm.player[side].allTime[allTimeIndex][mildIndex].status * 32, x+120, 433, 40, 32);
 	if ( sm.player[side].allTime[allTimeIndex][mildIndex].status >= STATUS_CLEARED )
 	{
-		renderGrade(sm.player[side].allTime[allTimeIndex][mildIndex].grade, x+120, 433-8);
+		renderGrade(sm.player[side].allTime[allTimeIndex][mildIndex].grade, x+105, 433-8);
 	}
-	masked_blit(m_statusStars, rm.m_backbuf, whichFrame * 40, mildColor * 32, x+120+20, 433, 40, 32);
+	masked_blit(m_statusStars, rm.m_backbuf, whichFrame * 40, mildColor * 32, x+105+20, 433, 40, 32);
+
 	_itoa_s(sm.player[side].allTime[allTimeIndex][wildIndex].getScore(), buffer, 9, 10);
 	addLeadingZeros(buffer, 7);
-	renderBoldString((unsigned char *)buffer, x+180, 440, 320, false, 2);
+	renderBoldString((unsigned char *)buffer, x+165, 440, 320, false, 2);
 	//masked_blit(m_miniStatus, rm.m_backbuf, 0, sm.player[side].allTime[allTimeIndex][wildIndex].status * 32, x+280, 433, 40, 32);
 	if ( sm.player[side].allTime[allTimeIndex][wildIndex].status >= STATUS_CLEARED )
 	{
-		renderGrade(sm.player[side].allTime[allTimeIndex][wildIndex].grade, x+280, 433-8);
+		renderGrade(sm.player[side].allTime[allTimeIndex][wildIndex].grade, x+265, 433-8);
 	}
-	masked_blit(m_statusStars, rm.m_backbuf, whichFrame * 40, wildColor * 32, x+280+20, 433, 40, 32);
+	masked_blit(m_statusStars, rm.m_backbuf, whichFrame * 40, wildColor * 32, x+265+20, 433, 40, 32);
 }
 
 void updatePreview(UTIME dt)
