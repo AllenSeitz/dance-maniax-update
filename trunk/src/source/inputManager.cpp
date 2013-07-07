@@ -42,7 +42,7 @@ void InputManager::updateKeyStates(UTIME dt)
 {	
 	for ( int i = 0; i < NUM_INPUTS; i++ )
 	{
-		if ( key[m_keyMapping[i]] != 0 || (i == MENU_START_1P && key[KEY_ENTER]) ) // for testing I like Enter
+		if ( key[m_keyMapping[i]] != 0 || (i == MENU_START_1P && key[KEY_ENTER]) || (i == MENU_START_2P && key[KEY_M]) ) // keyboard testing requires alternate start buttons
 		{
 			if ( m_panelStates[i] < 1 ) // if the key was up
 			{
