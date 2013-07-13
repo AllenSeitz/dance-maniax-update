@@ -131,6 +131,8 @@ int getColumnOffsetX_DMX(int column);
 
 int getLeftmostColumnX_DMX(int player);
 
+int getCenterOfLanesX(int player);
+
 void loadGameplayGraphics();
 // precondition: called only once when the program starts
 // postcondition: allocates a bunch of memory that isn't freed until the program quits

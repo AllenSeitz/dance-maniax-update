@@ -10,6 +10,8 @@
 #include "inputManager.h"
 #include "scoreManager.h"
 #include "gameplayRendering.h"
+#include "particleSprites.h"
+#include "specialEffects.h"
 #include "videoManager.h"
 
 extern int* songIDs;
@@ -135,6 +137,7 @@ void firstGameplayLoop()
 {
 #ifdef DMXDEBUG
 	debugCheats = true;
+	autoplay = true;
 #endif
 
 	// reset the player's stats
@@ -214,6 +217,7 @@ void mainGameplayLoop(UTIME dt)
 		}
 	}
 
+	updateParticles(dt);
 	renderGameplay();
 
 	gs.player[0].timeElapsed += dt;
@@ -944,13 +948,26 @@ void scoreNote(int p, int judgement, int column)
 		em.playSample(SFX_FULL_COMBO_SPLASH);
 		fullComboAnimStep = 1;
 		fullComboAnimTimer = 0;
+
+		int comboType = 0;
+		if ( sm.player[p].currentSet[rememberedCurrentStage].goods == 0 )
+		{
+			comboType = 1;
+		}
+		if ( sm.player[p].currentSet[rememberedCurrentStage].goods == 0 && sm.player[p].currentSet[rememberedCurrentStage].greats == 0 )
+		{
+			comboType = 2;
+		}
+
 		if ( p == 0 )
 		{
 			fullComboP1 = true;
+			createFullComboParticles(0, comboType);
 		}
 		else
 		{
 			fullComboP2 = true;
+			createFullComboParticles(1, comboType);
 		}
 	}
 }

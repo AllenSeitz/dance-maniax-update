@@ -32,4 +32,8 @@ void renderBannerAnim();
 // precondition: the next banner is already determined
 // postcondition: renders the next step of the banner animation
 
+void createFullComboParticles(int player, int type);
+// precondition: type = 0 for good combo, 1 = great combo, 2 = perfect combo
+// postcondition: creates the particles just offscreen at (x, 0)
+
 #endif // end include guard
