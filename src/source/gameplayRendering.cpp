@@ -5,6 +5,7 @@
 
 #include "gameStateManager.h"
 #include "gameplayRendering.h"
+#include "particleSprites.h"
 #include "scoreManager.h"
 #include "specialEffects.h"
 #include "videoManager.h"
@@ -89,6 +90,31 @@ int getNumColumns()
 		numColumns += 4;
 	}
 	return numColumns;
+}
+
+int getCenterOfLanesX(int player)
+{
+	int columnWidth = 32; // dmx
+
+	if ( player == 1 )
+	{
+		return getColumnOffsetX_DMX(4)+1 + 2*columnWidth;
+	}
+
+	if ( gs.isDoubles )
+	{
+		return getColumnOffsetX_DMX(0)+66 + 4*columnWidth;
+	}
+	else if ( gs.player[0].centerRight )
+	{
+		return getColumnOffsetX_DMX(4)+1 + 2*columnWidth;
+	}
+	else if ( gs.isVersus || gs.player[0].centerLeft )
+	{
+		return getColumnOffsetX_DMX(0)+1 + 2*columnWidth;
+	}
+
+	return getColumnOffsetX_DMX(0)+65 + 2*columnWidth;
 }
 
 void loadGameplayGraphics()
@@ -577,7 +603,9 @@ void renderFullComboAnim(int x, int time, int step)
 	int y = 86;
 	//y = (gs.player[player].isColumnReversed(i) ? DMX_STEP_ZONE_REV_Y-34 : DMX_STEP_ZONE_Y)-46;
 	time %= 1000;
-	
+
+	x -= 64; // because we pass in the CENTER of the player's play area, and this animation is 128 pixels wide
+
 	if ( step == 1 )
 	{
 		set_add_blender(0,0,0,256);
@@ -585,16 +613,16 @@ void renderFullComboAnim(int x, int time, int step)
 		//blit(m_fcRays[frame], rm.m_backbuf, 0, 0, x+65, y, 128, 216);
 		set_alpha_blender(); // the game assumes the graphics are left in this mode
 	}
-	else if ( step == 2 )
+	else if ( step == 2 ) // "FULL COMBO" fading in
 	{
 		frame = MIN(time/60, 10);
 		draw_trans_sprite(rm.m_backbuf, m_fullComboAnim[frame], x-69, 320);
 	}
-	else if ( step == 3 )
+	else if ( step == 3 ) // stationary text
 	{
 		draw_trans_sprite(rm.m_backbuf, m_fullComboAnim[10], x-69, 320);
 	}
-	else if ( step > 3 )
+	else if ( step > 3 ) // "FULL COMBO" fading out
 	{
 		frame = 10 - time/60;
 		if ( frame >= 0 )
@@ -732,6 +760,7 @@ void renderGameplay()
 
 	} // done with 1P 2P loop
 
+	renderParticles(rm.m_backbuf);
 
 	// render things on the frame
 	if ( gs.player[0].danceManiaxMode )
@@ -760,26 +789,13 @@ void renderGameplay()
 
 	if ( fullComboP1 )
 	{
-		if ( gs.isDoubles )
-		{
-			renderFullComboAnim(getColumnOffsetX_DMX(0)+66, fullComboAnimTimer, fullComboAnimStep);
-		}
-		else if ( gs.player[0].centerRight )
-		{
-			renderFullComboAnim(getColumnOffsetX_DMX(4)+1, fullComboAnimTimer, fullComboAnimStep);
-		}
-		else if ( gs.isVersus || gs.player[0].centerLeft )
-		{
-			renderFullComboAnim(getColumnOffsetX_DMX(0)+1, fullComboAnimTimer, fullComboAnimStep);
-		}
-		else 
-		{
-			renderFullComboAnim(getColumnOffsetX_DMX(0)+65, fullComboAnimTimer, fullComboAnimStep);
-		}
+		int centerx = getCenterOfLanesX(0);
+		renderFullComboAnim(centerx, fullComboAnimTimer, fullComboAnimStep);
 	}
 	if ( fullComboP2 )
 	{
-		renderFullComboAnim(getColumnOffsetX_DMX(4)+1, fullComboAnimTimer, fullComboAnimStep);
+		int centerx = getCenterOfLanesX(1);
+		renderFullComboAnim(centerx, fullComboAnimTimer, fullComboAnimStep);
 	}
 
 #ifdef DMXDEBUG

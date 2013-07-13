@@ -3,7 +3,9 @@
 
 #include "specialEffects.h"
 #include "common.h"
+#include "gameplayRendering.h"
 #include "gameStateManager.h"
+#include "particleSprites.h"
 
 extern RenderingManager rm;
 extern GameStateManager gs;
@@ -12,6 +14,7 @@ extern int trickBanner1;
 extern int trickBanner2;
 extern BITMAP* m_banner1;
 extern BITMAP* m_banner2;
+extern BITMAP* m_statusStars;
 
 void renderLightningBeamHorizontal(int x, int width, int y1, int y2, int seed, int endStyle)
 {
@@ -260,4 +263,54 @@ void drawLightningPixelOld(BITMAP *bmp, int x, int y, int brightness)
 
 	long c = (r << 16) + (g << 8) + b;
 	((long *)bmp->line[y])[x] = c;
+}
+
+void createFullComboParticles(int player, int type)
+{
+	struct PARTICLE_INFO a;
+	struct PARTICLE_INFO b;
+
+	a.texture = b.texture = m_statusStars;
+	a.pwidth = b.pwidth = 40;
+	a.pheight = b.pheight = 32;
+
+	int numParticlesToMake = 20;
+	int bcount = 5;
+
+	switch (type)
+	{
+	case 0: // good full combo
+		a.textureOffsetX = 0;
+		a.textureOffsetY = 0; // blue
+		b.textureOffsetX = 0;
+		b.textureOffsetY = 64; // silver
+		break;
+	case 1: // great full combo
+		a.textureOffsetX = 0;
+		a.textureOffsetY = 32; // green
+		b.textureOffsetX = 0;
+		b.textureOffsetY = 96; // gold
+		numParticlesToMake = 30;
+		break;
+	case 2: // perfect full combo
+		a.textureOffsetX = 0;
+		a.textureOffsetY = 96; // gold
+		b.textureOffsetX = 0;
+		b.textureOffsetY = 128; // big gold
+		numParticlesToMake = 50;
+		bcount = 2;
+		break;
+	}
+
+	//al_trace("center of lane X: %d\r\n", getCenterOfLanesX(player));
+	for ( int i = 0; i < numParticlesToMake; i++ )
+	{
+		a.x = b.x = getCenterOfLanesX(player) + getValueFromRange(-32, +32, rand()%100) - 20; // -20 is to center the particle
+		a.y = b.y = -32 - (i*8);
+		a.xvel = b.xvel = getValueFromRange(-50, 50, rand()%100);
+		a.yvel = b.yvel = getValueFromRange(350, 650, rand()%100);
+		a.timeToLive = b.timeToLive = 5000;
+
+		addParticle( i % bcount == 0 ? b : a);
+	}
 }

@@ -38,13 +38,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>DMX_Debug</TargetName>
-    <IncludePath>D:\svn\dmx\trunk\lib\allegro-4.4.2-msvc-10.0\include;D:\svn\dmx\trunk\lib\fmodapi375win\api\inc;D:\svn\dmx\trunk\lib\libpng\include\libpng12;D:\svn\dmx\trunk\lib\libpng\include;D:\svn\dmx\trunk\lib\loadpng;D:\svn\dmx\trunk\src\headers;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\svn\dmx\trunk\lib\allegro-4.4.2-msvc-10.0\lib;D:\svn\dmx\trunk\lib\fmodapi375win\api\lib;D:\svn\dmx\trunk\lib\libpng\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\..\lib\fmodapi375win\api\inc;..\..\..\lib\libpng\include\libpng12;..\..\..\lib\libpng\include;..\..\..\lib\loadpng;..\..\..\src\headers;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\..\lib\fmodapi375win\api\lib;..\..\..\lib\libpng\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>DMX</TargetName>
-    <IncludePath>D:\svn\dmx\trunk\lib\allegro-4.4.2-msvc-10.0\include;D:\svn\dmx\trunk\lib\fmodapi375win\api\inc;D:\svn\dmx\trunk\lib\libpng\include\libpng12;D:\svn\dmx\trunk\lib\libpng\include;D:\svn\dmx\trunk\lib\loadpng;D:\svn\dmx\trunk\src\headers;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\svn\dmx\trunk\lib\allegro-4.4.2-msvc-10.0\lib;D:\svn\dmx\trunk\lib\fmodapi375win\api\lib;D:\svn\dmx\trunk\lib\libpng\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\..\lib\fmodapi375win\api\inc;..\..\..\lib\libpng\include\libpng12;..\..\..\lib\libpng\include;..\..\..\lib\loadpng;..\..\..\src\headers;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\..\lib\fmodapi375win\api\lib;..\..\..\lib\libpng\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -80,6 +80,7 @@
     <ClInclude Include="..\..\headers\gameplayRendering.h" />
     <ClInclude Include="..\..\headers\gameStateManager.h" />
     <ClInclude Include="..\..\headers\inputManager.h" />
+    <ClInclude Include="..\..\headers\particleSprites.h" />
     <ClInclude Include="..\..\headers\scoreManager.h" />
     <ClInclude Include="..\..\headers\songwheelMode.h" />
     <ClInclude Include="..\..\headers\specialEffects.h" />
@@ -98,6 +99,7 @@
     <ClCompile Include="..\..\source\main.cpp" />
     <ClCompile Include="..\..\source\menuMode.cpp" />
     <ClCompile Include="..\..\source\nonstopMode.cpp" />
+    <ClCompile Include="..\..\source\particleSprites.cpp" />
     <ClCompile Include="..\..\source\render_ddr.cpp" />
     <ClCompile Include="..\..\source\render_dm.cpp" />
     <ClCompile Include="..\..\source\render_dmx.cpp" />
@@ -106,6 +108,7 @@
     <ClCompile Include="..\..\source\songwheelMode.cpp" />
     <ClCompile Include="..\..\source\specialEffects.cpp" />
     <ClCompile Include="..\..\source\VideoManager.cpp" />
+    <ClCompile Include="xsq_read.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
