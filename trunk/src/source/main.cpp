@@ -231,6 +231,14 @@ int main()
 	{
 		rm.useAlphaLanes = true; // temporary for testing
 	}
+	if ( fileExists("revpolarityred") )
+	{
+		im.reverseRedSensorPolarity = true; // temporary for testing
+	}
+	if ( fileExists("revpolarityblue") )
+	{
+		im.reverseBlueSensorPolarity = true; // temporary for testing
+	}
 
 	if ( initializeSonglist() == -1 )
 	{

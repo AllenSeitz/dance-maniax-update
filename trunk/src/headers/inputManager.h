@@ -79,6 +79,18 @@ public:
 	// precondition: milliseconds should be [0..150] or bad things will happen
 	// postcondition: if milliseconds > 0 then "ghosting" will be less of a problem
 
+	// these functions and bools are for reversing the on/off logic for a PPP controller
+	bool isRedSensor(int i)
+	{
+		return i == UL_1P || i == UR_1P || i == UL_2P || i == UR_2P;
+	}
+	bool isBlueSensor(int i)
+	{
+		return i >= 19 && i <= 26; // BLUE_SENSOR_1PL0 = 19, BLUE_SENSOR_2PR1 = 26
+	}
+	bool reverseRedSensorPolarity; // a hack for PPP sensors
+	bool reverseBlueSensorPolarity;
+
 protected:
 	char m_panelStates[NUM_INPUTS];
 	int m_panelHoldLength[NUM_INPUTS];
