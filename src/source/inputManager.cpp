@@ -36,13 +36,24 @@ InputManager::InputManager()
 	{
 		m_keyMapping[i] = defaultKeyMapping[i];
 	}
+
+	reverseRedSensorPolarity = false;
+	reverseBlueSensorPolarity = false;
 }
 
 void InputManager::updateKeyStates(UTIME dt)
 {	
 	for ( int i = 0; i < NUM_INPUTS; i++ )
 	{
-		if ( key[m_keyMapping[i]] != 0 || (i == MENU_START_1P && key[KEY_ENTER]) || (i == MENU_START_2P && key[KEY_M]) ) // keyboard testing requires alternate start buttons
+		bool thisKeyIsPressed = key[m_keyMapping[i]] != 0;
+
+		// hax for a PPP sensor
+		if ( (reverseRedSensorPolarity && isRedSensor(i)) || (reverseBlueSensorPolarity && isBlueSensor(i)) )
+		{
+			thisKeyIsPressed = !thisKeyIsPressed;
+		}
+
+		if ( thisKeyIsPressed || (i == MENU_START_1P && key[KEY_ENTER]) || (i == MENU_START_2P && key[KEY_M]) ) // keyboard testing requires alternate start button
 		{
 			if ( m_panelStates[i] < 1 ) // if the key was up
 			{
