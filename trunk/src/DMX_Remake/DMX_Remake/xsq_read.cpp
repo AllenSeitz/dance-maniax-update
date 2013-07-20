@@ -39,28 +39,28 @@ int getColumn_XSQ(long column, char which)
 	if ( column & 0x00001000 )
 	{
 		if ( which == 0 )
-			return 0;
+			return 3;
 		else
 			which--;
 	}
 	if ( column & 0x00002000 )
 	{
 		if ( which == 0 )
-			return 1;
+			return 2;
 		else
 			which--;
 	}
 	if ( column & 0x00004000 )
 	{
 		if ( which == 0 )
-			return 2;
+			return 1;
 		else
 			which--;
 	}
 	if ( column & 0x00008000 )
 	{
 		if ( which == 0 )
-			return 3;
+			return 0;
 		else
 			which--;
 	}
@@ -68,28 +68,28 @@ int getColumn_XSQ(long column, char which)
 	if ( column & 0x00000100 )
 	{
 		if ( which == 0 )
-			return 4;
+			return 7;
 		else
 			which--;
 	}
 	if ( column & 0x00000200 )
 	{
 		if ( which == 0 )
-			return 5;
+			return 6;
 		else
 			which--;
 	}
 	if ( column & 0x00000400 )
 	{
 		if ( which == 0 )
-			return 6;
+			return 5;
 		else
 			which--;
 	}
 	if ( column & 0x00000800 )
 	{
 		if ( which == 0 )
-			return 7;
+			return 4;
 		else
 			which--;
 	}
@@ -146,7 +146,7 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 		fgetc(fp);
 	}
 
-	gap = 48;
+	//gap = 48;
 
 	struct XSQ_RECORD temp;
 	int numLoops = 0; // for debugging
