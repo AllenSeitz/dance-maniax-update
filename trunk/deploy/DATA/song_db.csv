@@ -1,4 +1,4 @@
-DMXDB,April 6th 2013,112,1,,,,,,,,,,,,,
+DMXDB,April 6th 2013,110,1,,,,,,,,,,,,,
 101,BROKEN MY HEART,NAOKI feat.PAULA TERRY,160,160,DATA/mov/brok.seq,4,0,7,0,6,0,6,0,1,0,0
 102,PUT YOUR FAITH IN ME,UZI-LAY,120,120,DATA/mov/puty.seq,1,0,5,0,3,0,5,0,1,0,0
 103,GORGEOUS 2012,THE SURRENDERS,135,135,DATA/mov/gorg.seq,6,0,7,0,6,0,7,0,1,0,0
@@ -8,7 +8,7 @@ DMXDB,April 6th 2013,112,1,,,,,,,,,,,,,
 107,Dr.Love,Asuka M.,123,123,DATA/mov/drlo.seq,3,0,7,0,4,0,5,0,1,0,0
 108,KEEP ON MOVIN' |(DMX MIX),N.M.R-typeG,131,131,DATA/mov/keep.seq,2,0,6,0,4,0,5,0,1,0,0
 109,ALL MY LOVE,Tomosuke * SABRINA,132,132,DATA/mov/disc.seq,3,0,8,0,4,0,6,0,1,0,0
-110,Heaven is a '57 metallic gray,Hiro feat.Sweet little 30's,95,95,DATA/mov/heav.seq,5,0,8,0,5,0,6,0,1,0,0
+110,Heaven is a '57 metallic gray,Hiro feat.Sweet little 30's,95,190,DATA/mov/heav.seq,5,0,8,0,5,0,6,0,1,0,0
 111,AFRONOVA PRIMEVAL,8 bit,200,200,DATA/mov/afro.seq,6,352,9,559,7,276,8,469,1,0,0
 112,MEANING OF LIFE,K.Wit feat.GARY,112,112,DATA/mov/mean.seq,5,0,6,0,3,0,5,0,1,0,0
 113,IN MY DREAMS,REBECCA,139,139,DATA/mov/inmy.seq,4,0,6,0,3,0,7,0,1,0,0
@@ -99,12 +99,10 @@ DMXDB,April 6th 2013,112,1,,,,,,,,,,,,,
 315,TYCOON,SOUND HOLIC f. Nana Takahashi,170,170,DATA/mov/meal.ssq,3,195,5,230,3,190,6,266,5,0,0
 316,Yuuyake |~Fading Day~,JAKAZiD,174,174,DATA/mov/yuuy.seq,6,337,9,479,6,347,8,427,5,0,0
 317,Non Stop Mix Special 3,Non Stop Mix Special,199,199,no,0,0,0,0,0,0,0,0,0,1,0
-318,Luv To Me |~super euro version~,tiger YAMATO and Y&Co.,160,160,DATA/mov/luv2.seq,4,215,6,263,2,144,5,186,5,0,0
+318,Luv To Me |~super euro version~,tiger YAMATO and Y&Co.,160,160,DATA/mov/luv2.seq,4,215,6,263,2,144,4,186,5,0,0
 319,Night of Fire,NIKO,155,155,DATA/mov/bfor.seq,4,136,6,190,4,143,6,226,5,0,0
 320,FLOWER,DJ YOSHITAKA,173,173,DATA/mov/twin.seq,4,0,7,0,4,0,7,0,5,0,0
-321,Keep It |-AKIBA KOUBOU MIX-,DJ Command feat. NAGISA,166,166,DATA/mov/bfor.seq,4,0,8,0,6,0,8,0,5,0,0
-322,DYNAMITE RAVE |~super euro ver.~,NAOKI and Y&Co.,150,150,DATA/mov/luv2.seq,4,0,6,0,4,0,6,0,5,0,1
-323,Popteen,Domino,151,151,DATA/mov/bfor.seq,2,0,6,0,3,0,6,0,5,0,1
+321,Keep it |-AKIBA KOUBOU MIX-,DJ Command feat. NAGISA,166,166,DATA/mov/bfor.seq,4,0,8,0,6,0,8,0,5,0,0
 385,SUPER EURO NOW |~NONSTOP~ ,MIXED BY GU TEAM ,160,160,DATA/mov/bfor.seq,0,0,7,0,0,0,8,0,101,0,1
 386,HIGH SPEED CONCLUSION,Ryutaro Nakahara,183,185,DATA/mov/bfor.seq,0,0,8,0,0,0,8,0,101,0,1
 387,Xmix2,Non Stop Mix Special,150,150,DATA/mov/bfor.seq,0,0,4,0,0,0,5,0,0,0,0
