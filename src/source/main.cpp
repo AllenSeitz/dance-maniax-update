@@ -69,6 +69,9 @@ int fpsHappyThreshold = 50;
 int testMenuMainIndex = 0;
 int testMenuSubIndex = 0;
 bool allsongsDebug = false;
+bool isTestingChart = false;
+int testChartSongID = 101;
+int testChartLevel = SINGLE_MILD;
 
 BITMAP** m_banners; // used globally
 BITMAP* m_caution;
@@ -238,6 +241,37 @@ int main()
 	if ( fileExists("revpolarityblue") )
 	{
 		im.reverseBlueSensorPolarity = true; // temporary for testing
+	}
+	if ( fileExists("testchart.txt") )
+	{
+		isTestingChart = true;
+		char tempch[3] = "sm";
+
+		FILE* tfp = NULL;
+		fopen_s(&tfp, "testchart.txt", "rt");
+		fscanf_s(tfp, "%d", &testChartSongID);
+		fscanf_s(tfp, " %c", &tempch[0]);
+		fscanf_s(tfp, "%c", &tempch[1]);
+		fclose(tfp);
+
+		if ( tempch[1] == 'm' )
+		{
+			testChartLevel = SINGLE_MILD;
+		}
+		if ( tempch[1] == 'w' )
+		{
+			testChartLevel = SINGLE_WILD;
+		}
+		if ( tempch[1] == 'x' )
+		{
+			testChartLevel = SINGLE_ANOTHER;
+		}
+		if ( tempch[0] == 'd' )
+		{
+			testChartLevel += 10; // doubles
+		}
+
+		gs.g_currentGameMode = GAMEPLAY; // launch directly into the chart test mode
 	}
 
 	if ( initializeSonglist() == -1 )

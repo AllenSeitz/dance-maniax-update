@@ -381,7 +381,7 @@ int readDWI(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 	if ( fopen_s(&fp, filename, "rt") != 0 )
 	{
 		// as a fall back, open a memory dump of a chart (legacy chart data)
-		return readXSQ(chart, holds, songID, chartType);
+		return readDMXSQ(chart, holds, songID, chartType);
 	}
 
 	// fix any potential bugs regarding data from one chart accidentally merging into the next chart

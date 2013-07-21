@@ -19,6 +19,10 @@ extern std::string* songTitles;
 extern std::string* songArtists;
 extern std::string* movieScripts;
 
+extern bool isTestingChart;
+extern int testChartSongID;
+extern int testChartLevel;
+
 //////////////////////////////////////////////////////////////////////////////
 // Constants
 //////////////////////////////////////////////////////////////////////////////
@@ -139,6 +143,16 @@ void firstGameplayLoop()
 	debugCheats = true;
 	autoplay = true;
 #endif
+	if ( isTestingChart )
+	{
+		autoplay = true;
+		useAssistClap = true;
+	}
+
+	if ( isTestingChart )
+	{
+		gs.currentStage = 0; // loop!
+	}
 
 	// reset the player's stats
 	for ( int p = 0; p < 2; p++ )
@@ -169,17 +183,23 @@ void firstGameplayLoop()
 	}
 
 	// DEBUG: if booting directly into gameplay mode, set stuff
-	if ( gs.player[0].stagesPlayed[0] <= 0 )
+	if ( gs.player[0].stagesPlayed[0] <= 0 || isTestingChart )
 	{
 		TRACE("DEBUG START IN GAME MODE");
-		gs.player[0].stagesPlayed[0] = gs.player[0].stagesPlayed[1] = gs.player[0].stagesPlayed[2] = 101;
-		gs.player[0].stagesLevels[0] = gs.player[0].stagesLevels[1] = gs.player[0].stagesLevels[2] = SINGLE_WILD;
-		gs.player[1].stagesPlayed[0] = gs.player[1].stagesPlayed[1] = gs.player[1].stagesPlayed[2] = 101;
-		gs.player[1].stagesLevels[0] = gs.player[1].stagesLevels[1] = gs.player[1].stagesLevels[2] = SINGLE_WILD;
-		gs.isDoubles = false;
-		//gs.isVersus = true;
-		gs.player[0].centerRight = true;
-		autoplay = true;
+		gs.player[0].stagesPlayed[0] = gs.player[0].stagesPlayed[1] = gs.player[0].stagesPlayed[2] = testChartSongID;
+		gs.player[0].stagesLevels[0] = gs.player[0].stagesLevels[1] = gs.player[0].stagesLevels[2] = testChartLevel;
+		gs.player[1].stagesPlayed[0] = gs.player[1].stagesPlayed[1] = gs.player[1].stagesPlayed[2] = testChartSongID;
+		gs.player[1].stagesLevels[0] = gs.player[1].stagesLevels[1] = gs.player[1].stagesLevels[2] = testChartLevel;
+		if ( testChartLevel >= DOUBLE_MILD )
+		{
+			gs.isDoubles = true;
+			gs.isVersus = false;
+		}
+		else
+		{
+			gs.isDoubles = false;
+			gs.isVersus = true;
+		}
 	}
 	clear_keybuf(); // also for debug
 
@@ -334,10 +354,15 @@ void mainGameplayLoop(UTIME dt)
 	}
 
 	// these should only work in debug mode
-	while (keypressed() == TRUE && debugCheats)
+	while (keypressed() == TRUE && (debugCheats || isTestingChart) )
 	{
 		int k = readkey() >> 8;
 
+		if ( k == KEY_O ) // restart the song
+		{
+			gs.g_currentGameMode = GAMEPLAY;
+			gs.g_gameModeTransition = 1;
+		}
 		if ( k == KEY_F6 )
 		{
 			gs.player[0].useBattery = true;
