@@ -270,6 +270,11 @@ void createFullComboParticles(int player, int type)
 	struct PARTICLE_INFO a;
 	struct PARTICLE_INFO b;
 
+	if ( m_statusStars == NULL )
+	{
+		m_statusStars = loadImage("DATA/songwheel/status_stars.tga");
+	}
+
 	a.texture = b.texture = m_statusStars;
 	a.pwidth = b.pwidth = 40;
 	a.pheight = b.pheight = 32;

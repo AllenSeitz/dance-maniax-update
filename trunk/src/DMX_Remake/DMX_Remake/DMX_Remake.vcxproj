@@ -90,6 +90,7 @@
     <ClCompile Include="..\..\source\attractMode.cpp" />
     <ClCompile Include="..\..\source\bookManager.cpp" />
     <ClCompile Include="..\..\source\common.cpp" />
+    <ClCompile Include="..\..\source\dmxsq_read.cpp" />
     <ClCompile Include="..\..\source\dwi_read.cpp" />
     <ClCompile Include="..\..\source\gameoverMode.cpp" />
     <ClCompile Include="..\..\source\gameplayMode.cpp" />

@@ -240,7 +240,9 @@ void mainAttractLoop(UTIME dt)
 			renderBoldString(songTitles[bannerIndex].c_str(), x + 140, y+11, 400, false, color);
 			renderArtistString(songArtists[bannerIndex].c_str(), x + 140, y + 51, 400, 32);
 			renderScoreNumber(i+1, x-55, y+11, 2);
-			//renderWhiteNumber(numplays[i], x-55, y+64);
+#ifdef DMXDEBUG
+			renderWhiteNumber(numplays[i], x-55, y+64);
+#endif
 		}
 
 		if ( submodeTimer > 28000 )
