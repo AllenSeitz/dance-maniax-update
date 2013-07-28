@@ -118,6 +118,8 @@ int  maxSongwheelIndex = 0;
 UTIME timeRemaining = 60000;
 int  introAnimTimer = 0;
 int  introAnimSteps = 5;
+UTIME nextStageAnimTimer = 0;
+#define NEXT_STAGE_ANIM_TIME 2000
 
 int  titleAnimTimer = 0;
 int  displayBPM = 150;              // oscillates between min and max
@@ -172,6 +174,14 @@ void updatePreview(UTIME dt);
 void loadPreview(int songid);
 // precondition: songid is [100..999]
 // postcondition: changes currentPreview, should only be called from updatePreview()
+
+void renderNextStageAnim();
+//
+//
+
+void renderNextStageAnimBanner(int textureID, int percent);
+//
+//
 
 bool isSongAvailable(int index)
 {
@@ -361,6 +371,8 @@ void mainSongwheelLoop(UTIME dt)
 		return;
 	}
 
+	SUBTRACT_TO_ZERO(nextStageAnimTimer, dt);
+
 	if ( isSphereMoving )
 	{
 		updateSongwheelRotation(dt);
@@ -507,6 +519,7 @@ void mainSongwheelLoop(UTIME dt)
 				else
 				{
 					em.playSample(SFX_SONGWHEEL_PICK);
+					nextStageAnimTimer = NEXT_STAGE_ANIM_TIME;
 				}
 			}
 		}
@@ -727,6 +740,12 @@ void renderSongwheelLoop()
 		}
 	}
 
+	// render the "pick next stage" animation
+	if ( nextStageAnimTimer > 0 )
+	{
+		renderNextStageAnim();
+	}
+	
 	rm.flip();
 }
 
@@ -765,6 +784,50 @@ void renderIntroAnim(int percent)
 	}
 
 	rm.flip();
+}
+
+void renderNextStageAnim()
+{
+	int percent = nextStageAnimTimer * 100 / NEXT_STAGE_ANIM_TIME;
+	int black = makeacol(0, 0, 0, 255);
+	char stageString[32] = "";
+	char ordinals[6][8] = { "", "2nd ", "3rd ", "4th ", "Final " };
+
+	strcpy_s(stageString, "Choose " );
+	strcat_s( stageString, ordinals[gs.currentStage == gs.numSongsPerSet-1 ? 4 : gs.currentStage] );
+	strcat_s(stageString, "Stage");
+
+	// black line: in
+	if ( percent > 90 )
+	{
+		rectfill(rm.m_backbuf, SCREEN_WIDTH, 300, getValueFromRange(0, SCREEN_WIDTH, (percent-90)*100/10), 340, black);
+	}
+	// text: in
+	else if ( percent > 60 )
+	{
+		rectfill(rm.m_backbuf, 0, 300, SCREEN_WIDTH, 340, black);
+		renderBoldString(stageString, getValueFromRange(SCREEN_WIDTH/2, SCREEN_WIDTH, (percent-60)*100/30), 306, 999, false, 0);
+	}
+	// pause
+	else if ( percent > 40 )
+	{
+		rectfill(rm.m_backbuf, 0, 300, SCREEN_WIDTH, 340, black);
+		renderBoldString(stageString, SCREEN_WIDTH/2, 306, 999, false, 0);
+	}
+	// text: out
+	else if ( percent > 10 )
+	{
+		rectfill(rm.m_backbuf, 0, 300, SCREEN_WIDTH, 340, black);
+		renderBoldString(stageString, getValueFromRange(-100, SCREEN_WIDTH/2, (percent-10)*100/30), 306, 999, false, 0);
+	}
+	// black line: out
+	else 
+	{
+		rectfill(rm.m_backbuf, 0, 300, getValueFromRange(0, SCREEN_WIDTH, (percent)*100/10), 340, black);
+	}
+
+	int firstHalfProgress = getValueFromRange(0, 100, (percent-50)*100/50);
+	renderNextStageAnimBanner(songID_to_listID(gs.player[0].stagesPlayed[ gs.currentStage-1 ]), percent > 50 ? firstHalfProgress : 0);
 }
 
 void prepareForSongwheelRotation()
@@ -812,6 +875,38 @@ void postSongwheelRotation()
 	displayBPMState = 0;
 }
 
+int getCoordinateOfPickedSong(int which)
+{
+	int startingX = SCREEN_W - 5 - (gs.numSongsPerSet * 71);
+	return startingX + which*71;
+}
+
+void renderPickedSongs(int percent)
+{
+	int startingX = getCoordinateOfPickedSong(0);
+	int x = startingX;
+
+	for ( int i = 0; i < gs.numSongsPerSet; i++ )
+	{
+		if ( gs.player[0].stagesPlayed[i] == -1 || i >= gs.currentStage )
+		{
+			// render an empty slot
+			rectfill(rm.m_backbuf, x, 5, x+64, 69, makeacol(0, 0, 0, getValueFromRange(0, 64, percent)));
+			if ( percent > 80 )
+			{
+				renderWhiteNumber(i+1, x + 10, 15);
+			}
+		}
+		else
+		{
+			// render a real banner
+			stretch_blit(m_banners[songID_to_listID(gs.player[0].stagesPlayed[i])], rm.m_backbuf, 0, 0, 256, 256, x, 5, 64, 64);
+		}
+
+		x += 71;
+	}
+}
+
 void updateSongwheelRotation(UTIME dt)
 {
 	rotateAnimTime -= dt;
@@ -833,17 +928,9 @@ void updateSongwheelRotation(UTIME dt)
 	}
 }
 
-void renderBanner(int textureID, int coordsIndex, bool isNew)
+// this is a super-private helper function which should only be called from renderBanner() and renderNextStageAnimBanner()
+void doRenderBanner(int textureID, bool isNew)
 {
-	for ( int i = 0; i < 4; i++ )
-	{
-		pp[i]->x = itofix(currentQuads[coordsIndex][i*2]);
-		pp[i]->y = itofix(currentQuads[coordsIndex][i*2 +1]);
-		pp[i]->z = 0;
-		pp[i]->c = 0;//makeacol(255,255,255,255);
-		pp[i]->u = pp[i]->v = 0;
-	}
-
 	pp[3]->u = itofix(0); // use hi-res 256x256 square banners
 	pp[3]->v = itofix(255);
 
@@ -866,6 +953,45 @@ void renderBanner(int textureID, int coordsIndex, bool isNew)
 	{
 		draw_trans_sprite(rm.m_backbuf, m_new, fixtoi(pp[0]->x), fixtoi(pp[0]->y) - 10);
 	}
+}
+
+void renderBanner(int textureID, int coordsIndex, bool isNew)
+{
+	for ( int i = 0; i < 4; i++ )
+	{
+		pp[i]->x = itofix(currentQuads[coordsIndex][i*2]);
+		pp[i]->y = itofix(currentQuads[coordsIndex][i*2 +1]);
+		pp[i]->z = 0;
+		pp[i]->c = 0;//makeacol(255,255,255,255);
+		pp[i]->u = pp[i]->v = 0;
+	}
+
+	doRenderBanner(textureID, isNew);
+}
+
+void renderNextStageAnimBanner(int textureID, int percent)
+{
+	int tx = getCoordinateOfPickedSong(gs.currentStage - 1);
+	int startPoint[8] = { 160,171, 256,171, 256,243, 160,243 };  // the starting point of the banner
+	int targetPoint[8] = { tx,5, tx+64,5, tx+64,5+64, tx,5+64 }; // the destination in the upper-right
+
+	// interpolate!
+	int currentQuad[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+	for ( int c = 0; c < 8; c++ )
+	{
+		currentQuad[c] = getValueFromRange(targetPoint[c], startPoint[c], percent);
+	}
+
+	for ( int i = 0; i < 4; i++ )
+	{
+		pp[i]->x = itofix(currentQuad[i*2]);
+		pp[i]->y = itofix(currentQuad[i*2 +1]);
+		pp[i]->z = 0;
+		pp[i]->c = 0;//makeacol(255,255,255,255);
+		pp[i]->u = pp[i]->v = 0;
+	}
+
+	doRenderBanner(textureID, false);
 }
 
 void renderTitleArea(int percent)
@@ -902,32 +1028,6 @@ void renderTitleArea(int percent)
 	if ( percent >= 85 )
 	{
 		masked_blit(m_versions, rm.m_backbuf, 0, songlist[songwheelIndex].version*60, 33, 178, 96, 60);
-	}
-}
-
-void renderPickedSongs(int percent)
-{
-	int startingX = SCREEN_W - 5 - (gs.numSongsPerSet * 71);
-	int x = startingX;
-
-	for ( int i = 0; i < gs.numSongsPerSet; i++ )
-	{
-		if ( gs.player[0].stagesPlayed[i] == -1 || i >= gs.currentStage )
-		{
-			// render an empty slot
-			rectfill(rm.m_backbuf, x, 5, x+64, 69, makeacol(0, 0, 0, getValueFromRange(0, 64, percent)));
-			if ( percent > 80 )
-			{
-				renderWhiteNumber(i+1, x + 10, 15);
-			}
-		}
-		else
-		{
-			// render a real banner
-			stretch_blit(m_banners[songID_to_listID(gs.player[0].stagesPlayed[i])], rm.m_backbuf, 0, 0, 256, 256, x, 5, 64, 64);
-		}
-
-		x += 71;
 	}
 }
 

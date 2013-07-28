@@ -130,6 +130,9 @@ extern void mainResultsLoop(UTIME dt);
 extern void firstGameoverLoop();
 extern void mainGameoverLoop(UTIME dt);
 
+extern void firstVoteLoop();
+extern void mainVoteLoop(UTIME dt);
+
 void firstVideoTestLoop();
 void mainVideoTestLoop(UTIME dt);
 
@@ -420,6 +423,9 @@ int main()
 				case FAILURE:
 					firstFailureLoop();
 					break;
+				case VOTEMODE:
+					firstVoteLoop();
+					break;
 				default:
 					break;
 				}
@@ -477,6 +483,9 @@ int main()
 					break;
 				case FAILURE:
 					mainFailureLoop(dt);
+					break;
+				case VOTEMODE:
+					mainVoteLoop(dt);
 					break;
 				default:
 					break;

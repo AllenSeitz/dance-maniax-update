@@ -1003,7 +1003,14 @@ void loadNextSong()
 
 	if ( gs.isVersus )
 	{
-		p1maxscore = readDWI(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
+		if ( isTestingChart )
+		{
+			p1maxscore = readDMXSQ(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
+		}
+		else
+		{
+			p1maxscore = readDWI(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
+		}
 		p2maxscore = readDWI2P(&gs.player[1].currentChart, &gs.player[1].freezeArrows, gs.player[1].stagesPlayed[gs.currentStage], gs.player[1].stagesLevels[gs.currentStage]);
 	}
 	else if ( gs.isSingles() )

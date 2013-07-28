@@ -222,7 +222,14 @@ void mainResultsLoop(UTIME dt)
 		}
 		else
 		{
-			gs.g_currentGameMode = GAMEOVER;
+			if ( sm.player[0].isLoggedIn || (gs.isVersus && sm.player[1].isLoggedIn) )
+			{
+				gs.g_currentGameMode = GAMEOVER;//VOTEMODE;
+			}
+			else
+			{
+				gs.g_currentGameMode = GAMEOVER;
+			}
 			gs.g_gameModeTransition = 1;
 		}
 	}
