@@ -109,6 +109,7 @@
     <ClCompile Include="..\..\source\songwheelMode.cpp" />
     <ClCompile Include="..\..\source\specialEffects.cpp" />
     <ClCompile Include="..\..\source\VideoManager.cpp" />
+    <ClCompile Include="..\..\source\voteMode.cpp" />
     <ClCompile Include="xsq_read.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
