@@ -273,6 +273,7 @@ void firstSongwheelLoop()
 	songlist = new SongEntry[maxSongwheelIndex];
 	int nextIndex = 0;
 	int futureStartIndex = maxSongwheelIndex; // would start on "Broken my Heart" (or whatever is first) if it doesn't find "Wuv U" (301)
+	int favoriteMusicHack = 0; // used later TODO: dont do this
 	for ( int i = 0; i < NUM_SONGS; i++ )
 	{
 		if ( isSongAvailable(i) )
@@ -305,10 +306,25 @@ void firstSongwheelLoop()
 				futureStartIndex = nextIndex; // start at the first custom song
 			}
 
+			// TODO: dont do this
+			if ( songlist[nextIndex].songID == 310 )
+			{
+				favoriteMusicHack = nextIndex;
+			}
+
 			nextIndex++;
 		}
 	}
 	ASSERT(nextIndex == maxSongwheelIndex);
+
+	// HACK: swap "Wuv U" and "Caramelldansen (speedycake remix)"
+	// TODO: dont do this
+	if ( favoriteMusicHack > 0 )
+	{
+		SongEntry wuvu = songlist[futureStartIndex];
+		songlist[futureStartIndex] = songlist[favoriteMusicHack];
+		songlist[favoriteMusicHack] = wuvu;
+	}
 
 	// this is for the intro anim
 	songwheelIndex = futureStartIndex-3;
