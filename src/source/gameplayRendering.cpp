@@ -103,7 +103,7 @@ int getCenterOfLanesX(int player)
 
 	if ( gs.isDoubles )
 	{
-		return getColumnOffsetX_DMX(0)+66 + 4*columnWidth;
+		return getColumnOffsetX_DMX(0)+1 + 4*columnWidth;
 	}
 	else if ( gs.player[0].centerRight )
 	{

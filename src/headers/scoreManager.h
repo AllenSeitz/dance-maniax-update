@@ -195,6 +195,56 @@ struct PLAYER_DATA
 
 		numPlaysSP = numPlaysDP = 0;
 	}
+
+	int PLAYER_DATA::getNumStars( int chartID, int minStatus )
+	{
+		int count = 0;
+		int ch = getChartIndexFromType(chartID);
+
+		for ( int i = 0; i < NUM_SONGS; i++ )
+		{
+			if ( allTime[i][ch].status >= minStatus )
+			{
+				count++;
+			}
+			else
+			{
+				// see if this song was full combo'd (or whatever for min status) during this set instead
+				for ( int c = 0; c < 7; c++ )
+				{
+					if ( (currentSet[c].songID == allTime[i][ch].songID) && (currentSet[c].chartID == chartID) && (currentSet[c].calculateStatus() >= minStatus) )
+					{
+						count++;
+					}
+				}
+			}
+		}
+
+		return count;
+	}
+
+	int PLAYER_DATA::getStatusOnSong( int songID, int chartID )
+	{		
+		int si = songID_to_listID(songID);
+		int ch = getChartIndexFromType(chartID);
+
+		int bestStatus = -1;
+		if ( si >= 0 && ch >= 0 )
+		{
+			bestStatus = allTime[si][ch].status;
+		}
+
+		// check whatever was played during this set, too
+		for ( int c = 0; c < 7; c++ )
+		{
+			if ( (currentSet[c].songID == songID) && currentSet[c].chartID == chartID )
+			{
+				bestStatus = MAX(bestStatus, currentSet[c].calculateStatus());
+			}
+		}
+
+		return bestStatus;
+	}
 };
 
 class ScoreManager
