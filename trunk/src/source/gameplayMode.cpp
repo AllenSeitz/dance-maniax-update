@@ -1130,25 +1130,41 @@ int checkForExtraStages()
 		if ( sumP1 >= 900000 || sumP2 >= 900000 )
 		{
 			awardedExtra = true;
-			gs.player[0].stagesPlayed[gs.numSongsPerSet] = 126;
+
+			// automatically set up for song 126 - Nonstop Megamix 1
+			int songToPlay = 126;
+
+			int numFullComboP1 = sm.player[0].getNumStars(levelP1, STATUS_FULLCOMBO);
+			int numFullComboP2 = sm.player[1].getNumStars(levelP2, STATUS_FULLCOMBO);
+
+			if ( (numFullComboP1 >= 15 && sm.player[0].getStatusOnSong(303, levelP1) >= STATUS_FULLCOMBO) || (numFullComboP2 >= 15 && sm.player[1].getStatusOnSong(303, levelP2) >= STATUS_FULLCOMBO) )
+			{
+				songToPlay = 324;
+				if ( songs[ songID_to_listID(324) ].version <= 0 )
+				{
+					songToPlay = 301; // TODO: finish Elemental Creation
+				}
+			}
+			else if ( (numFullComboP1 >= 5 && sm.player[0].getStatusOnSong(126, levelP1) >= STATUS_FULLCOMBO) || (numFullComboP2 >= 5 && sm.player[1].getStatusOnSong(126, levelP2) >= STATUS_FULLCOMBO) )
+			{
+				songToPlay = 303;
+			}
+
+			// make it happen
+			gs.player[0].stagesPlayed[gs.numSongsPerSet] = songToPlay;
 			gs.player[0].stagesLevels[gs.numSongsPerSet] = levelP1;
 			gs.player[0].useBattery = true;
 			gs.player[0].lifebarLives = 4;
 			if ( gs.isVersus )
 			{
-				gs.player[1].stagesPlayed[gs.numSongsPerSet] = 126;
+				gs.player[1].stagesPlayed[gs.numSongsPerSet] = songToPlay;
 				gs.player[1].stagesLevels[gs.numSongsPerSet] = levelP2;
 				gs.player[1].useBattery = true;
 				gs.player[1].lifebarLives = 4;
 			}
 
-			// I realize that I just checked for versus a minute ago. This will change soon.
-			if ( gs.isVersus || gs.isDoubles )
+			if ( songToPlay != 126 )
 			{
-				gs.player[0].stagesPlayed[gs.numSongsPerSet] = 303;
-				gs.player[1].stagesPlayed[gs.numSongsPerSet] = 303;
-				gs.player[0].lifebarLives = 5;
-				gs.player[1].lifebarLives = 5;
 				em.announcerQuip(GUY_EARN_SPECIAL_EXTRA);
 			}
 			else
