@@ -5,6 +5,7 @@
 #include "common.h"
 
 #include "dwi_read.h"
+#include "xsq_read.h"
 
 #include "gameStateManager.h"
 #include "inputManager.h"
@@ -1005,7 +1006,8 @@ void loadNextSong()
 	{
 		if ( isTestingChart )
 		{
-			p1maxscore = readDMXSQ(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
+			//p1maxscore = readDMXSQ(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
+			p1maxscore = readXSQ(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
 		}
 		else
 		{
