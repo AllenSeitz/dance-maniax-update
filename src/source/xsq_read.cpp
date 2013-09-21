@@ -1,5 +1,6 @@
-// xsq_read.cpp reads a .xsq file, which is a memory dump of a chart from MAME (for official simfiles)
+// xsq_read.cpp reads a .xsq file, which is my memory dump of a chart from MAME (for chart data from the original series)
 // source file created 6/28/2013 by Catastrophe
+// updated 9/21/2013 to try to fix the gap
 
 #include <algorithm>
 #include <vector>
@@ -7,7 +8,7 @@
 
 #include "common.h"
 
-// first the chart is read in as a series of these, then sorted, then the beats are turned into milliseconds (and a real chart)
+// the chart in memory is a sequence of these. I'm not sure what each field is for
 struct XSQ_RECORD
 {
 	int timing;
@@ -99,19 +100,19 @@ int getColumn_XSQ(long column, char which)
 
 int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds, int songID, int chartType)
 {
-	char filename[] = "DATA/dwis/101_sm.xsq";
+	char filename[] = "DATA/xsq/101_sm.xsq";
 	FILE* fp = NULL;
 
-	// hopefully open the target DWI file
-	filename[10] = (songID/100 % 10) + '0';
-	filename[11] = (songID/10 % 10) + '0';
-	filename[12] = (songID % 10) + '0';
-	filename[14] = chartType <= SINGLE_ANOTHER ? 's' : 'd';
-	filename[15] = chartType == SINGLE_MILD || chartType == DOUBLE_MILD ? 'm' : 'w';
+	// hopefully open the target XSQ file
+	filename[ 9] = (songID/100 % 10) + '0';
+	filename[10] = (songID/10 % 10) + '0';
+	filename[11] = (songID % 10) + '0';
+	filename[13] = chartType <= SINGLE_ANOTHER ? 's' : 'd';
+	filename[14] = chartType == SINGLE_MILD || chartType == DOUBLE_MILD ? 'm' : 'w';
 
 	if ( fopen_s(&fp, filename, "rb") != 0 )
 	{
-		char helpString[64] = "song 0000 is missing chart data";
+		char helpString[64] = "song 0000 is missing chart data (xsq)";
 		helpString[5] = (songID / 1000 ) % 10 + '0';
 		helpString[6] = (songID / 100 ) % 10 + '0';
 		helpString[7] = (songID / 10 ) % 10 + '0';	
@@ -120,38 +121,39 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 		return 0;
 	}
 
-	// fix any potential bugs regarding data from one chart accidentally merging into the next chart
 	chart->clear();
 	holds->clear();
 
 	// skip some weird header stuff that I don't understand yet? get right to the good stuff
 	char songCode[8] = "";
+	char skip = 0;
 	long tempoMarkerThingy = 0;
 	long displayBPM = 0;
 	long gap = 0;
-	long endTime = 5000;
+	long mp3length = 5000; // end when the charts ends, or this number, whichever comes first
 
 	fread_s(&songCode, sizeof(char)*8, sizeof(char), 8, fp);
 	fread_s(&tempoMarkerThingy, sizeof(long), sizeof(long), 1, fp);
 	fread_s(&displayBPM, sizeof(long), sizeof(long), 1, fp);
-	fgetc(fp);
+	fread_s(&skip, sizeof(char), sizeof(char), 1, fp);
 	fread_s(&gap, sizeof(long), sizeof(long), 1, fp);
 	for ( int i = 0; i < 155; i++ )
 	{
-		fgetc(fp);
+		fread_s(&skip, sizeof(char), sizeof(char), 1, fp);
 	}
-	fread_s(&endTime, sizeof(long), sizeof(long), 1, fp);
-	for ( int i = 0; i < 21; i++ )
+	fread_s(&mp3length, sizeof(long), sizeof(long), 1, fp);
+	for ( int i = 0; i < 25; i++ ) // also used in the past: 25, and 40
 	{
-		fgetc(fp);
+		fread_s(&skip, sizeof(char), sizeof(char), 1, fp);
 	}
 
 	//gap = 48;
+	//gap = 68;
 
 	struct XSQ_RECORD temp;
 	int numLoops = 0; // for debugging
-
 	int timePerBeat = 400; // unused anyway, but in the future when I know the bpm, could be used
+
 	while ( 1 )
 	{
 		numLoops++;
@@ -174,7 +176,10 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 			if ( col != -1 ) 
 			{
 				struct ARROW a;
-				a.timing = temp.timing * 60;
+				//a.timing = temp.timing * 60;
+				//a.timing = (temp.timing * 5600) / 100;
+				//a.timing = (temp.timing * 5580) / 100;
+				a.timing = temp.timing * 62;
 				a.color = calculateArrowColor(a.timing, timePerBeat);
 				a.type = TAP;
 				a.columns[0] = col;
@@ -186,7 +191,7 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 
 	// always put one of these in the chart
 	struct ARROW a;
-	a.timing = endTime * 60;
+	a.timing = mp3length * 60;
 	a.type = END_SONG;
 	chart->push_back(a);
 
@@ -209,6 +214,7 @@ int readXSQ2P(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *hold
 {
 	int retval = readXSQ(chart, holds, songID, chartType);
 
+	// transform the chart
 	for ( std::vector<struct ARROW>::iterator c = chart->begin(); c != chart->end(); c++ )
 	{
 		for ( int i = 0; i < 4; i++ )
@@ -220,6 +226,7 @@ int readXSQ2P(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *hold
 		}
 	}
 
+	// just for completeness - but official charts have no holds
 	for ( std::vector<struct FREEZE>::iterator f = holds->begin(); f != holds->end(); f++ )
 	{
 		for ( int i = 0; i < 2; i++ )
@@ -238,6 +245,7 @@ int readXSQCenter(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *
 {
 	int retval = readXSQ(chart, holds, songID, chartType);
 
+	// transform the chart
 	for ( std::vector<struct ARROW>::iterator c = chart->begin(); c != chart->end(); c++ )
 	{
 		for ( int i = 0; i < 4; i++ )
@@ -254,6 +262,7 @@ int readXSQCenter(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *
 		}
 	}
 
+	// just for completeness - but official charts have no holds
 	for ( std::vector<struct FREEZE>::iterator f = holds->begin(); f != holds->end(); f++ )
 	{
 		for ( int i = 0; i < 2; i++ )

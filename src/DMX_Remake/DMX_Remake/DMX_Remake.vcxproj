@@ -85,6 +85,7 @@
     <ClInclude Include="..\..\headers\songwheelMode.h" />
     <ClInclude Include="..\..\headers\specialEffects.h" />
     <ClInclude Include="..\..\headers\videoManager.h" />
+    <ClInclude Include="..\..\headers\xsq_read.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\attractMode.cpp" />
@@ -110,7 +111,7 @@
     <ClCompile Include="..\..\source\specialEffects.cpp" />
     <ClCompile Include="..\..\source\VideoManager.cpp" />
     <ClCompile Include="..\..\source\voteMode.cpp" />
-    <ClCompile Include="xsq_read.cpp" />
+    <ClCompile Include="..\..\source\xsq_read.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
