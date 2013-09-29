@@ -1149,6 +1149,8 @@ int loadSongDB()
 		}
 	}
 
+	fclose(fp);
+
 	return 0;
 }
 
