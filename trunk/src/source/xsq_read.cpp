@@ -12,10 +12,10 @@
 struct XSQ_RECORD
 {
 	int timing;
+	int word2; // linked list node pointer? timing in frames? distance to next note?
 	int column;
-	int word3;
-	int word4;
-	int word5;
+	int word4; // always 0x0000FFFF
+	int word5; // always zero
 
 	XSQ_RECORD()
 	{
@@ -23,11 +23,11 @@ struct XSQ_RECORD
 	}
 	void reset()
 	{
-		timing = column = word3 = word4 = word5 = 0;
+		timing = column = word2 = word4 = word5 = 0;
 	}
 	bool isFinalNote()
 	{
-		return column == 0x00FFFF00 && word3 == 0x00FFFF00 && word4 == 0 && word5 == 0; // don't question it
+		return column == 0xFFFF0000 && word4 == 0xFFFF0000 && word5 == 0; // don't question it
 	}
 };
 
@@ -37,28 +37,32 @@ int getColumn_XSQ(long ch, char which);
 
 int getColumn_XSQ(long column, char which)
 {
-	if ( column & 0x00001000 )
+	if ( (column & 0xFFFE0000) == 0xFFFE0000 ) // 0xFE might begin a chart, and 0xFF might end one
+	{
+		return -1;
+	}
+	if ( column & 0x00100000 )
 	{
 		if ( which == 0 )
 			return 3;
 		else
 			which--;
 	}
-	if ( column & 0x00002000 )
+	if ( column & 0x00200000 )
 	{
 		if ( which == 0 )
 			return 2;
 		else
 			which--;
 	}
-	if ( column & 0x00004000 )
+	if ( column & 0x00400000 )
 	{
 		if ( which == 0 )
 			return 1;
 		else
 			which--;
 	}
-	if ( column & 0x00008000 )
+	if ( column & 0x00800000 )
 	{
 		if ( which == 0 )
 			return 0;
@@ -66,28 +70,28 @@ int getColumn_XSQ(long column, char which)
 			which--;
 	}
 
-	if ( column & 0x00000100 )
+	if ( column & 0x00010000 )
 	{
 		if ( which == 0 )
 			return 7;
 		else
 			which--;
 	}
-	if ( column & 0x00000200 )
+	if ( column & 0x00020000 )
 	{
 		if ( which == 0 )
 			return 6;
 		else
 			which--;
 	}
-	if ( column & 0x00000400 )
+	if ( column & 0x00040000 )
 	{
 		if ( which == 0 )
 			return 5;
 		else
 			which--;
 	}
-	if ( column & 0x00000800 )
+	if ( column & 0x00080000 )
 	{
 		if ( which == 0 )
 			return 4;
@@ -129,26 +133,29 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 	char skip = 0;
 	long tempoMarkerThingy = 0;
 	long displayBPM = 0;
-	long gap = 0;
+	long gap = 0; // always!
 	long mp3length = 5000; // end when the charts ends, or this number, whichever comes first
 
 	fread_s(&songCode, sizeof(char)*8, sizeof(char), 8, fp);
 	fread_s(&tempoMarkerThingy, sizeof(long), sizeof(long), 1, fp);
 	fread_s(&displayBPM, sizeof(long), sizeof(long), 1, fp);
-	fread_s(&skip, sizeof(char), sizeof(char), 1, fp);
-	fread_s(&gap, sizeof(long), sizeof(long), 1, fp);
-	for ( int i = 0; i < 155; i++ )
-	{
-		fread_s(&skip, sizeof(char), sizeof(char), 1, fp);
-	}
-	fread_s(&mp3length, sizeof(long), sizeof(long), 1, fp);
-	for ( int i = 0; i < 25; i++ ) // also used in the past: 25, and 40
+	//fread_s(&skip, sizeof(char), sizeof(char), 1, fp);
+	//fread_s(&gap, sizeof(long), sizeof(long), 1, fp);
+	for ( int i = 0; i < 160; i++ )
 	{
 		fread_s(&skip, sizeof(char), sizeof(char), 1, fp);
 	}
 
-	//gap = 48;
-	//gap = 68;
+	//gap = 79; // Mad Blast
+	//gap = 140; // Mobo*Moga
+	//gap = 141; // Broken My Heart
+
+	// start with this
+	struct ARROW first;
+	first.timing = 0;
+	first.type = BPM_CHANGE;
+	first.color = displayBPM;
+	chart->push_back(first);
 
 	struct XSQ_RECORD temp;
 	int numLoops = 0; // for debugging
@@ -163,11 +170,15 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 			allegro_message("Potential problem with %s", filename);
 			break;
 		}
-		temp.timing += gap;
+		temp.timing += gap; // zero anyways
 
-		if ( temp.isFinalNote() )
+		// I don't understand this, but it is needed for some reason (remember, these are memory dumps)
+		if ( numLoops == 2 )
 		{
-			break; // happy ending
+			temp.word2 = temp.column;
+			temp.column = temp.word4;
+			temp.word4 = temp.word5;
+			fread_s(&temp.word5, sizeof(long), sizeof(long), 1, fp); // should still be zero anyways, like always
 		}
 
 		for ( int i = 0; i < 4; i++ )
@@ -176,10 +187,19 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 			if ( col != -1 ) 
 			{
 				struct ARROW a;
+
 				//a.timing = temp.timing * 60;
 				//a.timing = (temp.timing * 5600) / 100;
 				//a.timing = (temp.timing * 5580) / 100;
-				a.timing = temp.timing * 62;
+				//a.timing = temp.timing * 350 / 100; // seems to be off by +1 frame on each successive note
+				// NOTE: word2 is exactly 15.234121810393 times larger than 'timing' (word1)
+				//a.timing = temp.timing * 338688 / 100000;
+				uint64_t ms = temp.timing;
+				//ms = ms * 338688;
+				ms = ms * 333333;
+				ms = ms / 100000; // because this just barely overflows 32 bits, temporarily
+				a.timing = ms;
+
 				a.color = calculateArrowColor(a.timing, timePerBeat);
 				a.type = TAP;
 				a.columns[0] = col;
@@ -187,11 +207,16 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 				chart->push_back(a);
 			}
 		}
+
+		if ( temp.isFinalNote() )
+		{
+			break; // happy ending
+		}
 	}
 
 	// always put one of these in the chart
 	struct ARROW a;
-	a.timing = mp3length * 60;
+	a.timing = chart->at(chart->size() - 1).timing + 3000;
 	a.type = END_SONG;
 	chart->push_back(a);
 
