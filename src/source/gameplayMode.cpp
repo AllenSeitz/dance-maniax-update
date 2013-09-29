@@ -135,6 +135,10 @@ int checkForExtraStages();
 // precondition: the game is between stages, and at least gs.numStagesPerCredit have been cleared
 // postcondition: modifies the song choices and returns 0-2, the number of bonus songs awarded
 
+void generateTimingReport();
+// UNUSED: needed while I was trying to figure out how to sync xsq charts
+
+
 //////////////////////////////////////////////////////////////////////////////
 // function implementations
 //////////////////////////////////////////////////////////////////////////////
@@ -451,7 +455,7 @@ void doChartLogic(UTIME dt, int p)
 	// step through the chart until the next non-current note is found
 	while ( gs.player[p].currentChart.size() > 0 && gs.player[p].currentChart[n].timing < gs.player[p].timeElapsed )
 	{
-		al_trace("time elapsed is %d\r\n", gs.player[p].timeElapsed);
+		//al_trace("time elapsed is %d\r\n", gs.player[p].timeElapsed);
 		// mark notes as hit
 		if ( autoplay )
 		{
@@ -1035,6 +1039,12 @@ void loadNextSong()
 		p1maxscore = readDWI(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
 	}
 
+	// argh how does the timing on the zsq files work?
+	if ( isTestingChart )
+	{
+		generateTimingReport();
+	}
+
 	for ( int p = 0; p < (gs.isVersus ? 2 : 1); p++ )
 	{
 		gs.player[p].nextStage();
@@ -1198,4 +1208,27 @@ int checkForExtraStages()
 	}
 
 	return 0 + (awardedExtra) + (awardedEncore);
+}
+
+void generateTimingReport()
+{
+	std::vector<int> diffs;
+
+	if ( gs.player[0].currentChart.size() != gs.player[1].currentChart.size() )
+	{
+		al_trace("generateTimingReport() failed, charts are different: %d %d\r\n", gs.player[0].currentChart.size(), gs.player[1].currentChart.size());
+		return;
+	}
+
+	for ( unsigned int i = 0; i < gs.player[0].currentChart.size(); i++ )
+	{
+		int diff  = gs.player[0].currentChart[i].timing - gs.player[1].currentChart[i].timing;
+		diffs.push_back(diff);
+		if ( i > 0 )
+		{
+			al_trace("diff: %d (%d)\r\n", diff, diff - diffs[i-1]);
+		}
+	}
+
+	al_trace("Report complete. %d/%d\r\n", diffs[1], diffs[diffs.size()-2]);
 }
