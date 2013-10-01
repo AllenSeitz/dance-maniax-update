@@ -1006,43 +1006,41 @@ void loadNextSong()
 {
 	int p1maxscore = 0, p2maxscore = 0;
 
+	int (*readChart)(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds, int songID, int chartType) = &readDWI;
+	int (*readChart2P)(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds, int songID, int chartType) = &readDWI2P;
+	int (*readChartCenter)(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds, int songID, int chartType) = &readDWICenter;
+
+	// For original songs, use xsq files. Else use dwi files.
+	if ( gs.player[0].stagesPlayed[gs.currentStage] < 300 )
+	{
+		readChart = &readXSQ;
+		readChart2P = &readXSQ2P;
+		readChartCenter = &readXSQCenter;
+	}
+
 	if ( gs.isVersus )
 	{
-		if ( isTestingChart )
-		{
-			//p1maxscore = readDMXSQ(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
-			p1maxscore = readXSQ(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
-		}
-		else
-		{
-			p1maxscore = readDWI(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
-		}
-		p2maxscore = readDWI2P(&gs.player[1].currentChart, &gs.player[1].freezeArrows, gs.player[1].stagesPlayed[gs.currentStage], gs.player[1].stagesLevels[gs.currentStage]);
+		p1maxscore = readChart(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
+		p2maxscore = readChart2P(&gs.player[1].currentChart, &gs.player[1].freezeArrows, gs.player[1].stagesPlayed[gs.currentStage], gs.player[1].stagesLevels[gs.currentStage]);
 	}
 	else if ( gs.isSingles() )
 	{
 		if ( gs.player[0].centerLeft )
 		{
-			p1maxscore = readDWI(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
+			p1maxscore = readChart(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
 		}
 		else if ( gs.player[0].centerRight )
 		{
-			p1maxscore = readDWI2P(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
+			p1maxscore = readChart2P(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
 		}
 		else
 		{
-			p1maxscore = readDWICenter(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
+			p1maxscore = readChartCenter(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
 		}
 	}
 	else
 	{
-		p1maxscore = readDWI(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
-	}
-
-	// argh how does the timing on the zsq files work?
-	if ( isTestingChart )
-	{
-		generateTimingReport();
+		p1maxscore = readChart(&gs.player[0].currentChart, &gs.player[0].freezeArrows, gs.player[0].stagesPlayed[gs.currentStage], gs.player[0].stagesLevels[gs.currentStage]);
 	}
 
 	for ( int p = 0; p < (gs.isVersus ? 2 : 1); p++ )
