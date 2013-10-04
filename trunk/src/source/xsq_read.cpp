@@ -146,6 +146,11 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 		fread_s(&skip, sizeof(char), sizeof(char), 1, fp);
 	}
 
+	if ( strlen(songCode) > 4 )
+	{
+		fread_s(&skip, sizeof(char), sizeof(char), 1, fp); // songs with an extra letter move everything else one byte back ("boss2", "stay2", "cbos1")
+	}
+
 	//gap = 79; // Mad Blast
 	//gap = 140; // Mobo*Moga
 	//gap = 141; // Broken My Heart
