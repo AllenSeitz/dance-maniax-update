@@ -214,6 +214,22 @@ public:
 			}
 			return (reverseModifier & (1 << col)) > 0;
 		}
+
+		bool pickedAllFromVersion( int version )
+		{
+			for ( int i = 0; i < 7; i++ )
+			{
+				if ( stagesPlayed[i] <= 0 )
+				{
+					return true;
+				}
+				if ( stagesPlayed[i] % 100 != version )
+				{
+					return false;
+				}
+			}
+			return true;
+		}
 	};
 
 	// per-player data

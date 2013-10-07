@@ -1111,42 +1111,43 @@ int checkForExtraStages()
 	awardedExtra = gs.player[0].stagesPlayed[gs.numSongsPerSet] > 0; // extra stage was already awarded
 	awardedEncore = gs.player[0].stagesPlayed[gs.numSongsPerSet+1] > 0; // encore stage was already awarded
 
+	int sumP1 = 0, sumP2 = 0;
+	int levelP1 = 0, levelP2 = 0;
+	int songToPlay = 126;
+
+	// calculate total score and average difficulty level - this is needed in a few places
+	for ( int i = 0; i < gs.numSongsPerSet; i++ )
+	{
+		sumP1 += sm.player[0].currentSet[i].getScore();
+		sumP2 += sm.player[1].currentSet[i].getScore();
+		levelP1 += sm.player[0].currentSet[i].chartID;
+		levelP2 += sm.player[1].currentSet[i].chartID;
+	}
+	sumP1 /= gs.numSongsPerSet;
+	sumP2 /= gs.numSongsPerSet;
+	levelP1 /= gs.numSongsPerSet;
+	levelP2 /= gs.numSongsPerSet;
+	if ( levelP1 % SINGLE_ANOTHER == SINGLE_ANOTHER )
+	{
+		levelP1 -= 1;
+	}
+	if ( levelP2 % SINGLE_ANOTHER == SINGLE_ANOTHER )
+	{
+		levelP2 -= 1;
+	}
+
 	if ( !awardedExtra )
 	{
 		// basic extra stage: are your combined scores above 900,000 per stage?
-		int sumP1 = 0, sumP2 = 0;
-		int levelP1 = 0, levelP2 = 0;
-		for ( int i = 0; i < gs.numSongsPerSet; i++ )
-		{
-			sumP1 += sm.player[0].currentSet[i].getScore();
-			sumP2 += sm.player[1].currentSet[i].getScore();
-			levelP1 += sm.player[0].currentSet[i].chartID;
-			levelP2 += sm.player[1].currentSet[i].chartID;
-		}
-		sumP1 /= gs.numSongsPerSet;
-		sumP2 /= gs.numSongsPerSet;
-		levelP1 /= gs.numSongsPerSet;
-		levelP2 /= gs.numSongsPerSet;
-		if ( levelP1 % SINGLE_ANOTHER == SINGLE_ANOTHER )
-		{
-			levelP1 -= 1;
-		}
-		if ( levelP2 % SINGLE_ANOTHER == SINGLE_ANOTHER )
-		{
-			levelP2 -= 1;
-		}
-
-		// check for (126) "Jet World + Drop Out + Paranoia Max type 2" -OR- (303) POSSESSION if versus
 		if ( sumP1 >= 900000 || sumP2 >= 900000 )
 		{
 			awardedExtra = true;
 
-			// automatically set up for song 126 - Nonstop Megamix 1
-			int songToPlay = 126;
+			/* old logic - use the number of full combos to pick a stage
+			//int numFullComboP1 = sm.player[0].getNumStars(levelP1, STATUS_FULLCOMBO);
+			//int numFullComboP2 = sm.player[1].getNumStars(levelP2, STATUS_FULLCOMBO);
 
-			int numFullComboP1 = sm.player[0].getNumStars(levelP1, STATUS_FULLCOMBO);
-			int numFullComboP2 = sm.player[1].getNumStars(levelP2, STATUS_FULLCOMBO);
-
+			// check for (126) "Jet World + Drop Out + Paranoia Max type 2" -OR- (303) POSSESSION if versus
 			if ( (numFullComboP1 >= 15 && sm.player[0].getStatusOnSong(303, levelP1) >= STATUS_FULLCOMBO) || (numFullComboP2 >= 15 && sm.player[1].getStatusOnSong(303, levelP2) >= STATUS_FULLCOMBO) )
 			{
 				songToPlay = 324;
@@ -1158,6 +1159,55 @@ int checkForExtraStages()
 			else if ( (numFullComboP1 >= 5 && sm.player[0].getStatusOnSong(126, levelP1) >= STATUS_FULLCOMBO) || (numFullComboP2 >= 5 && sm.player[1].getStatusOnSong(126, levelP2) >= STATUS_FULLCOMBO) )
 			{
 				songToPlay = 303;
+			}
+			*/
+
+			// check for a full combo with miss count == 0
+			int numMissesP1 = 0;
+			int numMissesP2 = 0;
+			for ( int i = 0; i < 5; i++ )
+			{
+				numMissesP1 += sm.player[0].currentSet[i].misses;
+				numMissesP2 += sm.player[1].currentSet[i].misses;
+			}
+
+			// give them a random edit if they full comboed their set
+			if ( numMissesP1 == 0 || ( gs.isVersus && numMissesP2 == 0 ) )
+			{
+				songToPlay = pickRandomInt(6, 145, 146, 147, 148, 149, 150);
+
+				// try in an intentionally half-hearted way to give them one that they 'need'
+				for ( int i = 0; i < 3; i++ )
+				{
+					bool isdone = sm.player[0].allTime[songID_to_listID(songToPlay)][levelP1].unlockStatus > 0 || (gs.isVersus && sm.player[1].allTime[songID_to_listID(songToPlay)][levelP2].unlockStatus);
+					if ( sm.player[0].getStatusOnSong(songToPlay, levelP1) < STATUS_FULLCOMBO || (gs.isVersus && sm.player[1].getStatusOnSong(songToPlay, levelP2) < STATUS_FULLCOMBO) )
+					{
+						break; // keep this one
+					}
+					songToPlay = pickRandomInt(6, 145, 146, 147, 148, 149, 150);
+				}
+			}
+			// give them megamix 1 for sure if they picked 3 first mix songs
+			else if ( gs.player[0].pickedAllFromVersion(1) || (gs.isVersus && gs.player[1].pickedAllFromVersion(1)) )
+			{
+				songToPlay = 126;
+			}
+			// give them megamix 2 for sure if they picked 3 second mix or append songs
+			else if ( gs.player[0].pickedAllFromVersion(2) || (gs.isVersus && gs.player[1].pickedAllFromVersion(2)) )
+			{
+				songToPlay = 230;
+			}
+			// otherwise use the extra rush list to pick an appropriate song
+			else
+			{
+				if ( sumP1 >= 950000 || sumP2 >= 950000 )
+				{
+					songToPlay = pickRandomInt(6, 145, 146, 147, 148, 149, 150); // gppd job! have one anyway
+				}
+				else
+				{
+					songToPlay = pickRandomInt(2, 126, 230); // meh
+				}
 			}
 
 			// make it happen
@@ -1172,16 +1222,38 @@ int checkForExtraStages()
 				gs.player[1].useBattery = true;
 				gs.player[1].lifebarLives = 4;
 			}
+			
+			em.announcerQuip( GUY_EARN_EXTRA );
+		}
+	}
+	else if ( !awardedEncore )
+	{
+		/*
+		// count the number of full combos
+		int numFullComboP1 = sm.player[0].getNumStars(levelP1, STATUS_FULLCOMBO);
+		int numFullComboP2 = sm.player[1].getNumStars(levelP2, STATUS_FULLCOMBO);
 
-			if ( songToPlay != 126 )
+		// count the number of EXTRA STAGE full combos
+		static int extraStages[8] = { 126, 230, 245, 246, 247, 248, 249, 250 };
+		int numSpecialP1 = 0;
+		int numSpecialP2 = 0;
+		for ( int i = 0; i < 8; i++ )
+		{
+			if ( sm.player[0].getStatusOnSong(extraStages[i], levelP1) >= STATUS_FULLCOMBO )
 			{
-				em.announcerQuip(GUY_EARN_SPECIAL_EXTRA);
+				numSpecialP1++;
 			}
-			else
+			if ( sm.player[1].getStatusOnSong(extraStages[i], levelP2) >= STATUS_FULLCOMBO )
 			{
-				em.announcerQuip(GUY_EARN_EXTRA);
+				numSpecialP2++;
 			}
 		}
+
+		if ( )
+		{
+			em.announcerQuip( GUY_EARN_SPECIAL_EXTRA );
+		}
+		*/
 	}
 
 	// check for permanently unlocking an extra stage by scoring 90% while on the extra stage
