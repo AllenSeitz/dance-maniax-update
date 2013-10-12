@@ -1105,17 +1105,14 @@ void arrangeChart(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *
 
 int checkForExtraStages()
 {
-	bool awardedExtra = false;
-	bool awardedEncore = false;
-
-	awardedExtra = gs.player[0].stagesPlayed[gs.numSongsPerSet] > 0; // extra stage was already awarded
-	awardedEncore = gs.player[0].stagesPlayed[gs.numSongsPerSet+1] > 0; // encore stage was already awarded
+	bool awardedExtra = gs.player[0].stagesPlayed[gs.numSongsPerSet] > 0; // extra stage was already awarded
+	bool awardedEncore = gs.player[0].stagesPlayed[gs.numSongsPerSet+1] > 0; // encore stage was already awarded
 
 	int sumP1 = 0, sumP2 = 0;
 	int levelP1 = 0, levelP2 = 0;
 	int songToPlay = 126;
 
-	// calculate total score and average difficulty level - this is needed in a few places
+	// calculate total score and average difficulty level
 	for ( int i = 0; i < gs.numSongsPerSet; i++ )
 	{
 		sumP1 += sm.player[0].currentSet[i].getScore();
@@ -1174,7 +1171,7 @@ int checkForExtraStages()
 			// give them a random edit if they full comboed their set
 			if ( numMissesP1 == 0 || ( gs.isVersus && numMissesP2 == 0 ) )
 			{
-				songToPlay = pickRandomInt(6, 145, 146, 147, 148, 149, 150);
+				songToPlay = pickRandomInt(6, 245, 246, 247, 248, 249, 250);
 
 				// try in an intentionally half-hearted way to give them one that they 'need'
 				for ( int i = 0; i < 3; i++ )
@@ -1184,7 +1181,7 @@ int checkForExtraStages()
 					{
 						break; // keep this one
 					}
-					songToPlay = pickRandomInt(6, 145, 146, 147, 148, 149, 150);
+					songToPlay = pickRandomInt(6, 245, 246, 247, 248, 249, 250);
 				}
 			}
 			// give them megamix 1 for sure if they picked 3 first mix songs
