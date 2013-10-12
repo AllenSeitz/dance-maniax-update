@@ -146,11 +146,7 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 		fread_s(&skip, sizeof(char), sizeof(char), 1, fp);
 	}
 
-	if ( strlen(songCode) > 4 )
-	{
-		fread_s(&skip, sizeof(char), sizeof(char), 1, fp); // songs with an extra letter move everything else one byte back ("boss2", "stay2", "cbos1")
-	}
-
+	// synch ith OST mp3s lol
 	//gap = 79; // Mad Blast
 	//gap = 140; // Mobo*Moga
 	//gap = 141; // Broken My Heart
@@ -184,6 +180,12 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 			temp.column = temp.word4;
 			temp.word4 = temp.word5;
 			fread_s(&temp.word5, sizeof(long), sizeof(long), 1, fp); // should still be zero anyways, like always
+			
+			// this is extra weird, but then again the song code is one byte longer?
+			if ( strlen(songCode) > 4 )
+			{
+				fread_s(&skip, sizeof(char), sizeof(char), 1, fp); // songs with an extra letter move everything else one byte back ("boss2", "stay2", "cbos1")
+			}
 		}
 
 		for ( int i = 0; i < 4; i++ )
