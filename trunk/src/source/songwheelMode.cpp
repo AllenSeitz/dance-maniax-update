@@ -689,7 +689,10 @@ void mainSongwheelLoop(UTIME dt)
 		stop_sample(currentPreview);
 	}
 
-	renderSongwheelLoop();
+	if ( gs.g_currentGameMode == SONGWHEEL )
+	{
+		renderSongwheelLoop();
+	}
 }
 
 void renderSongwheelLoop()
