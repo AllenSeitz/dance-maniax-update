@@ -5,7 +5,7 @@ DMXDB,Sept 30th 2013,110,1,,,,,,,,,,,,,
 104,Ain't It Good,Tomoki Hirata,134,134,DATA/mov/aint.seq,4,0,6,0,6,0,6,0,1,0,0
 105,All Night |(Original Mix),Tomoki Hirata,134,134,DATA/mov/alln.seq,2,0,5,0,6,0,7,0,1,0,0
 106,Body |(I.C.B. Club Vocal Mix),Tomoki Hirata,134,134,DATA/mov/body.seq,4,0,5,0,4,0,5,0,1,0,0
-107,Dr.Love,Asuka M.,123,123,DATA/mov/drlo.seq,3,0,7,0,4,0,5,0,1,0,0
+107,Dr.Love,Asuka M.,123,123,DATA/mov/drlo.seq,3,0,7,0,4,0,5,0,1,9,0
 108,KEEP ON MOVIN' |(DMX MIX),N.M.R-typeG,131,131,DATA/mov/keep.seq,2,0,6,0,4,0,5,0,1,0,0
 109,ALL MY LOVE,Tomosuke * SABRINA,132,132,DATA/mov/disc.seq,3,0,8,0,4,0,6,0,1,0,0
 110,Heaven is a '57 metallic gray,Hiro feat.Sweet little 30's,95,190,DATA/mov/heav.seq,5,0,8,0,5,0,6,0,1,0,0
@@ -19,11 +19,11 @@ DMXDB,Sept 30th 2013,110,1,,,,,,,,,,,,,
 118,LET'S GET DOWN |(MO-FUNK MIX),JT PLAYAZ,145,145,DATA/mov/lets.seq,5,0,7,0,5,0,6,0,1,0,0
 119,IT'S A PARTY,BASTAMIKE & RASHAD,145,145,DATA/mov/itsa.seq,5,0,7,0,5,0,7,0,1,0,0
 120,TOGETHER FOREVER,CYDNEY D,134,134,DATA/mov/toge.seq,3,0,5,0,5,0,7,0,1,0,0
-121,jane jana,T.E.M.P.O. feat. Mohammad & Emi,125,125,DATA/mov/indi.seq,3,0,6,0,5,0,6,0,1,0,0
+121,jane jana,T.E.M.P.O. feat. Mohammad & Emi,125,125,DATA/mov/indi.seq,3,0,6,0,5,0,6,0,1,9,0
 122,GET IT ALL,BRASS TRICKS,139,139,DATA/mov/horn.seq,6,0,8,0,6,0,7,0,1,0,0
 123,BAILA! BAILA!,DANDY MINEIRO,129,129,DATA/mov/bail.seq,5,0,7,0,6,0,7,0,1,0,0
 124,Mobo*Moga,Orange Lounge,172,172,DATA/mov/mobo.seq,4,0,6,0,6,0,6,0,1,0,0
-125,MAD BLAST,THE INFECTION,180,180,DATA/mov/punk.seq,6,0,8,0,7,0,8,0,1,0,0
+125,MAD BLAST,THE INFECTION,180,180,DATA/mov/punk.seq,6,0,8,0,7,0,8,0,1,9,0
 126,Non Stop Mix Special 1,Non Stop Mix Special,130,220,DATA/mov/boss.seq,6,284,8,420,6,235,8,372,1,1,0
 127,Man and Woman,Cool,0,0,no,1,0,1,0,1,0,1,0,0,0,0
 128,First Love,CLON,0,0,no,1,0,1,0,1,0,1,0,0,0,0
@@ -62,7 +62,7 @@ DMXDB,Sept 30th 2013,110,1,,,,,,,,,,,,,
 227,I WILL FOLLOW HIM,TAEKO + THE V.O.W.,148,148,DATA/mov/iwil.seq,2,0,5,0,3,0,5,0,3,0,0
 228,FUNKY MODELLING,SPAKER,148,148,DATA/mov/funk.seq,5,0,8,0,6,0,8,0,3,0,0
 229,Paranoia |~jazzy groove~,200-10,0,0,DATA/mov/boss2.seq,0,0,0,0,0,0,0,0,0,0,0
-230,Non Stop Mix Special 2,Non Stop Mix Special,999,999,DATA/mov/boss2.seq,6,0,9,0,7,0,9,0,3,1,0
+230,Non Stop Mix Special 2,Non Stop Mix Special,180,180,DATA/mov/boss2.seq,6,0,9,0,7,0,9,0,3,1,0
 231,ABSOLUTE,dj TAKA,140,140,DATA/mov/abso.seq,3,0,8,0,4,0,8,0,4,0,0
 232,B4U,NAOKI,155,155,DATA/mov/bfor.seq,6,0,8,0,6,0,7,0,4,0,0
 233,DXY!,TaQ,148,148,DATA/mov/dxye.seq,6,0,7,0,5,0,7,0,4,0,0
@@ -77,12 +77,12 @@ DMXDB,Sept 30th 2013,110,1,,,,,,,,,,,,,
 242,Junanasai,BAMBEE,140,140,DATA/mov/juna.seq,4,0,7,0,5,0,7,0,4,0,0
 243,BE TOGETHER,NI-NI,140,140,DATA/mov/beto.seq,3,0,5,0,4,0,6,0,4,0,0
 244,THE TWIST |(Double Pump MIX),LIBERTY ALL STAZ,156,156,DATA/mov/thet.seq,4,0,8,0,6,0,7,0,4,0,0
-245,Non Stop Special 2 |(ny edit),Non Stop Mix Special,0,0,DATA/mov/boss2.seq,1,0,1,0,1,0,1,0,4,1,0
-246,Non Stop Special 2 |(os edit),Non Stop Mix Special,0,0,DATA/mov/boss2.seq,1,0,1,0,1,0,1,0,4,1,0
-247,Non Stop Special 2 |(ss edit),Non Stop Mix Special,0,0,DATA/mov/boss2.seq,1,0,1,0,1,0,1,0,4,1,0
-248,Non Stop Special 2 |(sy edit),Non Stop Mix Special,0,0,DATA/mov/boss2.seq,1,0,1,0,1,0,1,0,4,1,0
-249,Non Stop Special 2 |(tt edit),Non Stop Mix Special,0,0,DATA/mov/boss2.seq,1,0,1,0,1,0,1,0,4,1,0
-250,Non Stop Special 2 |(yh edit),Non Stop Mix Special,0,0,DATA/mov/boss2.seq,1,0,1,0,1,0,1,0,4,1,0
+245,Non Stop Special 2 |(ny edit),Non Stop Mix Special,180,180,DATA/mov/boss2.seq,5,0,9,0,5,0,9,0,4,1,0
+246,Non Stop Special 2 |(os edit),Non Stop Mix Special,180,180,DATA/mov/boss2.seq,5,0,9,0,5,0,9,0,4,1,0
+247,Non Stop Special 2 |(ss edit),Non Stop Mix Special,180,180,DATA/mov/boss2.seq,5,0,9,0,5,0,9,0,4,1,0
+248,Non Stop Special 2 |(sy edit),Non Stop Mix Special,180,180,DATA/mov/boss2.seq,5,0,9,0,5,0,9,0,4,1,0
+249,Non Stop Special 2 |(tt edit),Non Stop Mix Special,180,180,DATA/mov/boss2.seq,5,0,9,0,5,0,9,0,4,1,0
+250,Non Stop Special 2 |(yh edit),Non Stop Mix Special,180,180,DATA/mov/boss2.seq,5,0,9,0,5,0,9,0,4,1,0
 301,Wuv U,kors k,173,173,DATA/mov/wuvu.seq,3,199,6,272,3,202,6,260,5,0,0
 302,Daisuke,Y&Co,157,157,DATA/mov/dais.seq,4,275,6,284,5,290,7,292,5,0,0
 303,POSSESSION,TAG,185,370,DATA/mov/poss.seq,6,351,9,491,4,252,8,419,5,1,0
