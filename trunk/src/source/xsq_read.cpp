@@ -134,7 +134,6 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 	long tempoMarkerThingy = 0;
 	long displayBPM = 0;
 	long gap = 0; // always!
-	long mp3length = 5000; // end when the charts ends, or this number, whichever comes first
 
 	fread_s(&songCode, sizeof(char)*8, sizeof(char), 8, fp);
 	fread_s(&tempoMarkerThingy, sizeof(long), sizeof(long), 1, fp);
@@ -146,11 +145,6 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 		fread_s(&skip, sizeof(char), sizeof(char), 1, fp);
 	}
 
-	// synch ith OST mp3s lol
-	//gap = 79; // Mad Blast
-	//gap = 140; // Mobo*Moga
-	//gap = 141; // Broken My Heart
-
 	// start with this
 	struct ARROW first;
 	first.timing = 0;
@@ -159,8 +153,8 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 	chart->push_back(first);
 
 	struct XSQ_RECORD temp;
-	int numLoops = 0; // for debugging
-	int timePerBeat = 400; // unused anyway, but in the future when I know the bpm, could be used
+	int numLoops = 0; // for an odd special case
+	int timePerBeat = BPM_TO_MSEC(displayBPM); // used to calculate the arrow color, even though DMX is flat
 
 	while ( 1 )
 	{
@@ -176,16 +170,35 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 		// I don't understand this, but it is needed for some reason (remember, these are memory dumps)
 		if ( numLoops == 2 )
 		{
-			temp.word2 = temp.column;
-			temp.column = temp.word4;
-			temp.word4 = temp.word5;
-			fread_s(&temp.word5, sizeof(long), sizeof(long), 1, fp); // should still be zero anyways, like always
-			
-			// this is extra weird, but then again the song code is one byte longer?
-			if ( strlen(songCode) > 4 )
+			if ( strlen(songCode) <= 4 )
 			{
-				fread_s(&skip, sizeof(char), sizeof(char), 1, fp); // songs with an extra letter move everything else one byte back ("boss2", "stay2", "cbos1")
+				temp.word2 = temp.column;
+				temp.column = temp.word4;
+				temp.word4 = temp.word5;
+				fread_s(&temp.word5, sizeof(long), sizeof(long), 1, fp); // should still be zero anyways, like always			
 			}
+			else
+			{
+				// this extra byte in between timing and word2 is extra weird, but then again the song code here ('boss2', 'stay2', 'cbos0') is one byte longer?
+				temp.word2 = 0;                // unused
+				temp.column = temp.word4 >> 8; // it never matters to worry about the 'carry'
+				temp.word4 = 0xFFFF0000;       // unused
+				temp.word5 = 0;                // unused
+				fread_s(&skip, sizeof(char), sizeof(char), 1, fp);       // songs with an extra letter move everything else one byte back ("boss2", "stay2", "cbos1")
+				fread_s(&temp.word5, sizeof(long), sizeof(long), 1, fp); // should still be zero anyways, like always			
+			}
+		}
+
+		al_trace("%d, %d, %d, %d, %d\r\n", temp.timing, temp.word2, temp.column, temp.word4, temp.word5);
+
+		int experimental = (temp.column & 0x000000FF) << 24;
+		if ( experimental != 0 )
+		{
+			al_trace("Found something: %d\n", experimental);
+		}
+		if ( temp.word5 != 0 )
+		{
+			al_trace("What is this? %d\n", temp.word5);
 		}
 
 		for ( int i = 0; i < 4; i++ )
@@ -196,15 +209,13 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 				struct ARROW a;
 
 				//a.timing = temp.timing * 60;
-				//a.timing = (temp.timing * 5600) / 100;
-				//a.timing = (temp.timing * 5580) / 100;
 				//a.timing = temp.timing * 350 / 100; // seems to be off by +1 frame on each successive note
 				// NOTE: word2 is exactly 15.234121810393 times larger than 'timing' (word1)
 				//a.timing = temp.timing * 338688 / 100000;
-				uint64_t ms = temp.timing;
-				//ms = ms * 338688;
+
+				uint64_t ms = temp.timing; // because this next operation just barely overflows 32 bits, temporarily
 				ms = ms * 333333;
-				ms = ms / 100000; // because this just barely overflows 32 bits, temporarily
+				ms = ms / 100000; // charts are at 18fps, so multiplly by 3.333333
 				a.timing = ms;
 
 				a.color = calculateArrowColor(a.timing, timePerBeat);
