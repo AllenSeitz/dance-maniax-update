@@ -254,6 +254,7 @@ void firstSongwheelLoop()
 	introAnimTimer = INTRO_ANIM_LENGTH;
 	introAnimSteps = 3;
 	isRandomSelect = false;
+	nextStageAnimTimer = 0;
 
 	// figure out how many songs are visible on the songwheel
 	maxSongwheelIndex = 0;
