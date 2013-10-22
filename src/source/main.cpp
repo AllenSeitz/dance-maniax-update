@@ -1147,6 +1147,19 @@ int loadSongDB()
 		{
 			NUM_COURSES++;
 		}
+
+		// do some datamining? sure whatev's
+		/*
+		#include "xsq_read.h"
+		if ( version > 0 && version < 5 )
+		{
+			smnotes = readXSQ(&gs.player[0].currentChart, &gs.player[0].freezeArrows, id, SINGLE_MILD)/2;
+			swnotes = readXSQ(&gs.player[0].currentChart, &gs.player[0].freezeArrows, id, SINGLE_WILD)/2;
+			dmnotes = readXSQ(&gs.player[0].currentChart, &gs.player[0].freezeArrows, id, DOUBLE_MILD)/2;
+			dwnotes = readXSQ(&gs.player[0].currentChart, &gs.player[0].freezeArrows, id, DOUBLE_WILD)/2;
+			al_trace("%d, %d, %d, %d, %d, %d, %d, %d, %d\r\n", id, sm, smnotes, sw, swnotes, dm, dmnotes, dw, dwnotes);
+		}
+		*/
 	}
 
 	fclose(fp);
