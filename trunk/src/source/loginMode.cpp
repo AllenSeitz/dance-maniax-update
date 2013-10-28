@@ -255,6 +255,16 @@ void mainLoginLoop(UTIME dt)
 		{
 			if ( isUse[side] && !isDone[side] )
 			{
+				if ( isLeftPress[side] && isRightPress[side] && isStartPress[side] )
+				{
+					// clear out the name for this player
+					for ( int c = 0; c < 8; c++ )
+					{
+						tempNames[side][c] = 0;						
+					}
+					continue;
+				}
+
 				if ( isLeftPress[side] )
 				{
 					if ( isRightHeld[side] )
@@ -927,6 +937,12 @@ void enterLetter(int player)
 	{
 		tempNames[player][i] = letter; // the check for END is done before enterLetter() is called
 		em.playSample(SFX_MENU_PICK2);
+
+		// max length name now? force the cursor to the END position
+		if ( i == 7 )
+		{
+			cursorPos[player] = END_NAME;
+		}
 	}
 }
 
