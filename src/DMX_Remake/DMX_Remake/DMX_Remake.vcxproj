@@ -80,6 +80,7 @@
     <ClInclude Include="..\..\headers\gameplayRendering.h" />
     <ClInclude Include="..\..\headers\gameStateManager.h" />
     <ClInclude Include="..\..\headers\inputManager.h" />
+    <ClInclude Include="..\..\headers\lightsManager.h" />
     <ClInclude Include="..\..\headers\particleSprites.h" />
     <ClInclude Include="..\..\headers\scoreManager.h" />
     <ClInclude Include="..\..\headers\songwheelMode.h" />
@@ -97,6 +98,7 @@
     <ClCompile Include="..\..\source\gameplayMode.cpp" />
     <ClCompile Include="..\..\source\gameplayRendering.cpp" />
     <ClCompile Include="..\..\source\inputManager.cpp" />
+    <ClCompile Include="..\..\source\lightsManager.cpp" />
     <ClCompile Include="..\..\source\loginMode.cpp" />
     <ClCompile Include="..\..\source\main.cpp" />
     <ClCompile Include="..\..\source\menuMode.cpp" />
