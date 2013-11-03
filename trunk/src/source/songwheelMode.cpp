@@ -1158,17 +1158,26 @@ void renderLoginStats(int x, int side)
 
 	int allTimeIndex = songID_to_listID(songlist[songwheelIndex].songID);
 	int whichFrame = displayBPMTimer > 1000 ? (displayBPMTimer-1000)/125 : 0;
-	int mildColor = 6, wildColor = 6;
+	int mildColor = 6, wildColor = 6; // intentionally transparent
 
 	if ( sm.player[side].allTime[allTimeIndex][mildIndex].getFullComboType() != 0 )
 	{
-		mildColor = sm.player[side].allTime[allTimeIndex][mildIndex].getFullComboType() + 1;
+		mildColor = sm.player[side].allTime[allTimeIndex][mildIndex].getFullComboType() - 1;
+		if ( mildColor == 2 )
+		{
+			mildColor = displayBPMState == -1 ? 3 : 4; // pick a gold star, and use the alternate 'grow' animation every other pass
+		}
 	}
 	if ( sm.player[side].allTime[allTimeIndex][wildIndex].getFullComboType() != 0 )
 	{
-		wildColor = sm.player[side].allTime[allTimeIndex][wildIndex].getFullComboType() + 1;
+		wildColor = sm.player[side].allTime[allTimeIndex][wildIndex].getFullComboType() - 1;
+		if ( wildColor == 2 )
+		{
+			wildColor = displayBPMState == -1 ? 3 : 4; // pick a gold star, and use the alternate 'grow' animation every other pass
+		}
 	}
 
+	// render MILD
 	_itoa_s(sm.player[side].allTime[allTimeIndex][mildIndex].getScore(), buffer, 9, 10);
 	addLeadingZeros(buffer, 7);
 	renderBoldString((unsigned char *)buffer, x+5, 440, 320, false, 1);
@@ -1179,6 +1188,7 @@ void renderLoginStats(int x, int side)
 	}
 	masked_blit(m_statusStars, rm.m_backbuf, whichFrame * 40, mildColor * 32, x+105+20, 433, 40, 32);
 
+	// render WILD
 	_itoa_s(sm.player[side].allTime[allTimeIndex][wildIndex].getScore(), buffer, 9, 10);
 	addLeadingZeros(buffer, 7);
 	renderBoldString((unsigned char *)buffer, x+165, 440, 320, false, 2);
