@@ -63,7 +63,7 @@ DMXDB,Sept 30th 2013,111,1,,,,,,,,,,,,,
 227,I WILL FOLLOW HIM,TAEKO + THE V.O.W.,148,148,DATA/mov/iwil.seq,2,142,5,230,3,161,5,240,3,0,0
 228,FUNKY MODELLING,SPAKER,148,148,DATA/mov/funk.seq,5,240,8,334,6,240,8,311,3,0,0
 229,Paranoia |~jazzy groove~,200-10,0,0,DATA/mov/boss2.seq,0,0,0,0,0,0,0,0,0,0,0
-230,Non Stop Mix Special 2,Non Stop Mix Special,180,180,DATA/mov/boss2.seq,6,400,9,475,7,383,9,484,3,1,0
+230,Non Stop Mix Special 2,Non Stop Mix Special,180,190,DATA/mov/boss2.seq,6,400,9,475,7,383,9,484,3,1,0
 231,ABSOLUTE,dj TAKA,140,140,DATA/mov/abso.seq,3,178,8,366,4,220,8,375,4,0,0
 232,B4U,NAOKI,155,155,DATA/mov/bfor.seq,6,261,8,381,6,260,7,342,4,0,0
 233,DXY!,TaQ,148,148,DATA/mov/dxye.seq,6,343,7,392,5,299,7,356,4,0,0
@@ -78,12 +78,12 @@ DMXDB,Sept 30th 2013,111,1,,,,,,,,,,,,,
 242,Junanasai,BAMBEE,140,140,DATA/mov/juna.seq,4,202,7,276,5,208,7,287,4,0,0
 243,BE TOGETHER,NI-NI,140,140,DATA/mov/beto.seq,3,136,5,226,4,130,6,244,4,0,0
 244,THE TWIST |(Double Pump MIX),LIBERTY ALL STAZ,156,156,DATA/mov/thet.seq,4,227,8,323,6,272,7,363,4,0,0
-245,Non Stop Special 2 |(ny edit),Non Stop Mix Special,180,180,DATA/mov/boss2.seq,5,399,9,437,5,351,9,447,4,1,0
-246,Non Stop Special 2 |(os edit),Non Stop Mix Special,180,180,DATA/mov/boss2.seq,5,419,9,511,5,345,9,405,4,1,0
-247,Non Stop Special 2 |(ss edit),Non Stop Mix Special,180,180,DATA/mov/boss2.seq,5,331,9,525,5,329,9,479,4,1,0
-248,Non Stop Special 2 |(sy edit),Non Stop Mix Special,180,180,DATA/mov/boss2.seq,5,364,9,504,5,352,9,532,4,1,0
-249,Non Stop Special 2 |(tt edit),Non Stop Mix Special,180,180,DATA/mov/boss2.seq,5,366,9,438,5,390,9,437,4,1,0
-250,Non Stop Special 2 |(yh edit),Non Stop Mix Special,180,180,DATA/mov/boss2.seq,5,322,9,523,5,365,9,501,4,1,0
+245,Non Stop Special 2 |(ny edit),Non Stop Mix Special,180,190,DATA/mov/boss2.seq,5,399,9,437,5,351,9,447,4,1,0
+246,Non Stop Special 2 |(os edit),Non Stop Mix Special,180,190,DATA/mov/boss2.seq,5,419,9,511,5,345,9,405,4,1,0
+247,Non Stop Special 2 |(ss edit),Non Stop Mix Special,180,190,DATA/mov/boss2.seq,5,331,9,525,5,329,9,479,4,1,0
+248,Non Stop Special 2 |(sy edit),Non Stop Mix Special,180,190,DATA/mov/boss2.seq,5,364,9,504,5,352,9,532,4,1,0
+249,Non Stop Special 2 |(tt edit),Non Stop Mix Special,180,190,DATA/mov/boss2.seq,5,366,9,438,5,390,9,437,4,1,0
+250,Non Stop Special 2 |(yh edit),Non Stop Mix Special,180,190,DATA/mov/boss2.seq,5,322,9,523,5,365,9,501,4,1,0
 301,Wuv U,kors k,173,173,DATA/mov/wuvu.seq,3,199,6,272,3,202,6,260,5,0,0
 302,Daisuke,Y&Co,157,157,DATA/mov/dais.seq,4,275,6,284,5,290,7,292,5,0,0
 303,POSSESSION,TAG,185,370,DATA/mov/poss.seq,6,351,9,491,4,252,8,419,5,1,0
@@ -94,7 +94,7 @@ DMXDB,Sept 30th 2013,111,1,,,,,,,,,,,,,
 308,SHION,DJ YOSHITAKA,179,179,DATA/mov/hotl.seq,1,0,2,0,1,0,2,0,0,0,0
 309,Love Ç Shine |(Body Grooverz Mix),W.W.S,177,177,DATA/mov/llsb.seq,3,206,7,331,3,218,7,329,5,0,0
 310,Caramelldansen |(Speedycake Remix),Caramell,164,164,DATA/mov/wond.seq,3,216,6,284,3,226,7,421,5,0,1
-311,south,Wall5,140,140,DATA/mov/alln.seq,3,189,7,334,2,187,6,320,5,0,1
+311,south,Wall5,140,140,DATA/mov/alln.seq,3,189,7,323,2,187,6,320,5,0,1
 312,Unbelievable |(Sparky Remix),jun feat. Sarah-Jane,87,185,DATA/mov/llsb.seq,4,240,8,417,5,235,9,421,5,0,0
 313,qwerty,qwerty,0,0,no,0,0,0,0,0,0,0,0,0,0,0
 314,qwerty,qwerty,0,0,no,0,0,0,0,0,0,0,0,0,0,0
