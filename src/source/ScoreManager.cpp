@@ -75,9 +75,16 @@ bool ScoreManager::loadPlayerFromDisk(char* name, char side)
 	}
 
 	vnum = checkFileVersion(fp, "DMXs");
-	if ( vnum != CURRENT_VERSION_NUMBER )
+	if ( vnum != CURRENT_SCORE_VERSION_NUMBER )
 	{
-		globalError(PLAYER_SCORES_LOST, scoreFilename);
+		if ( vnum == 1 )
+		{
+			return loadPlayerFromDisk_v1(fp, side);
+		}
+		else
+		{
+			globalError(PLAYER_SCORES_LOST, scoreFilename);
+		}
 	}
 
 	for ( int i = 0; i < NUM_SONGS; i++ ) // loop through each song
@@ -112,6 +119,62 @@ bool ScoreManager::loadPlayerFromDisk(char* name, char side)
 		else
 		{
 			TRACE("Unable to use high score for song %d chart %d.", temp.songID, temp.chartID);
+		}
+	}
+
+	fclose(fp);
+	return true;
+}
+
+bool ScoreManager::loadPlayerFromDisk_v1(FILE* fp, char side)
+{
+	struct PLAYER_DATA& p = side == 0 ? player[0] : player[1];
+
+	for ( int i = 0; i < NUM_SONGS; i++ ) // loop through each song
+	for ( int j = 0; j < 6; j++ )         // loop through each chart
+	{
+		SONG_RECORD temp;
+		if ( fread(&temp.songID, sizeof(int), 1, fp) == 0 || fread(&temp.chartID, sizeof(int), 1, fp) == 0 )
+		{
+			i = NUM_SONGS; // file ended short. use the default blank scores for any new songs added to the DB
+			j = 6;
+			break;
+		}
+		fread(&temp.grade, sizeof(char), 1, fp);
+		fread(&temp.status, sizeof(char), 1, fp);
+		fread(&temp.time, sizeof(long), 1, fp);
+		fread(&temp.maxCombo, sizeof(int), 1, fp);
+		fread(&temp.points, sizeof(int), 1, fp);
+		fread(&temp.maxPoints, sizeof(int), 1, fp);
+		fread(&temp.perfects, sizeof(int), 1, fp);
+		fread(&temp.greats, sizeof(int), 1, fp);
+		fread(&temp.goods, sizeof(int), 1, fp);
+		fread(&temp.misses, sizeof(int), 1, fp);
+		fread(&temp.unlockStatus, sizeof(char), 1, fp);
+
+		int songIndex = songID_to_listID(temp.songID);
+		int chartIndex = getChartIndexFromType(temp.chartID);
+
+		if ( songIndex >= 0 && chartIndex >= 0 ) // otherwise would indicate a song which was cut
+		{
+			// all that changed between v1 and v2 was that I changed the full combo status to be more specific
+			if ( temp.status == 4 ) // OLD STATUS_PERFECT
+			{
+				temp.status = STATUS_FULL_PERFECT_COMBO;
+			}
+			else if ( temp.status == 3 ) // OLD STATUS_FULL_COMBO
+			{
+				if ( temp.goods == 0 )
+				{
+					temp.status = STATUS_FULL_GREAT_COMBO;
+				}
+				else
+				{
+					temp.status = STATUS_FULL_GOOD_COMBO;
+				}
+			}
+
+			p.allTime[songIndex][chartIndex] = temp;
 		}
 	}
 
@@ -258,7 +321,7 @@ void ScoreManager::savePlayerToDisk(PLAYER_DATA &p)
 	}
 
 	fprintf(fp, "DMXs");
-	vnum = CURRENT_VERSION_NUMBER;
+	vnum = CURRENT_SCORE_VERSION_NUMBER;
 	fwrite(&vnum, sizeof(long), 1, fp);
 
 	for ( int i = 0; i < NUM_SONGS; i++ ) // loop through each song

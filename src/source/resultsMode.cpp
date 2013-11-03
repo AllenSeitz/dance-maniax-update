@@ -255,8 +255,9 @@ void renderResult(int which, int x)
 	int statusy = 73; // 357
 	switch( sm.player[currentPlayer].currentSet[which].status )
 	{
-	case STATUS_PERFECT:
-	case STATUS_FULLCOMBO:
+	case STATUS_FULL_PERFECT_COMBO:
+	case STATUS_FULL_GREAT_COMBO:
+	case STATUS_FULL_GOOD_COMBO:
 		masked_blit(m_clearStatus, rm.m_backbuf, 0, frame*32, x-32, statusy, 192, 32);
 		break;
 	case STATUS_FAILED:
