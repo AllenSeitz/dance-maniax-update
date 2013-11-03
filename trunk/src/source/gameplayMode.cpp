@@ -1141,8 +1141,8 @@ int checkForExtraStages()
 			awardedExtra = true;
 
 			// count the number of full combos
-			int numFullComboP1 = sm.player[0].getNumStars(levelP1, STATUS_FULLCOMBO);
-			int numFullComboP2 = sm.player[1].getNumStars(levelP2, STATUS_FULLCOMBO);
+			int numFullComboP1 = sm.player[0].getNumStars(levelP1, STATUS_FULL_GOOD_COMBO);
+			int numFullComboP2 = sm.player[1].getNumStars(levelP2, STATUS_FULL_GOOD_COMBO);
 
 			// count the number of EXTRA STAGE full combos
 			static int extraStages[10] = { 126, 230, 245, 246, 247, 248, 249, 250, 303, 324 };
@@ -1150,11 +1150,11 @@ int checkForExtraStages()
 			int numSpecialP2 = 0;
 			for ( int i = 0; i < 10; i++ )
 			{
-				if ( sm.player[0].getStatusOnSong(extraStages[i], levelP1) >= STATUS_FULLCOMBO )
+				if ( sm.player[0].getStatusOnSong(extraStages[i], levelP1) >= STATUS_FULL_GOOD_COMBO )
 				{
 					numSpecialP1++;
 				}
-				if ( sm.player[1].getStatusOnSong(extraStages[i], levelP2) >= STATUS_FULLCOMBO )
+				if ( sm.player[1].getStatusOnSong(extraStages[i], levelP2) >= STATUS_FULL_GOOD_COMBO )
 				{
 					numSpecialP2++;
 				}
@@ -1205,7 +1205,7 @@ int checkForExtraStages()
 					for ( int i = 0; i < 3; i++ )
 					{
 						bool isdone = sm.player[0].allTime[songID_to_listID(songToPlay)][levelP1].unlockStatus > 0 || (gs.isVersus && sm.player[1].allTime[songID_to_listID(songToPlay)][levelP2].unlockStatus);
-						if ( sm.player[0].getStatusOnSong(songToPlay, levelP1) < STATUS_FULLCOMBO || (gs.isVersus && sm.player[1].getStatusOnSong(songToPlay, levelP2) < STATUS_FULLCOMBO) )
+						if ( sm.player[0].getStatusOnSong(songToPlay, levelP1) < STATUS_FULL_GOOD_COMBO || (gs.isVersus && sm.player[1].getStatusOnSong(songToPlay, levelP2) < STATUS_FULL_GOOD_COMBO) )
 						{
 							break; // keep this one
 						}
@@ -1222,7 +1222,7 @@ int checkForExtraStages()
 				for ( int i = 0; i < 3; i++ )
 				{
 					bool isdone = sm.player[0].allTime[songID_to_listID(songToPlay)][levelP1].unlockStatus > 0 || (gs.isVersus && sm.player[1].allTime[songID_to_listID(songToPlay)][levelP2].unlockStatus);
-					if ( sm.player[0].getStatusOnSong(songToPlay, levelP1) < STATUS_FULLCOMBO || (gs.isVersus && sm.player[1].getStatusOnSong(songToPlay, levelP2) < STATUS_FULLCOMBO) )
+					if ( sm.player[0].getStatusOnSong(songToPlay, levelP1) < STATUS_FULL_GOOD_COMBO || (gs.isVersus && sm.player[1].getStatusOnSong(songToPlay, levelP2) < STATUS_FULL_GOOD_COMBO) )
 					{
 						break; // keep this one
 					}
@@ -1240,7 +1240,7 @@ int checkForExtraStages()
 				songToPlay = 230;
 				
 				// eh... they've covered this one. Maybe give them an edit instead
-				if ( sm.player[0].getStatusOnSong(230, levelP1) >= STATUS_FULLCOMBO || sm.player[1].getStatusOnSong(230, levelP2) >= STATUS_FULLCOMBO )
+				if ( sm.player[0].getStatusOnSong(230, levelP1) >= STATUS_FULL_GOOD_COMBO || sm.player[1].getStatusOnSong(230, levelP2) >= STATUS_FULL_GOOD_COMBO )
 				{
 					songToPlay = pickRandomInt(7, 230, 245, 246, 247, 248, 249, 250);
 				}

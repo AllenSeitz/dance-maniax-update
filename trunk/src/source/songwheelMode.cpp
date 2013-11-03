@@ -1160,17 +1160,17 @@ void renderLoginStats(int x, int side)
 	int whichFrame = displayBPMTimer > 1000 ? (displayBPMTimer-1000)/125 : 0;
 	int mildColor = 6, wildColor = 6; // intentionally transparent
 
-	if ( sm.player[side].allTime[allTimeIndex][mildIndex].getFullComboType() != 0 )
+	if ( sm.player[side].allTime[allTimeIndex][mildIndex].status >= STATUS_FULL_GOOD_COMBO )
 	{
-		mildColor = sm.player[side].allTime[allTimeIndex][mildIndex].getFullComboType() - 1;
+		mildColor = sm.player[side].allTime[allTimeIndex][mildIndex].status - 3;
 		if ( mildColor == 2 )
 		{
 			mildColor = displayBPMState == -1 ? 3 : 4; // pick a gold star, and use the alternate 'grow' animation every other pass
 		}
 	}
-	if ( sm.player[side].allTime[allTimeIndex][wildIndex].getFullComboType() != 0 )
+	if ( sm.player[side].allTime[allTimeIndex][wildIndex].status >= STATUS_FULL_GOOD_COMBO )
 	{
-		wildColor = sm.player[side].allTime[allTimeIndex][wildIndex].getFullComboType() - 1;
+		wildColor = sm.player[side].allTime[allTimeIndex][wildIndex].status - 3;
 		if ( wildColor == 2 )
 		{
 			wildColor = displayBPMState == -1 ? 3 : 4; // pick a gold star, and use the alternate 'grow' animation every other pass

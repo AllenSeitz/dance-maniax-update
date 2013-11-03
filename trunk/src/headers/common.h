@@ -29,6 +29,7 @@
 #define SCREEN_HEIGHT 480
 
 #define CURRENT_VERSION_NUMBER 1
+#define CURRENT_SCORE_VERSION_NUMBER 2
 
 // for the operator menu
 #define WHITE makeacol(255,255,255, 255)
@@ -469,7 +470,8 @@ int getSampleLength(SAMPLE* sample);
 #define STATUS_NONE 0
 #define STATUS_FAILED 1
 #define STATUS_CLEARED 2
-#define STATUS_FULLCOMBO 3
-#define STATUS_PERFECT 4
+#define STATUS_FULL_GOOD_COMBO 3
+#define STATUS_FULL_GREAT_COMBO 4
+#define STATUS_FULL_PERFECT_COMBO 5
 
 #endif // end include guard

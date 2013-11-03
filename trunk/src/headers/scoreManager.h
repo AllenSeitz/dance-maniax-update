@@ -65,10 +65,20 @@ struct SONG_RECORD
 		}
 		else if ( misses == 0 )
 		{
-			status = STATUS_FULLCOMBO;
-			if ( greats == 0 )
+			if ( goods == 0 )
 			{
-				status = STATUS_PERFECT;
+				if ( greats == 0 )
+				{
+					status = STATUS_FULL_PERFECT_COMBO;
+				}
+				else
+				{
+					status = STATUS_FULL_GREAT_COMBO;
+				}
+			}
+			else
+			{
+					status = STATUS_FULL_GOOD_COMBO;
 			}
 		}
 		else if ( getScore() >= 700000 )
@@ -81,25 +91,6 @@ struct SONG_RECORD
 		}
 
 		return status;
-	}
-
-	int SONG_RECORD::getFullComboType()
-	{
-		calculateStatus(); // intentional side effect, set status now just in case (status is theoretically read-only by design anyway)
-
-		if ( status == STATUS_PERFECT )
-		{
-			return 3;
-		}
-		if ( status != STATUS_FULLCOMBO )
-		{
-			return 0;
-		}
-		if ( goods > 0 )
-		{
-			return 1;
-		}
-		return 2; // full combo with greats
 	}
 
 	int SONG_RECORD::calculateGrade()
@@ -258,6 +249,7 @@ public:
 	bool loadPlayerFromDisk(char* name, char side);
 	// precondition: name is 1-8 letters [0-9,A-Z], side is 0-1
 	// postcondition: loads the player if it exists and sets isLoggedIn to true on success
+	// NOTE: the current file version is v2. Any v1 files will automatically use loadPlayerFromDisk_v1()
 
 	void savePlayersToDisk();
 	// postcondition: for each player, if isLoggedIn is true, creates a new file on disk
@@ -276,6 +268,10 @@ private:
 
 	void savePlayerToDisk(PLAYER_DATA &p);
 	// postcondition: writes or rewrites players/NAME.score on disk
+
+	bool loadPlayerFromDisk_v1(FILE* fp, char side);
+	// precondition: only called from loadPlayerFromDisk() when it detects a legacy save file, and fp is good
+	// postcondition: loads the player, sets isLoggedIn to true, and updates the full combo status correctly
 
 public:
 	PLAYER_DATA player[2];
