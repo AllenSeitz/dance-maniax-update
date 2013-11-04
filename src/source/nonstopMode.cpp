@@ -276,7 +276,6 @@ void mainNonstopLoop(UTIME dt)
 	{
 		rm.dimScreen(getValueFromRange(0, 100, fadeAnimTimer*100/INTRO_ANIM_LENGTH));
 	}
-	rm.flip();
 }
 
 void renderNonstopTitleArea(int percent)

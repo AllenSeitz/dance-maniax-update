@@ -33,6 +33,7 @@ extern "C" {
 #include "bookManager.h"
 #include "inputManager.h"
 #include "gameStateManager.h"
+#include "lightsManager.h"
 #include "scoreManager.h"
 #include "videoManager.h"
 
@@ -87,6 +88,7 @@ GameStateManager gs;
 ScoreManager sm;
 VideoManager vm;
 EffectsManager em;
+LightsManager lm;
 
 void firstSplashLoop();
 void mainSplashLoop(UTIME dt);
@@ -141,6 +143,7 @@ void mainCautionLoop(UTIME dt);
 
 void renderCreditsDisplay();
 void getUpdateAndRestart();
+void renderDebugOverlay();
 
 // operator menus
 void renderInputTest();
@@ -230,6 +233,7 @@ int main()
 	rm.Initialize();
 	im.updateKeyStates(1);
 	em.initialize();
+	lm.initialize();
 
 	loadGameplayGraphics();	// these stay loaded the ENTIRE program
 
@@ -320,6 +324,7 @@ int main()
 			im.updateKeyStates(dt);
 			bm.logTime(dt, gs.g_currentGameMode);
 			vm.update(dt, fpsLastFrame < fpsHappyThreshold); // if we're not getting enoguh fps, then pause the movie
+			lm.update(dt);
 
 			if ( gs.g_gameModeTransition == 2 )
 			{
@@ -344,21 +349,6 @@ int main()
 				}
 				em.playSample(SFX_CREDIT);
 			}
-
-			// render the credits display
-			if ( gs.g_currentGameMode != TESTMODE && hideCreditsTimer == 0 )
-			{
-				renderCreditsDisplay();
-			}
-			else if ( gs.g_currentGameMode != TESTMODE )
-			{
-				if ( gs.g_currentGameMode != GAMEPLAY )
-				{
-					rectfill(rm.m_backbuf, 0, 460, 640, 480, 0); // burn-in protection
-				}
-				blit(rm.m_backbuf, screen, 0, 460, 0, 460, 640, 20);
-			}
-			SUBTRACT_TO_ZERO(hideCreditsTimer, dt);
 
 			// switch between modes
 			if ( gs.g_gameModeTransition == 1 )
@@ -491,6 +481,29 @@ int main()
 					break;
 				}
 				++frameCounter;
+
+				// render the credits display
+				if ( gs.g_currentGameMode != TESTMODE && hideCreditsTimer == 0 )
+				{
+					renderCreditsDisplay();
+				}
+				else if ( gs.g_currentGameMode != TESTMODE )
+				{
+					if ( gs.g_currentGameMode != GAMEPLAY )
+					{
+						rectfill(rm.m_backbuf, 0, 460, 640, 480, 0); // burn-in protection
+					}
+					blit(rm.m_backbuf, screen, 0, 460, 0, 460, 640, 20);
+				}
+				SUBTRACT_TO_ZERO(hideCreditsTimer, dt);
+
+#ifdef DMXDEBUG
+				if ( gs.g_currentGameMode != TESTMODE )
+				{
+					renderDebugOverlay();
+				}
+#endif
+				rm.flip();
 			}
 		}
 
@@ -504,6 +517,20 @@ int main()
 	return EXIT_SUCCESS;
 }
 END_OF_MAIN();	
+
+void renderDebugOverlay()
+{
+	//* FPS display
+	if ( totalGameTime > 1000 )
+	{
+		//al_trace("FPS = %d (%d %ld)\n", (int)(frameCounter/((float)timeElapsed/1000.0f)), frameCounter, timeElapsed);
+		renderWhiteNumber(frameCounter / (totalGameTime/1000), 0, 0);
+		renderWhiteString("DEBUG MODE", 0, 12);
+	}
+	//*/
+
+	lm.renderDebugOutput(rm.m_backbuf);
+}
 
 void firstSplashLoop()
 {
@@ -556,8 +583,6 @@ void mainErrorLoop(UTIME dt)
 		gs.g_currentGameMode = MAINMENU;
 		gs.g_gameModeTransition = 1;
 	}
-
-	rm.flip();
 }
 
 void firstFailureLoop()
@@ -606,8 +631,6 @@ void mainFailureLoop(UTIME dt)
 		gs.g_currentGameMode = RESULTS;
 		gs.g_gameModeTransition = 1;
 	}
-
-	rm.flip();
 }
 
 // this function ultimately renders the bottom twenty pixels
@@ -642,7 +665,6 @@ void renderCreditsDisplay()
 			renderWhiteNumber(gs.numCoinsPerCredit, x+12, y);
 		}
 	}
-	blit(rm.m_backbuf, screen, 0, 460, 0, (y-4), 640, 480);
 }
 
 // update.bat is exepected to relaunch this program. The point is that this program may be modified.
@@ -978,10 +1000,9 @@ void mainOperatorLoop(UTIME dt)
 		}
 	}
 
-	if ( testMenuMainIndex != 2 || testMenuSubIndex == -1 ) // the screen test needs the whole screen
+	if ( !(testMenuSubIndex != -1 && testMenuMainIndex == 2) ) // the screen test needs the whole screen
 	{
-		rm.flip();
-		rectfill(screen, 0, 460, 640, 480, makeacol(0,0,0,255)); // burn-in protection
+		rectfill(rm.m_backbuf, 0, 460, 640, 480, makecol(0,0,0)); // burn-in protection
 	}
 }
 
@@ -1001,7 +1022,6 @@ void mainVideoTestLoop(UTIME dt)
 	vm.renderToSurface(rm.m_backbuf, 100, 100);
 	renderWhiteString("MOVIE TEST", 10, 10);
 	renderWhiteString(movieScripts[videoIndex].c_str(), 10, 30);
-	rm.flip();
 
 	if ( im.getKeyState(MENU_START_2P) == JUST_DOWN )
 	{
@@ -1048,7 +1068,6 @@ void mainCautionLoop(UTIME dt)
 		gs.g_gameModeTransition = 1;
 		gs.g_currentGameMode = PLAYERSELECT;
 	}
-	rm.flip();
 }
 
 int initializeSonglist()

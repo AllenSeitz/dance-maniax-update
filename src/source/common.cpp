@@ -334,7 +334,7 @@ void renderWhiteLetter(char letter, int x, int y)
 
 void RenderingManager::flip()
 {
-	blit(m_backbuf, screen, 0, 0, 0, 0, 640, 460); // intentionally leave the bottom 20 pixels alone
+	blit(m_backbuf, screen, 0, 0, 0, 0, 640, 480);
 	if ( currentPage == 1 )
 	{
 		m_backbuf = m_backbuf2;	

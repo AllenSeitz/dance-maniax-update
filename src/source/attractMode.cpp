@@ -282,7 +282,7 @@ void mainAttractLoop(UTIME dt)
 			}
 
 			// check for advance to next banner
-			if ( submodeTimer >= 5000*(attractSubState+1) )
+			if ( submodeTimer >= (unsigned long)(5000*(attractSubState+1)) )
 			{
 				attractSubState++;
 			}
@@ -358,5 +358,4 @@ void mainAttractLoop(UTIME dt)
 	{
 		renderBoldString("PUSH START!", 262, (numBlinks/400)%2 == 1 ? 325 : 275, 400, false);
 	}
-	rm.flip();
 }

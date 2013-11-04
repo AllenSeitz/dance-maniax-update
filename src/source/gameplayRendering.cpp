@@ -797,19 +797,6 @@ void renderGameplay()
 		int centerx = getCenterOfLanesX(1);
 		renderFullComboAnim(centerx, fullComboAnimTimer, fullComboAnimStep);
 	}
-
-#ifdef DMXDEBUG
-	//* FPS display
-	if ( totalGameTime > 1000 )
-	{
-		//al_trace("FPS = %d (%d %ld)\n", (int)(frameCounter/((float)timeElapsed/1000.0f)), frameCounter, timeElapsed);
-		renderWhiteNumber(frameCounter / (totalGameTime/1000), 0, 0);
-		renderWhiteString("DEBUG MODE", 0, 12);
-	}
-	//*/
-#endif
-
-	rm.flip();
 }
 
 void renderDebugNote(struct ARROW n, int x, int y)

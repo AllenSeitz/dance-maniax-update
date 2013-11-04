@@ -149,7 +149,6 @@ void mainResultsLoop(UTIME dt)
 	if ( !doneIntroAnim && resultFadeTimer < (INTRO_ANIM_LENGTH/2) )
 	{
 		rm.renderWipeAnim(getValueFromRange(0, 14, resultFadeTimer*100/(INTRO_ANIM_LENGTH/2)));
-		rm.flip();
 		return;
 	}
 
@@ -196,7 +195,6 @@ void mainResultsLoop(UTIME dt)
 	{
 		renderTimeRemaining(5, 36);
 	}
-	rm.flip();
 
 	// check for input
 	if ( (im.getKeyState(MENU_LEFT_1P) == HELD_DOWN || im.getKeyState(MENU_LEFT_2P) == HELD_DOWN) && scrollTweenTime == 0 && scrollX < 64 )

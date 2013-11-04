@@ -765,8 +765,6 @@ void renderSongwheelLoop()
 	{
 		renderNextStageAnim();
 	}
-	
-	rm.flip();
 }
 
 void renderIntroAnim(int percent)
@@ -802,8 +800,6 @@ void renderIntroAnim(int percent)
 		bannerIndex = songID_to_listID(songlist[bannerIndex].songID);
 		renderBanner(bannerIndex, i, songs[bannerIndex].isNew);
 	}
-
-	rm.flip();
 }
 
 void renderNextStageAnim()

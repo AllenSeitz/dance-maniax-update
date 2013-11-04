@@ -78,6 +78,4 @@ void renderGameoverLoop()
 	{
 		rm.dimScreen(getValueFromRange(0, 100, (timeRemaining-15700)*100)/300);
 	}
-
-	rm.flip();
 }

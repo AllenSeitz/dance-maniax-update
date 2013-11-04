@@ -590,8 +590,6 @@ void renderMenuLoop()
 		rectfill(rm.m_backbuf, 0, 0, getValueFromRange(640, 0, introTimer*100/250), 480, makeacol(0,0,0,255));
 		rm.dimScreen(getValueFromRange(100, 0, introTimer*100/250));
 	}
-
-	rm.flip();
 }
 
 void renderMods(int x, int y, int which, int selection, int currentRow)
