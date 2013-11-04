@@ -244,7 +244,10 @@ void renderDMXNote(int player, struct ARROW n, int y)
 		//renderEndSongMarker(leftX, rightX, (gs.player[player].reverseModifier != 0 ? y+74 : y));
 		break;
 	case BPM_CHANGE:
-		renderBPMMarker(leftX, rightX, (gs.player[player].reverseModifier != 0 ? y+74 : y), n.color);
+		if ( ABS(n.color - gs.player[player].scrollRate) >= 5 && n.timing > 0 )
+		{
+			renderBPMMarker(leftX, rightX, (gs.player[player].reverseModifier != 0 ? y+74 : y), n.color);
+		}
 		break;
 	case SCROLL_STOP:
 		renderTempoStopMarker(leftX, rightX, (gs.player[player].reverseModifier != 0 ? y+74 : y), n.color);
