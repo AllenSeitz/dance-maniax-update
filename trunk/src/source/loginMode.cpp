@@ -766,7 +766,6 @@ void renderLoginLoop()
 	}
 
 	renderTimeRemaining();
-	rm.flip();
 }
 
 void endLoginMode()

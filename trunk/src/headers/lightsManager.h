@@ -66,10 +66,13 @@ enum PinACIO
 };
 
 // used for making sure that output signals are only sent on output pins
-static const PinACIO outputPins[] = {	spotlightA, spotlightB, spotlightC, 
+#define NUM_OUTPUT_PINS 15
+static const PinACIO outputPins[NUM_OUTPUT_PINS] = {	
+										spotlightA, spotlightB, spotlightC, 
 										lampStartP1, lampMenuP1, lampStartP2, lampMenuP2,
 										lampRed0, lampRed1, lampRed2, lampRed3,
 										lampBlue0, lampBlue1, lampBlue2, lampBlue3 };
+
 class LightsManager
 {
 public:
@@ -81,15 +84,15 @@ public:
 	// precondition: initialize() has been called
 	// postcondition: communicates with the IO board and updates the state of the lights
 
-	void setLamp(PinACIO which, int duration);
-	void addLamp(PinACIO which, int duration);
+	void setLamp(PinACIO which, int milliseconds);
+	void addLamp(PinACIO which, int milliseconds);
 	// precondition: which is an output pin (checked)
 	// postcondition: sets or adds to the duration of this lamp
 
-	bool getLamp(PinACIO which, int duration);
+	bool getLamp(PinACIO which);
 	// returns: true if the duration for this pin is > 0
 
-	void lampOff(PinACIO which, int duration);
+	void lampOff(PinACIO which);
 	// precondition: which is an output pin (checked)
 	// postcondition: turns the lamp off NOW and also sets any remaining duration to 0
 
@@ -99,7 +102,7 @@ public:
 	void pulseOdometer();
 	// postcondition: sends the only accepted output on this pin
 
-	void setOrbColor(int player, int orb, int color, int duration);
+	void setOrbColor(int player, int orb, int color, int milliseconds);
 	// precondition: player is 0-1, orb is 0-3, and color is 0=red, 1=blue, 2=purple
 	// postcondition: for all LEDs on this orb, the duration becomes either the given duration or zero
 
@@ -108,12 +111,14 @@ public:
 	// postcondition: renders a simulated lights display in the top right corner
 
 private:
-	bool isOutputPin();
+	bool isOutputPin(PinACIO which);
 	// returns: true if this pin is intended to be set by this class
 
 private:
 	bool acioDetected;
 	int duration[53];
+
+	BITMAP* debug;
 };
 
 #endif
