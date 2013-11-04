@@ -102,6 +102,67 @@ int getColumn_XSQ(long column, char which)
 	return -1;
 }
 
+// This function is really stupid, and I'm sorry.
+// There are three songs in official DMX with significant tempo changes:
+// -- 110, Heaven is a '57, 190 ->  95 -> 190
+// -- 126, boss nonstop #1, 138 -> 130 -> 200
+// -- 230, boss nonstop #2, 180 -> 190
+// There are also two songs which have large number of tempo changes:
+// -- 227, I Will Follow Him, (8) tempo changes after the last note
+// -- 231, ABSOLUTE, (6) tempo changes mostly for the last note
+// Finally these songs have 'invisible' tempo changes:
+// -- 104, Ain't it Good
+// -- 202, Virtual Mind
+// -- 213, Stay (organic house version)
+// -- 226, Matsuri (J-Summer Mix)
+// The problem I'm having is that I can detect when a tempo change happens in the chart data, but the
+// byte that I'm provided makes no sense. It is a different value for different charts of the same song,
+// although it at least appears reliably at the same expected time. Given that its value only increases
+// for songs with multiple tempo changes I think it might be an index into another table. However, I
+// can't find that other table. But I do know which value I'm expecting to see, so I provide that instead.
+int hackGuessBPM(int songID, int currentTime)
+{
+	switch (songID)
+	{
+		// trivial cases
+	case 104: return 134; // aint it good
+	case 202: return 128; // virtual mind
+	case 213: return 125; // stay1
+	case 226: return 180; // matsuri
+
+		// gimmick slowdown endings - skipped
+	case 227: return 148; // i will follow him
+	case 231: return 140; // absolute
+
+		// songs with meaningful scroll rate changes
+	case 110:
+		if ( currentTime == 24258 )
+			return 95;
+		else
+			return 190;
+	case 126:
+		if ( currentTime == 11224 )
+			return 130;//138;
+		else if ( currentTime == 11375 )
+			return 130;
+		else if ( currentTime == 23694 ) // don't know exactly what's up with this one
+			return 130;
+		else if ( currentTime == 23834 )
+			return 200;
+		else
+			return 200;
+	case 230: // boss 2 and all of its edits have exactly one tempo change, fortunately
+	case 245:
+	case 246:
+	case 247:
+	case 248:
+	case 249:
+	case 250:
+		return 190;
+	}
+	return 150;
+}
+
 int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds, int songID, int chartType)
 {
 	char filename[] = "DATA/xsq/101_sm.xsq";
@@ -189,16 +250,32 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 			}
 		}
 
-		al_trace("%d, %d, %d, %d, %d\r\n", temp.timing, temp.word2, temp.column, temp.word4, temp.word5);
+		//al_trace("%d, %d, %d, %d, %d\r\n", temp.timing, temp.word2, temp.column, temp.word4, temp.word5);
 
-		int experimental = (temp.column & 0x000000FF) << 24;
+		int experimental = (temp.column & 0x000000FF);
 		if ( experimental != 0 )
 		{
-			al_trace("Found something: %d\n", experimental);
-		}
-		if ( temp.word5 != 0 )
-		{
-			al_trace("What is this? %d\n", temp.word5);
+			if ( (temp.column & 0xFFFE0000) == 0xFFFE0000 ) // 0xFE might begin a chart, and 0xFF might end one
+			{
+				//al_trace("Start chart: %u\n", experimental);
+			}
+			else
+			{
+				//al_trace("Found something: %x\n", temp.column); //experimental);
+				//al_trace("%d, %d, %x\n", songID, temp.timing, temp.column);
+
+				// make a tempo change event
+				struct ARROW a;
+				uint64_t ms = temp.timing; // because this next operation just barely overflows 32 bits, temporarily
+				ms = ms * 333333;
+				ms = ms / 100000; // charts are at 18fps, so multiplly by 3.333333
+				a.timing = ms;
+
+				a.color = hackGuessBPM(songID, temp.timing);
+				a.type = BPM_CHANGE;
+			
+				chart->push_back(a);
+			}
 		}
 
 		for ( int i = 0; i < 4; i++ )
