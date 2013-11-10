@@ -709,6 +709,8 @@ void mainOperatorLoop(UTIME dt)
 		textprintf(rm.m_backbuf, font, 50, 300, testMenuMainIndex == 9 ? RED : WHITE, "ALL FACTORY DEFAULTS");
 		textprintf(rm.m_backbuf, font, 50, 320, testMenuMainIndex == 10 ? RED : WHITE, "GAME MODE");
 
+		lm.setAll(0);
+
 		if ( im.getKeyState(MENU_START_1P) == JUST_DOWN || im.getKeyState(MENU_TEST) == JUST_DOWN )
 		{
 			testMenuSubIndex = 0; // enter that submenu
@@ -737,27 +739,53 @@ void mainOperatorLoop(UTIME dt)
 			break;
 		case 1: // lamp test
 			renderLampTest();
-			if ( im.isKeyDown(MENU_START_1P) && im.isKeyDown(MENU_START_2P) )
+			if ( im.getKeyState(MENU_START_1P) == JUST_DOWN )
 			{
 				testMenuMainIndex = 0;
 				testMenuSubIndex = -1;
 			}
 			if ( im.getKeyState(MENU_RIGHT_1P) == JUST_DOWN || im.getKeyState(MENU_SERVICE) == JUST_DOWN )
 			{
-				testMenuSubIndex = (testMenuSubIndex + 1) % 20;
+				testMenuSubIndex = (testMenuSubIndex + 1) % 46;
 			}
 			if ( im.getKeyState(MENU_LEFT_1P) == JUST_DOWN )
 			{
-				testMenuSubIndex = (testMenuSubIndex - 1 + 20) % 20;
+				testMenuSubIndex = (testMenuSubIndex - 1 + 46) % 46;
 			}
-			if ( im.getKeyState(MENU_RIGHT_2P) == JUST_DOWN )
+
+			// turn lamps on or off
+			if ( testMenuSubIndex == 0 && im.isKeyDown(MENU_START_2P) )
 			{
-				tempSelection = (tempSelection + 4) % 4; // use temp selection to set lamp states
+				lm.setAll(-1);
 			}
-			if ( im.getKeyState(MENU_LEFT_2P) == JUST_DOWN )
+			else
 			{
-				tempSelection = (tempSelection - 1 + 4) % 4;
+				for ( int i = 0; i < 12; i++ )
+				{
+					if ( (testMenuSubIndex >= 1 && testMenuSubIndex <= 36) && (testMenuSubIndex-1)/3 == i )
+					{
+						lm.setGroupColor(i, (testMenuSubIndex-1)%3, -1);
+						if ( i == 9 )
+						{
+							al_trace("setting group 9 to color=%d\n", (testMenuSubIndex-1)%3);
+						}
+					}
+					else
+					{
+						lm.setGroupColor(i, 2, 0);
+					}
+				}
+				lm.setLamp(lampLeft, testMenuSubIndex == 37 ? -1 : 0);
+				lm.setLamp(lampStart, testMenuSubIndex == 38 ? -1 : 0);
+				lm.setLamp(lampRight, testMenuSubIndex == 39 ? -1 : 0);
+				lm.setLamp(spotlightA, testMenuSubIndex == 40 ? -1 : 0);
+				lm.setLamp(spotlightB, testMenuSubIndex == 41 ? -1 : 0);
+				lm.setLamp(spotlightC, testMenuSubIndex == 42 ? -1 : 0);
+				lm.setLamp((int)lampLeft + 1, testMenuSubIndex == 43 ? -1 : 0);
+				lm.setLamp((int)lampStart + 1, testMenuSubIndex == 44 ? -1 : 0);
+				lm.setLamp((int)lampRight + 1, testMenuSubIndex == 45 ? -1 : 0);
 			}
+
 			break;
 		case 2: // screen test
 			renderScreenTest();
@@ -1294,53 +1322,82 @@ void renderInputTest()
 void renderLampTest()
 {
 	textprintf_centre(rm.m_backbuf, font, 320, 50, WHITE, "LAMP TEST");
-	textprintf_centre(rm.m_backbuf, font, 320, 70, testMenuSubIndex == 0 ? RED : WHITE, "LIGHT ALL LAMPS");
-	textprintf(rm.m_backbuf, font, 50, 100, GREEN, "1P LEFT SIDE");
-	textprintf(rm.m_backbuf, font, 50, 120, testMenuSubIndex == 1 ? RED : WHITE, "TOP L: ");
-	textprintf(rm.m_backbuf, font, 50, 140, testMenuSubIndex == 2 ? RED : WHITE, "TOP R: ");
-	textprintf(rm.m_backbuf, font, 50, 160, testMenuSubIndex == 3 ? RED : WHITE, "LOW L: ");
-	textprintf(rm.m_backbuf, font, 50, 180, testMenuSubIndex == 4 ? RED : WHITE, "LOW R: ");
-	textprintf(rm.m_backbuf, font, 50, 200, testMenuSubIndex == 5 ? RED : WHITE, "MENU LEFT : ");
-	textprintf(rm.m_backbuf, font, 50, 220, testMenuSubIndex == 6 ? RED : WHITE, "MENU RIGHT: ");
-	textprintf(rm.m_backbuf, font, 50, 240, testMenuSubIndex == 7 ? RED : WHITE, "MENU START: ");
-	textprintf(rm.m_backbuf, font, 106, 120, GET_LAMP_COLOR(0), GET_LAMP_STRING(0));
-	textprintf(rm.m_backbuf, font, 106, 140, GET_LAMP_COLOR(0), GET_LAMP_STRING(0));
-	textprintf(rm.m_backbuf, font, 106, 160, GET_LAMP_COLOR(0), GET_LAMP_STRING(0));
-	textprintf(rm.m_backbuf, font, 106, 180, GET_LAMP_COLOR(0), GET_LAMP_STRING(0));
-	textprintf(rm.m_backbuf, font, 144, 200, GET_ON_COLOR(0), GET_ON_OFF(0));
-	textprintf(rm.m_backbuf, font, 144, 220, GET_ON_COLOR(0), GET_ON_OFF(0));
-	textprintf(rm.m_backbuf, font, 144, 240, GET_ON_COLOR(0), GET_ON_OFF(0));
+	textprintf_centre(rm.m_backbuf, font, 320, 70, testMenuSubIndex == 0 ? RED : WHITE, "ALL LAMPS OFF");
 
-	textprintf(rm.m_backbuf, font, 400, 100, GREEN, "2P RIGHT SIDE");
-	textprintf(rm.m_backbuf, font, 400, 120, testMenuSubIndex == 8  ? RED : WHITE, "TOP L: ");
-	textprintf(rm.m_backbuf, font, 400, 140, testMenuSubIndex == 9  ? RED : WHITE, "TOP R: ");
-	textprintf(rm.m_backbuf, font, 400, 160, testMenuSubIndex == 10 ? RED : WHITE, "LOW L: ");
-	textprintf(rm.m_backbuf, font, 400, 180, testMenuSubIndex == 11 ? RED : WHITE, "LOW R: ");
-	textprintf(rm.m_backbuf, font, 400, 200, testMenuSubIndex == 12 ? RED : WHITE, "MENU LEFT : ");
-	textprintf(rm.m_backbuf, font, 400, 220, testMenuSubIndex == 13 ? RED : WHITE, "MENU RIGHT: ");
-	textprintf(rm.m_backbuf, font, 400, 240, testMenuSubIndex == 14 ? RED : WHITE, "MENU START: ");
-	textprintf(rm.m_backbuf, font, 456, 120, GET_LAMP_COLOR(0), GET_LAMP_STRING(0));
-	textprintf(rm.m_backbuf, font, 456, 140, GET_LAMP_COLOR(0), GET_LAMP_STRING(0));
-	textprintf(rm.m_backbuf, font, 456, 160, GET_LAMP_COLOR(0), GET_LAMP_STRING(0));
-	textprintf(rm.m_backbuf, font, 456, 180, GET_LAMP_COLOR(0), GET_LAMP_STRING(0));
-	textprintf(rm.m_backbuf, font, 494, 200, GET_ON_COLOR(0), GET_ON_OFF(0));
-	textprintf(rm.m_backbuf, font, 494, 220, GET_ON_COLOR(0), GET_ON_OFF(0));
-	textprintf(rm.m_backbuf, font, 494, 240, GET_ON_COLOR(0), GET_ON_OFF(0));
+	textprintf(rm.m_backbuf, font, 40, 100, GREEN, "<1P - TOP LEFT>");
+	textprintf(rm.m_backbuf, font, 40, 120, testMenuSubIndex == 1 ? RED : WHITE, "RED");
+	textprintf(rm.m_backbuf, font, 40, 140, testMenuSubIndex == 2 ? RED : WHITE, "BLUE");
+	textprintf(rm.m_backbuf, font, 40, 160, testMenuSubIndex == 3 ? RED : WHITE, "PURPLE");
 
-	textprintf(rm.m_backbuf, font, 250, 300, testMenuSubIndex == 15 ? RED : WHITE, " SPOT 1: ");
-	textprintf(rm.m_backbuf, font, 250, 320, testMenuSubIndex == 16 ? RED : WHITE, " SPOT 2: ");
-	textprintf(rm.m_backbuf, font, 250, 340, testMenuSubIndex == 17 ? RED : WHITE, " SPOT 3: ");
-	textprintf(rm.m_backbuf, font, 250, 360, testMenuSubIndex == 18 ? RED : WHITE, " SPOT 4: ");
-	textprintf(rm.m_backbuf, font, 250, 380, testMenuSubIndex == 19 ? RED : WHITE, " SPOT 5: ");
-	textprintf(rm.m_backbuf, font, 330, 300, GET_ON_COLOR(0), GET_ON_OFF(0));
-	textprintf(rm.m_backbuf, font, 330, 320, GET_ON_COLOR(0), GET_ON_OFF(0));
-	textprintf(rm.m_backbuf, font, 330, 340, GET_ON_COLOR(0), GET_ON_OFF(0));
-	textprintf(rm.m_backbuf, font, 330, 360, GET_ON_COLOR(0), GET_ON_OFF(0));
-	textprintf(rm.m_backbuf, font, 330, 380, GET_ON_COLOR(0), GET_ON_OFF(0));
+	textprintf(rm.m_backbuf, font, 190, 100, GREEN, "<1P - TOP RIGHT>");
+	textprintf(rm.m_backbuf, font, 190, 120, testMenuSubIndex == 4 ? RED : WHITE, "RED");
+	textprintf(rm.m_backbuf, font, 190, 140, testMenuSubIndex == 5 ? RED : WHITE, "BLUE");
+	textprintf(rm.m_backbuf, font, 190, 160, testMenuSubIndex == 6 ? RED : WHITE, "PURPLE");
 
-	textprintf(rm.m_backbuf, font, 50, 420, WHITE, "PRESS 1P LEFT/RIGHT = change target lamp");
-	textprintf(rm.m_backbuf, font, 50, 440, WHITE, "PRESS 2P LEFT/RIGHT = change lamp color");
-	textprintf(rm.m_backbuf, font, 50, 460, WHITE, "1P START + 2P START = exit lamp test");
+	textprintf(rm.m_backbuf, font, 340, 100, GREEN, "<2P - TOP LEFT>");
+	textprintf(rm.m_backbuf, font, 340, 120, testMenuSubIndex == 7 ? RED : WHITE, "RED");
+	textprintf(rm.m_backbuf, font, 340, 140, testMenuSubIndex == 8 ? RED : WHITE, "BLUE");
+	textprintf(rm.m_backbuf, font, 340, 160, testMenuSubIndex == 9 ? RED : WHITE, "PURPLE");
+
+	textprintf(rm.m_backbuf, font, 490, 100, GREEN, "<2P - TOP RIGHT>");
+	textprintf(rm.m_backbuf, font, 490, 120, testMenuSubIndex == 10 ? RED : WHITE, "RED");
+	textprintf(rm.m_backbuf, font, 490, 140, testMenuSubIndex == 11 ? RED : WHITE, "BLUE");
+	textprintf(rm.m_backbuf, font, 490, 160, testMenuSubIndex == 12 ? RED : WHITE, "PURPLE");
+
+	textprintf(rm.m_backbuf, font, 40, 200, GREEN, "<1P - LOW LEFT>");
+	textprintf(rm.m_backbuf, font, 40, 220, testMenuSubIndex == 13 ? RED : WHITE, "RED");
+	textprintf(rm.m_backbuf, font, 40, 240, testMenuSubIndex == 14 ? RED : WHITE, "BLUE");
+	textprintf(rm.m_backbuf, font, 40, 260, testMenuSubIndex == 15 ? RED : WHITE, "PURPLE");
+	textprintf(rm.m_backbuf, font, 40, 280, testMenuSubIndex == 16 ? RED : WHITE, "RED");
+	textprintf(rm.m_backbuf, font, 40, 300, testMenuSubIndex == 17 ? RED : WHITE, "BLUE");
+	textprintf(rm.m_backbuf, font, 40, 320, testMenuSubIndex == 18 ? RED : WHITE, "PURPLE");
+
+	textprintf(rm.m_backbuf, font, 190, 200, GREEN, "<1P - LOW RIGHT>");
+	textprintf(rm.m_backbuf, font, 190, 220, testMenuSubIndex == 19 ? RED : WHITE, "RED");
+	textprintf(rm.m_backbuf, font, 190, 240, testMenuSubIndex == 20 ? RED : WHITE, "BLUE");
+	textprintf(rm.m_backbuf, font, 190, 260, testMenuSubIndex == 21 ? RED : WHITE, "PURPLE");
+	textprintf(rm.m_backbuf, font, 190, 280, testMenuSubIndex == 22 ? RED : WHITE, "RED");
+	textprintf(rm.m_backbuf, font, 190, 300, testMenuSubIndex == 23 ? RED : WHITE, "BLUE");
+	textprintf(rm.m_backbuf, font, 190, 320, testMenuSubIndex == 24 ? RED : WHITE, "PURPLE");
+
+	textprintf(rm.m_backbuf, font, 340, 200, GREEN, "<2P - LOW LEFT>");
+	textprintf(rm.m_backbuf, font, 340, 220, testMenuSubIndex == 25 ? RED : WHITE, "RED");
+	textprintf(rm.m_backbuf, font, 340, 240, testMenuSubIndex == 26 ? RED : WHITE, "BLUE");
+	textprintf(rm.m_backbuf, font, 340, 260, testMenuSubIndex == 27 ? RED : WHITE, "PURPLE");
+	textprintf(rm.m_backbuf, font, 340, 280, testMenuSubIndex == 28 ? RED : WHITE, "RED");
+	textprintf(rm.m_backbuf, font, 340, 300, testMenuSubIndex == 29 ? RED : WHITE, "BLUE");
+	textprintf(rm.m_backbuf, font, 340, 320, testMenuSubIndex == 30 ? RED : WHITE, "PURPLE");
+
+	textprintf(rm.m_backbuf, font, 490, 200, GREEN, "<2P - LOW RIGHT>");
+	textprintf(rm.m_backbuf, font, 490, 220, testMenuSubIndex == 31 ? RED : WHITE, "RED");
+	textprintf(rm.m_backbuf, font, 490, 240, testMenuSubIndex == 32 ? RED : WHITE, "BLUE");
+	textprintf(rm.m_backbuf, font, 490, 260, testMenuSubIndex == 33 ? RED : WHITE, "PURPLE");
+	textprintf(rm.m_backbuf, font, 490, 280, testMenuSubIndex == 34 ? RED : WHITE, "RED");
+	textprintf(rm.m_backbuf, font, 490, 300, testMenuSubIndex == 35 ? RED : WHITE, "BLUE");
+	textprintf(rm.m_backbuf, font, 490, 320, testMenuSubIndex == 36 ? RED : WHITE, "PURPLE");
+
+	textprintf(rm.m_backbuf, font, 90, 340, GREEN, "<1P - MENU>");
+	textprintf(rm.m_backbuf, font, 90, 360, testMenuSubIndex == 37 ? RED : WHITE, "LEFT");
+	textprintf(rm.m_backbuf, font, 90, 380, testMenuSubIndex == 38 ? RED : WHITE, "START");
+	textprintf(rm.m_backbuf, font, 90, 400, testMenuSubIndex == 39 ? RED : WHITE, "RIGHT");
+
+	textprintf(rm.m_backbuf, font, 265, 340, GREEN, "<SPOT LIGHT>");
+	textprintf(rm.m_backbuf, font, 265, 360, testMenuSubIndex == 40 ? RED : WHITE, "YELLOW");
+	textprintf(rm.m_backbuf, font, 265, 380, testMenuSubIndex == 41 ? RED : WHITE, "PINK");
+	textprintf(rm.m_backbuf, font, 265, 400, testMenuSubIndex == 42 ? RED : WHITE, "BLUE");
+
+	textprintf(rm.m_backbuf, font, 440, 340, GREEN, "<2P - MENU>");
+	textprintf(rm.m_backbuf, font, 440, 360, testMenuSubIndex == 43 ? RED : WHITE, "LEFT");
+	textprintf(rm.m_backbuf, font, 440, 380, testMenuSubIndex == 44 ? RED : WHITE, "START");
+	textprintf(rm.m_backbuf, font, 440, 400, testMenuSubIndex == 45 ? RED : WHITE, "RIGHT");
+
+	textprintf(rm.m_backbuf, font, 50, 420, makecol(196, 255, 255), "PRESS 1P LEFT / RIGHT = change target lamp");
+	textprintf(rm.m_backbuf, font, 50, 440, makecol(196, 255, 255), "PRESS 1P START BUTTON = confirm selection");
+
+	if (DMXDEBUG)
+	{
+		lm.renderDebugOutput(rm.m_backbuf);
+	}
 }
 
 void renderScreenTest()

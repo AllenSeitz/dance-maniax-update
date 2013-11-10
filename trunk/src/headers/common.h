@@ -37,6 +37,8 @@
 #define GREEN makeacol(100,255,100, 255)
 #define BLUE makeacol(100,100,255, 255)
 #define PURPLE makeacol(255,64,255, 255)
+#define YELLOW makeacol(255,255,64, 255)
+#define DARKGRAY makeacol(96,96,96, 255)
 #define GET_ON_OFF(b) (b ? "ON" : "OFF")
 #define GET_ON_COLOR(b) (b ? RED : WHITE)
 #define GET_LAMP_STRING(n) (n == 1 ? "RED" : n == 2 ? "BLUE" : n == 3 ? "PURPLE" : "OFF")
@@ -129,6 +131,11 @@ void makeBackupFile(char* filename);
 
 int checkFileVersion(FILE* fp, char* expected);
 
+
+//////////////////////////////////////////////////////////////////////////////
+// generic rendering functions, including text and debug rendering
+//////////////////////////////////////////////////////////////////////////////
+
 // implement some debug rendering
 void renderWhiteLetter(char letter, int x, int y);
 void renderWhiteString(const char* string, int x, int y);
@@ -179,7 +186,9 @@ void replaceColor(BITMAP* bmp, long col1, long col2);
 // postcondition: any instances of col1 are replaced by col2
 
 
-// implement a global sfx system
+//////////////////////////////////////////////////////////////////////////////
+// sound effects
+//////////////////////////////////////////////////////////////////////////////
 #define TOTAL_NUM_SFX 160
 class EffectsManager
 {
@@ -281,6 +290,7 @@ public:
 #define GUY_EARN_SPECIAL_EXTRA pickRandomInt(2, 82, 81) // wow youre a real dancer, can you do this, 
 #define GUY_STAGE_FAILED pickRandomInt(2, 66, 67)
 #define GUY_SPECIAL_GAMEOVER pickRandomInt(2, 110, 138)
+
 
 //////////////////////////////////////////////////////////////////////////////
 // implement the chart structure
@@ -473,5 +483,79 @@ int getSampleLength(SAMPLE* sample);
 #define STATUS_FULL_GOOD_COMBO 3
 #define STATUS_FULL_GREAT_COMBO 4
 #define STATUS_FULL_PERFECT_COMBO 5
+
+
+//////////////////////////////////////////////////////////////////////////////
+// IO board related
+//////////////////////////////////////////////////////////////////////////////
+
+// used for all input and output pins. also used to distinguish lamps for the LightsManager
+enum PinACIO
+{
+	// input pins
+	buttonStartP1 = 2,
+	buttonLeftP1 = 3,
+	buttonRightP1 = 4,
+	buttonStartP2 = 5,
+	buttonLeftP2 = 6,
+	buttonRightP2 = 7,
+
+	// red input pins
+	sensorLeftRedP1 = 8,
+	sensorRightRedP1 = 9,
+	sensorLeftRedP2 = 10,
+	sensorRightRedP2 = 11,
+	diagnostic = 12,           // not hooked up / reserved for potential hardware test
+	internalLED = 13,          // not hooked up
+
+	// blue input pins
+	sensorBlueLeft0P1 = 14,    // straight down
+	sensorBlueLeft1P1 = 15,    // angled down
+	sensorBlueRight0P1 = 16,   // straight down
+	sensorBlueRight1P1 = 17,   // angled down
+	sensorBlueLeft0P2 = 18,    // straight down
+	sensorBlueLeft1P2 = 19,    // angled down
+	sensorBlueRight0P2 = 20,   // straight down
+	sensorBlueRight1P2 = 21,   // angled down
+
+	// lamp output pins - 2P uses the odd numbers (add one)
+	coinCounter = 22,          // coin OUTPUT
+	coinLockout = 23,          // coin OUTPUT
+	lampLeft = 24,
+	lampRight = 26,
+	lampStart = 28,
+	lampRed0 = 30,
+	lampRed1 = 32,
+	lampRed2a = 34,
+	lampRed2b = 36,
+	lampRed3a = 38,
+	lampRed3b = 40,
+	lampBlue0 = 42,
+	lampBlue1 = 44,
+	lampBlue2a = 46,
+	lampBlue2b = 48,
+	lampBlue3a = 50,
+	lampBlue3b = 52,	
+
+	// analog input pins
+	vgaInputRed = 100,
+	vgaInputGreen = 101,
+	vgaInputBlue = 102,
+	vgaInputSync = 103,
+	vgaInputGround = 104,
+	test = 105,                // could be on a digital pin, but it fits here
+	service = 106,             // could be on a digital pin, but it fits here
+	coin = 107,                // could be on a digital pin, but it fits here
+
+	// analog output pins
+	vgaOutputRed = 108,
+	vgaOutputGreen = 109,
+	vgaOutputBlue = 110,
+	vgaOutputSync = 111,
+	vgaOutputGround = 112,
+	spotlightA = 113,          // the spotlight in the middle (yellow)
+	spotlightB = 114,          // spotlights 2 + 4, always together (pink)
+	spotlightC = 115,          // spotlights 1 + 5, always together (blue)
+};
 
 #endif // end include guard
