@@ -12,7 +12,7 @@
 //                      //
 // (0) (1)_____(0) (1)  //
 //   \             /    //
-//   /  A B C B A  \    //
+//   /  C B A B C  \    //
 //   |-------------|    //
 //   |             |    //
 //   |             |    //
@@ -21,57 +21,6 @@
 //   |             |    //
 //   |             |    //
 //                      //
-
-// used for all input and output pins. also used to distinguish lamps for the LightsManager
-enum PinACIO
-{
-	// input pins
-	test = 2,
-	service = 3,
-	coin = 4,
-
-	// output pins
-	spotlightA = 5, // spotlights 1 + 5, always together
-	spotlightB = 6, // spotlights 2 + 4, always together
-	spotlightC = 7, // the spotlight in the middle
-
-	// more output pins
-	odometer = 8,
-	lampStartP1 = 9,
-	lampMenuP1 = 10,
-	lampStartP2 = 11,
-	lampMenuP2 = 12,
-	selfTest = 13,
-
-	// input pins - add one for 2P
-	buttonStart = 20,
-	buttonMenuLeft = 22,
-	buttonMenuRight = 24,
-	sensorRed0 = 26,      // left
-	sensorRed1 = 28,      // right
-	sensorBlueL0 = 30,    // straight down
-	sensorBlueL1 = 32,    // angled down
-	sensorBlueR0 = 34,    // straight down
-	sensorBlueR1 = 36,    // angled down
-	
-	// output pins - add one for 2P
-	lampRed0 = 38,  // upper left
-	lampRed1 = 40,  // upper right
-	lampRed2 = 42,  // lower left
-	lampRed3 = 44,  // lower right
-	lampBlue0 = 46, // upper left
-	lampBlue1 = 48, // upper right
-	lampBlue2 = 50, // lower left
-	lampBlue3 = 52, // lower right
-};
-
-// used for making sure that output signals are only sent on output pins
-#define NUM_OUTPUT_PINS 15
-static const PinACIO outputPins[NUM_OUTPUT_PINS] = {	
-										spotlightA, spotlightB, spotlightC, 
-										lampStartP1, lampMenuP1, lampStartP2, lampMenuP2,
-										lampRed0, lampRed1, lampRed2, lampRed3,
-										lampBlue0, lampBlue1, lampBlue2, lampBlue3 };
 
 class LightsManager
 {
@@ -85,25 +34,32 @@ public:
 	// postcondition: communicates with the IO board and updates the state of the lights
 
 	void setLamp(PinACIO which, int milliseconds);
+	void setLamp(int which, int milliseconds) { return setLamp( (PinACIO)which, milliseconds ); }
 	void addLamp(PinACIO which, int milliseconds);
+	void addLamp(int which, int milliseconds) { return addLamp( (PinACIO)which, milliseconds ); }
 	// precondition: which is an output pin (checked)
 	// postcondition: sets or adds to the duration of this lamp
 
 	bool getLamp(PinACIO which);
+	bool getLamp(int which) { return getLamp( (PinACIO)which ); }
 	// returns: true if the duration for this pin is > 0
 
 	void lampOff(PinACIO which);
 	// precondition: which is an output pin (checked)
 	// postcondition: turns the lamp off NOW and also sets any remaining duration to 0
 
-	void allOff();
-	// postcondition: calls lampOff() for every lamp
+	void setAll(int milliseconds);
+	// postcondition: calls setLamp() for every lamp
 
 	void pulseOdometer();
 	// postcondition: sends the only accepted output on this pin
 
+	void setGroupColor(int group, int color, int milliseconds);
+	// precondition: group is 0-11, and color is 0=red, 1=blue, 2=purple
+	// postcondition: for all LEDs on this orb, the duration becomes either the given duration or zero
+
 	void setOrbColor(int player, int orb, int color, int milliseconds);
-	// precondition: player is 0-1, orb is 0-3, and color is 0=red, 1=blue, 2=purple
+	// precondition: playeris 0-1, orb is 0-3, and color is 0=red, 1=blue, 2=purple
 	// postcondition: for all LEDs on this orb, the duration becomes either the given duration or zero
 
 	void renderDebugOutput(BITMAP* surface);
@@ -111,12 +67,17 @@ public:
 	// postcondition: renders a simulated lights display in the top right corner
 
 private:
+	int getLampDebugColor(int ledset);
+	// precondition: only to be used by renderDebugOutput()
+	// returns: an rgb color value
+
 	bool isOutputPin(PinACIO which);
 	// returns: true if this pin is intended to be set by this class
 
 private:
 	bool acioDetected;
-	int duration[53];
+	int duration[54];
+	int spotDurations[3];
 
 	BITMAP* debug;
 };
