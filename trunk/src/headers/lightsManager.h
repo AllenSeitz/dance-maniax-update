@@ -62,6 +62,16 @@ public:
 	// precondition: playeris 0-1, orb is 0-3, and color is 0=red, 1=blue, 2=purple
 	// postcondition: for all LEDs on this orb, the duration becomes either the given duration or zero
 
+	void loadLampProgram(const char* filename);
+	// precondition: this file exists under data/lights and is well formed (checked)
+	// postcondition: the program will start running if the precondition was met
+
+	void updateLampProgram(UTIME dt);
+	// postcondition: updates the lamps if a program is loaded
+
+	void stopLampProgram();
+	// postcondition: this existing lamp program is also cleared and would have to be re-loaded to run
+
 	void renderDebugOutput(BITMAP* surface);
 	// precondition: surface is one of the backbuffers
 	// postcondition: renders a simulated lights display in the top right corner
@@ -78,6 +88,11 @@ private:
 	bool acioDetected;
 	int duration[54];
 	int spotDurations[3];
+
+	std::vector<LAMP_STEP> lampProgram;
+	UTIME currentLampProgramTime;
+	int currentLampProgramIndex;
+	bool loopLampProgram;
 
 	BITMAP* debug;
 };

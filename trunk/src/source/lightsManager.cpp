@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <algorithm>
 
 #include "lightsManager.h"
 
@@ -16,6 +17,10 @@ bool LightsManager::initialize()
 		duration[i] = 0;
 	}
 	spotDurations[0] = spotDurations[1] = spotDurations[2] = 0;
+
+	currentLampProgramTime = 0;
+	currentLampProgramIndex = 0;
+	loopLampProgram = false;
 
 	debug = create_bitmap_ex(32, 100, 100);
 
@@ -39,6 +44,8 @@ void LightsManager::update(UTIME dt)
 			SUBTRACT_TO_ZERO(spotDurations[j], (int)dt);
 		}
 	}
+
+	updateLampProgram(dt);
 
 	// update the IO board
 }
@@ -203,6 +210,93 @@ void LightsManager::setOrbColor(int player, int orb, int color, int milliseconds
 		setGroupColor(7 + player*4, color, milliseconds);
 		break;
 	}
+}
+
+void LightsManager::loadLampProgram(const char* filename)
+{
+	char temp[512] = "data/lights/";
+	FILE* fp = NULL;
+
+	stopLampProgram();
+
+	// open the file
+	strcat_s(temp, 256, filename);
+	fopen_s(&fp, temp, "rt");
+	if ( fp == NULL )
+	{
+		return;
+	}
+
+	// read lines until EOF
+	fgets(temp, 512, fp);
+	while ( temp[0] != 0 )
+	{
+		if ( temp[0] == '#' || temp[0] == '@' || temp[0] == '\n' || temp[0] == '\r' )
+		{
+			// comment
+		}
+		else
+		{
+			struct LAMP_STEP lamp;
+			sscanf_s(temp, "%d, %d, %d, %d, %c", &lamp.timing, &lamp.group, &lamp.addDuration, &lamp.color, &lamp.option);
+			lampProgram.push_back(lamp);
+		}
+
+		// next loop
+		if ( fgets(temp, 512, fp) == NULL )
+		{
+			break;
+		}
+	}
+
+	sort(lampProgram.begin(), lampProgram.end(), LAMP_STEP::sortNoteFunction);
+
+	fclose(fp);
+}
+
+void LightsManager::updateLampProgram(UTIME dt)
+{
+	if ( lampProgram.size() == 0 )
+	{
+		return;
+	}
+	currentLampProgramTime += dt;
+
+	while ( currentLampProgramIndex < (int)lampProgram.size() && lampProgram[currentLampProgramIndex].timing <= currentLampProgramTime )
+	{
+		// perform the instruction and move on to the next element
+		if ( lampProgram[currentLampProgramIndex].group >= 13 && lampProgram[currentLampProgramIndex].group <= 15 )
+		{
+			addLamp(lampProgram[currentLampProgramIndex].group + 100, lampProgram[currentLampProgramIndex].addDuration); // spotlight
+		}
+		if ( lampProgram[currentLampProgramIndex].group < 12 )
+		{
+			setGroupColor(lampProgram[currentLampProgramIndex].group, lampProgram[currentLampProgramIndex].color, lampProgram[currentLampProgramIndex].addDuration);
+		}
+		currentLampProgramIndex++;
+	}
+
+	// restart the lamp sequence or end it
+	if ( currentLampProgramIndex >= (int)lampProgram.size() )
+	{
+		if ( loopLampProgram )
+		{
+			currentLampProgramIndex = 0;
+			currentLampProgramTime = 0;
+		}
+		else
+		{
+			stopLampProgram();
+		}
+	}
+}
+
+void LightsManager::stopLampProgram()
+{
+	lampProgram.clear();
+	currentLampProgramTime = 0;
+	currentLampProgramIndex = 0;
+	loopLampProgram = false;
 }
 
 void LightsManager::renderDebugOutput(BITMAP* surface)

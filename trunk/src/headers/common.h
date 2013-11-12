@@ -558,4 +558,27 @@ enum PinACIO
 	spotlightC = 115,          // spotlights 1 + 5, always together (blue)
 };
 
+struct LAMP_STEP
+{
+	UTIME     timing;
+	int       group;        // 0-11 signals a group number, or 113-115 signals a spotlight
+	int	      addDuration;  // how much time to add to this lamp
+	int       color;        // 0=red, 1=blue, 2=purple, ignored for spotlights
+	char      option;       // dunno yet
+
+	LAMP_STEP()
+	{
+		timing = group = addDuration = color = option = 0;
+	}
+
+	static bool sortNoteFunction(struct LAMP_STEP a, struct LAMP_STEP b)
+	{
+		if ( a.timing == b.timing )
+		{
+			return a.group < b.group;
+		}
+		return a.timing < b.timing;
+	}
+};
+
 #endif // end include guard
