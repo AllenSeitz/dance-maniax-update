@@ -4,6 +4,7 @@
 #include "common.h"
 #include "GameStateManager.h"
 #include "inputManager.h"
+#include "lightsManager.h"
 #include "scoreManager.h"
 #include "songwheelMode.h"
 #include "videoManager.h"
@@ -11,6 +12,7 @@
 extern GameStateManager gs;
 extern RenderingManager rm;
 extern InputManager im;
+extern LightsManager lm;
 extern ScoreManager sm;
 extern VideoManager vm;
 extern EffectsManager em;
@@ -64,18 +66,22 @@ void advanceToNextMode()
 	case 0: // movie
 		vm.loadScript("DATA/mov/A_TITLE2.seq");
 		vm.play();
+		lm.loadLampProgram("attract_0.txt");
 		break;
 	case 1: // title
 		vm.stop();
+		lm.loadLampProgram("attract_0.txt");
 		break;
 	case 2: // new songs
 		break;
 	case 3: // how to
 		vm.loadScript("DATA/mov/A_HOWTO.seq");
 		vm.play();
+		lm.loadLampProgram("attract_0.txt");
 		break;
 	case 4: // hitchart
 		vm.stop();
+		lm.loadLampProgram("attract_0.txt");
 		break;
 	}
 }
