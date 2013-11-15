@@ -234,6 +234,10 @@ void LightsManager::loadLampProgram(const char* filename)
 		if ( temp[0] == '#' || temp[0] == '@' || temp[0] == '\n' || temp[0] == '\r' )
 		{
 			// comment
+			if ( strcmp(temp, "@loop\n") == 0 )
+			{
+				loopLampProgram = true;
+			}
 		}
 		else
 		{
