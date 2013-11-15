@@ -70,18 +70,19 @@ void advanceToNextMode()
 		break;
 	case 1: // title
 		vm.stop();
-		lm.loadLampProgram("attract_0.txt");
+		lm.loadLampProgram("attract_1.txt");
 		break;
 	case 2: // new songs
+		lm.loadLampProgram("attract_2.txt");
 		break;
 	case 3: // how to
 		vm.loadScript("DATA/mov/A_HOWTO.seq");
 		vm.play();
-		lm.loadLampProgram("attract_0.txt");
+		lm.loadLampProgram("attract_3.txt");
 		break;
 	case 4: // hitchart
 		vm.stop();
-		lm.loadLampProgram("attract_0.txt");
+		lm.loadLampProgram("attract_4.txt");
 		break;
 	}
 }
@@ -217,11 +218,6 @@ void mainAttractLoop(UTIME dt)
 			rm.dimScreen(getValueFromRange(100, 0, (submodeTimer-8000)*100/3200));
 		}
 		if ( submodeTimer > 11300 )
-		{
-			//masked_blit(m_mask, rm.m_backbuf, 0, 0, 0, 0, 640, 480);
-			advanceToNextMode();
-		}
-		if ( submodeTimer > 15500 )
 		{
 			advanceToNextMode();
 		}
