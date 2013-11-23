@@ -7,30 +7,9 @@
 #include <process.h>
 #include <string>
 
-// none of these old libraries are built for 64 bit
-#pragma warning(disable : 4312)
-#include "allegro.h"			// allegro library
-//#include "apeg.h"				// an add on for mpeg and ogg support
-#include "loadpng.h"            // extra functions for PNG support
-
-/*
-#ifdef __cplusplus
-extern "C" {
-#endif
-#include "logg.h"               // an addon for ogg support
-#ifdef __cplusplus
-}
-#endif
-//*/
-#pragma warning(default : 4312)
-
-#include "fmod.h"				// an audio library used for playing keysounds
-
-#include "winalleg.h"
-#include "mmsystem.h"			// high resolution Windows specific timers
-
 #include "common.h"
 #include "bookManager.h"
+#include "extioManager.h"
 #include "inputManager.h"
 #include "gameStateManager.h"
 #include "lightsManager.h"
@@ -80,6 +59,9 @@ BITMAP* m_failure;
 UTIME cautionTimer = 0;
 UTIME failureTimer = 0;
 UTIME hideCreditsTimer = 0;
+UTIME totalBootTime = 0;
+UTIME bootStepTime = 0;
+int currentBootStep = 0;
 
 BookManager bm;
 RenderingManager rm;
@@ -89,6 +71,7 @@ ScoreManager sm;
 VideoManager vm;
 EffectsManager em;
 LightsManager lm;
+extioManager extio;
 
 void firstSplashLoop();
 void mainSplashLoop(UTIME dt);
@@ -107,6 +90,9 @@ void mainErrorLoop(UTIME dt);
 
 void firstOperatorLoop();
 void mainOperatorLoop(UTIME dt);
+
+void firstBootLoop();
+void mainBootLoop(UTIME dt);
 
 extern void firstSongwheelLoop();
 extern void mainSongwheelLoop(UTIME dt);
@@ -235,6 +221,8 @@ int main()
 	em.initialize();
 	lm.initialize();
 
+	extio.initialize();
+
 	loadGameplayGraphics();	// these stay loaded the ENTIRE program
 
 	if ( fileExists("alphalanes") )
@@ -325,6 +313,7 @@ int main()
 			bm.logTime(dt, gs.g_currentGameMode);
 			vm.update(dt, fpsLastFrame < fpsHappyThreshold); // if we're not getting enoguh fps, then pause the movie
 			lm.update(dt);
+			extio.update(dt);
 
 			if ( gs.g_gameModeTransition == 2 )
 			{
@@ -416,6 +405,8 @@ int main()
 				case VOTEMODE:
 					firstVoteLoop();
 					break;
+				case BOOTMODE:
+					firstBootLoop();
 				default:
 					break;
 				}
@@ -476,6 +467,9 @@ int main()
 					break;
 				case VOTEMODE:
 					mainVoteLoop(dt);
+					break;
+				case BOOTMODE:
+					mainBootLoop(dt);
 					break;
 				default:
 					break;
@@ -1096,6 +1090,88 @@ void mainCautionLoop(UTIME dt)
 		gs.g_gameModeTransition = 1;
 		gs.g_currentGameMode = PLAYERSELECT;
 	}
+}
+
+void firstBootLoop()
+{
+	totalBootTime = 0;
+	bootStepTime = 0;
+	currentBootStep = 0;
+}
+
+void mainBootLoop(UTIME dt)
+{
+	static char results[6][5] = { ".", "..", "...", "....", "OK", "BAD" };
+	int dotdotdot = (bootStepTime / 333) % 3;
+
+	bootStepTime += dt;
+	if ( currentBootStep <= 2 )
+	{
+		totalBootTime += dt;
+	}
+
+	clear_to_color(rm.m_backbuf, 0);
+	textprintf_centre(rm.m_backbuf, font, 320, 50, WHITE, "DanceManiax System Startup");
+	textprintf(rm.m_backbuf, font, 50, 140, WHITE, "I/O   CHECK:");
+	textprintf(rm.m_backbuf, font, 50, 160, WHITE, "DATA  CHECK:");
+	textprintf(rm.m_backbuf, font, 50, 180, WHITE, "SOUND CHECK:");
+
+	if ( currentBootStep == 0 )
+	{
+		if ( extio.updateInitialize(dt) == false )
+		{
+			textprintf(rm.m_backbuf, font, 154, 140, RED, results[5]); // hard fail
+			bootStepTime = 0;
+			currentBootStep = 1;
+		}
+		else
+		{
+			textprintf(rm.m_backbuf, font, 154, 140, WHITE, results[dotdotdot]);
+
+			if ( extio.isReady() )
+			{
+				bootStepTime = 0;
+				currentBootStep = 1;
+			}	
+		}
+	}
+	else if ( currentBootStep == 1 )
+	{
+		textprintf(rm.m_backbuf, font, 154, 140, GREEN, results[4]);
+		textprintf(rm.m_backbuf, font, 154, 160, WHITE, results[dotdotdot]);
+
+		if ( bootStepTime >= 3000 )
+		{
+			bootStepTime = 0;
+			currentBootStep = 2;
+		}
+	}
+	else if ( currentBootStep == 2 )
+	{
+		textprintf(rm.m_backbuf, font, 154, 140, GREEN, results[4]);
+		textprintf(rm.m_backbuf, font, 154, 160, GREEN, results[4]);
+		textprintf(rm.m_backbuf, font, 154, 180, WHITE, results[dotdotdot]);
+
+		if ( bootStepTime >= 3000 )
+		{
+			bootStepTime = 0;
+			currentBootStep = 3;
+		}
+	}
+	else
+	{
+		textprintf(rm.m_backbuf, font, 154, 140, (bootStepTime/75) %2 == 0 && bootStepTime < 2500 ? WHITE : GREEN, results[4]);
+		textprintf(rm.m_backbuf, font, 154, 160, (bootStepTime/75) %2 == 0 && bootStepTime < 2500 ? WHITE : GREEN, results[4]);
+		textprintf(rm.m_backbuf, font, 154, 180, (bootStepTime/75) %2 == 0 && bootStepTime < 2500 ? WHITE : GREEN, results[4]);
+
+		if ( bootStepTime >= 3000 )
+		{
+			gs.g_gameModeTransition = 1;
+			gs.g_currentGameMode = ATTRACT;
+		}
+	}
+
+	textprintf(rm.m_backbuf, font, 50, 350, WHITE, "TIME ELAPSED: %ld", totalBootTime);
 }
 
 int initializeSonglist()

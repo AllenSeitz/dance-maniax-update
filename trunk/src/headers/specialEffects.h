@@ -4,10 +4,7 @@
 #ifndef _SPECIALEFFECTS_H_
 #define _SPECIALEFFECTS_H_
 
-#pragma warning(disable : 4312)
-#include <allegro.h>			// allegro library
-//#include "apeg.h"				// an add on for mpeg and ogg support
-#pragma warning(default : 4312)
+#include "common.h"
 
 void renderLightningBeamHorizontal(int x, int width, int y1, int y2, int seed, int endStyle);
 void renderLightningBeamVertical(int y, int height, int x1, int x2, int seed, int endStyle);

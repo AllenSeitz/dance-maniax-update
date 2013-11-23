@@ -4,9 +4,7 @@
 #ifndef _PARTICLESPRITES_H_
 #define _PARTICLESPRITES_H_
 
-#pragma warning(disable : 4312)
-#include <allegro.h>			// allegro library
-#pragma warning(default : 4312)
+#include "common.h"
 
 struct PARTICLE_INFO
 {
