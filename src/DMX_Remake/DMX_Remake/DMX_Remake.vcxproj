@@ -77,6 +77,7 @@
     <ClInclude Include="..\..\headers\bookManager.h" />
     <ClInclude Include="..\..\headers\common.h" />
     <ClInclude Include="..\..\headers\dwi_read.h" />
+    <ClInclude Include="..\..\headers\extioManager.h" />
     <ClInclude Include="..\..\headers\gameplayRendering.h" />
     <ClInclude Include="..\..\headers\gameStateManager.h" />
     <ClInclude Include="..\..\headers\inputManager.h" />
@@ -94,6 +95,7 @@
     <ClCompile Include="..\..\source\common.cpp" />
     <ClCompile Include="..\..\source\dmxsq_read.cpp" />
     <ClCompile Include="..\..\source\dwi_read.cpp" />
+    <ClCompile Include="..\..\source\extioManager.cpp" />
     <ClCompile Include="..\..\source\gameoverMode.cpp" />
     <ClCompile Include="..\..\source\gameplayMode.cpp" />
     <ClCompile Include="..\..\source\gameplayRendering.cpp" />

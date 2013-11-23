@@ -4,15 +4,20 @@
 #ifndef _COMMONDMXH_H_
 #define _COMMONDMXH_H_
 
+#pragma warning(disable : 4312)
+#include "allegro.h"			// allegro library
+#include "winalleg.h"
+#include "loadpng.h"            // extra functions for PNG support
+
+#include "mmsystem.h"			// high resolution Windows specific timers
+
+#include "fmod.h"				// an audio library used for playing keysounds
+#pragma warning(default : 4312)
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <time.h>
 #include <string>
-
-#pragma warning(disable : 4312)
-#include "allegro.h"			// allegro library
-//#include "apeg.h"				// an add on for mpeg and ogg support
-#pragma warning(default : 4312)
 
 #define UTIME unsigned long int
 
@@ -88,8 +93,10 @@ struct AL_POINT
 #define FAILURE 15
 #define PLAYERSELECT 16
 #define VOTEMODE 17
+#define BOOTMODE 18
 #ifdef DMXDEBUG
-	#define FIRST_GAME_MODE SONGWHEEL
+	#define FIRST_GAME_MODE BOOTMODE
+	//#define FIRST_GAME_MODE SONGWHEEL
 	//#define FIRST_GAME_MODE GAMEPLAY
 	//#define FIRST_GAME_MODE PLAYERSELECT
 	//#define FIRST_GAME_MODE ATTRACT
@@ -488,6 +495,9 @@ int getSampleLength(SAMPLE* sample);
 //////////////////////////////////////////////////////////////////////////////
 // IO board related
 //////////////////////////////////////////////////////////////////////////////
+
+// used only while debugging to speed up the IO test
+#define TRUSTED_COM_PORT 4
 
 // used for all input and output pins. also used to distinguish lamps for the LightsManager
 enum PinACIO
