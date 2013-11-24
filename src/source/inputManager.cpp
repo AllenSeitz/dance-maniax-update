@@ -166,7 +166,7 @@ void InputManager::processInputFromExtio(unsigned char bytes[3])
 		return;
 	}
 
-	al_trace("GIVEN: %d %d %d\n", bytes[0], bytes[1], bytes[2]);
+	//al_trace("GIVEN: %d %d %d\n", bytes[0], bytes[1], bytes[2]);
 	for ( int i = 0; i < 8; i++ )
 	{
 		if ( pins0[i] > 0 )
@@ -194,15 +194,15 @@ void InputManager::processDanceManiaxBlueSensors()
 
 void InputManager::processDanceManiaxBlueSensorHelper(int a, int b, int blue)
 {
-	if ( m_panelStates[a] == JUST_DOWN || m_panelStates[b] == JUST_DOWN )
+	if ( m_panelStates[a] == HELD_DOWN || m_panelStates[b] == HELD_DOWN )
 	{
-		m_panelStates[blue] = JUST_DOWN;
+		m_panelStates[blue] = HELD_DOWN;
 		m_panelHoldLength[blue] = MAX(m_panelHoldLength[a], m_panelHoldLength[b]);
 		m_panelReleaseLength[blue] = 0;
 	}
-	else if ( m_panelStates[a] == HELD_DOWN || m_panelStates[b] == HELD_DOWN )
+	else if ( m_panelStates[a] == JUST_DOWN || m_panelStates[b] == JUST_DOWN )
 	{
-		m_panelStates[blue] = HELD_DOWN;
+		m_panelStates[blue] = JUST_DOWN;
 		m_panelHoldLength[blue] = MAX(m_panelHoldLength[a], m_panelHoldLength[b]);
 		m_panelReleaseLength[blue] = 0;
 	}
