@@ -437,6 +437,8 @@ public:
 		case PLAYER_SCORES_LOST: return "PLAYER SCORE DATA LOST";
 		case 6000: return "UNSPECIFIC UPDATE ERROR";
 		case UPDATE_FAILED: return "FAILED TO START UPDATE PROCESS";
+		case 7000: return "UNSPECIFIC HARDWARE ERROR";
+		case EXTIO_ERROR: return "I/O BOARD SYNC ERROR";
 		}
 		return "(no error description)";
 	}
