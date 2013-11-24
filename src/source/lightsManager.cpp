@@ -6,6 +6,9 @@
 #include <algorithm>
 
 #include "lightsManager.h"
+#include "extioManager.h"
+
+extern extioManager extio;
 
 bool LightsManager::initialize()
 {
@@ -46,6 +49,7 @@ void LightsManager::update(UTIME dt)
 	}
 
 	updateLampProgram(dt);
+	extio.updateLamps();
 
 	// update the IO board
 }

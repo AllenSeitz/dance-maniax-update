@@ -27,6 +27,12 @@ public:
 	// precondition: isReady() (checked) or else this call will do nothing
 	// postcondition: updates the IO board, if necessary
 
+	void updateLamps();
+	// precondition: called only by the LightsManager whenever a lamp change happens, and not more than 20 times per second
+	// postcondition: a packet has been sent to the IO board
+
+	// TODO: functions for coin counter and lockout coil
+
 private:
 	int comPort;
 	bool isConnected;
@@ -44,6 +50,7 @@ private:
 private:
 	static const int PACKET_SIZE = 3;
 	unsigned char inputBuffer[PACKET_SIZE];
+	UTIME timeSinceLastLampUpdate;
 
 	void* hSerial;
 	COMSTAT status;
