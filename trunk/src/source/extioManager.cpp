@@ -2,9 +2,12 @@
 // source file created by Allen Seitz 11/14/2013
 
 #include "extioManager.h"
+#include "inputManager.h"
 
 #define ARDUINO_WAIT_TIME 2000
 #define ARDUINO_TIMEOUT 4000
+
+extern InputManager im;
 
 extioManager::extioManager()
 {
@@ -68,11 +71,12 @@ bool extioManager::updateInitialize(UTIME dt)
 			if ( isPacketReady() )
 			{
 				ReadData(inputBuffer, PACKET_SIZE);
-				if ( strcmp(inputBuffer, "OK!") == 0 )
+				if ( inputBuffer[0] == 'O' && inputBuffer[1] == 'K' && inputBuffer[2] == '!' )
 				{
 					isTalking = true;
 					connectionState = 3;
 					al_trace("Handshake accepted! Found the IO board on port %d.\r\n", comPort);
+					WriteData("I", 1); // begin the input request loop
 				}
 				else
 				{
@@ -108,8 +112,6 @@ bool extioManager::isReady()
 
 void extioManager::update(UTIME dt)
 {
-	static UTIME benchmarkTime = 0;
-
 	if ( isConnected )
 	{
 		powerOnTime += dt;
@@ -120,30 +122,12 @@ void extioManager::update(UTIME dt)
 	}
 
 	// actually do work here
-	//*
-	if ( connectionState == 3 )
-	{
-		char temp[4] = "000";
-		for ( int i = 0; i < PACKET_SIZE; i++ )
-		{
-			temp[i] = rand()%5 + '0';
-		}
-		//WriteData("PING__", PACKET_SIZE);
-		WriteData(temp, PACKET_SIZE);
-		al_trace("%s ->", temp);
-		benchmarkTime = powerOnTime;
-		connectionState = 4;
-	}
 	if ( isPacketReady() )
 	{
 		ReadData(inputBuffer, PACKET_SIZE);
-		al_trace("%c%c%c in %dms\r\n", inputBuffer[0], inputBuffer[1], inputBuffer[2], powerOnTime-benchmarkTime);
-		if ( strcmp(inputBuffer, "PONG__") == 0 )
-		{
-		}
-		connectionState = 3;
+		im.processInputFromExtio(inputBuffer);
+		WriteData("I", 1); // continue requesting input in a loop forever
 	}
-	//*/
 }
 
 bool extioManager::attemptConnection(const char* port)
@@ -193,7 +177,7 @@ bool extioManager::attemptConnection(const char* port)
 // LOW LEVEL SERIAL FUNCTIONS
 //////////////////////////////////////////////////////////////////////////////
 
-int extioManager::ReadData(char *buffer, unsigned int nbChar)
+int extioManager::ReadData(unsigned char *buffer, unsigned int nbChar)
 {
     //Number of bytes we'll have read
     DWORD bytesRead;

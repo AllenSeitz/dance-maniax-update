@@ -43,13 +43,13 @@ private:
 	//////////////////////////////////////////////////////////////////////////
 private:
 	static const int PACKET_SIZE = 3;
-	char inputBuffer[PACKET_SIZE];
+	unsigned char inputBuffer[PACKET_SIZE];
 
 	void* hSerial;
 	COMSTAT status;
 	DWORD errors;
 
-	int ReadData(char *buffer, unsigned int nbChar);
+	int ReadData(unsigned char *buffer, unsigned int nbChar);
 	// precondition: isReady() and buffer can hold nbChar bytes
 	// postcondition: reads up to nbChar bytes
 	// returns: number of bytes actually read, or -1 if the port was empty

@@ -79,6 +79,11 @@ public:
 	// precondition: milliseconds should be [0..150] or bad things will happen
 	// postcondition: if milliseconds > 0 then "ghosting" will be less of a problem
 
+	void processInputFromExtio(unsigned char bits[3]);
+	// precondition: both this class and the extioManager are initialized and ready
+	// postcondition: panelsDown and panelHoldLength are updated
+	// NOTE: the parameter is a specific array of 24 bits, directly from the IO board
+
 	// these functions and bools are for reversing the on/off logic for a PPP controller
 	bool isRedSensor(int i)
 	{
@@ -97,6 +102,9 @@ protected:
 	int m_panelReleaseLength[NUM_INPUTS];
 
 	int m_cooldownThreshold; // needed to prevent input flickering (as infrareds are likely to do)
+
+	// for the extioManager to set
+	bool m_ioBoardStates[NUM_INPUTS];
 
 	// {qw,az,sx} = 1P, arrow keys for 2P, enter for 'start', see source file
 	int m_keyMapping[NUM_INPUTS];

@@ -29,7 +29,8 @@ InputManager::InputManager()
 	{
 		m_panelStates[i] = HELD_UP;
 		m_panelHoldLength[i] = 0;
-		m_panelReleaseLength[10] = 0;
+		m_panelReleaseLength[i] = 0;
+		m_ioBoardStates[i] = false;
 	}
 
 	for ( i = 0; i < NUM_INPUTS; i++ )
@@ -45,7 +46,7 @@ void InputManager::updateKeyStates(UTIME dt)
 {	
 	for ( int i = 0; i < NUM_INPUTS; i++ )
 	{
-		bool thisKeyIsPressed = key[m_keyMapping[i]] != 0;
+		bool thisKeyIsPressed = key[m_keyMapping[i]] != 0 || m_ioBoardStates[i];
 
 		// hax for a PPP sensor
 		if ( (reverseRedSensorPolarity && isRedSensor(i)) || (reverseBlueSensorPolarity && isBlueSensor(i)) )
@@ -148,6 +149,39 @@ int InputManager::getReleaseLength(int column)
 {
 	ASSERT(column < NUM_INPUTS && column >= 0);
 	return m_panelReleaseLength[column];
+}
+
+void InputManager::processInputFromExtio(unsigned char bytes[3])
+{
+	const int pins0[] = { MENU_TEST, MENU_SERVICE, MENU_START_1P, MENU_LEFT_1P, MENU_RIGHT_1P, MENU_START_2P, MENU_LEFT_2P, MENU_RIGHT_2P };
+	const int pins1[] = { UL_1P, UR_1P, UL_2P, UR_2P, -1, -1, BLUE_SENSOR_1PL0, BLUE_SENSOR_1PL1 };
+	const int pins2[] = { BLUE_SENSOR_1PR0, BLUE_SENSOR_1PR1, BLUE_SENSOR_2PL0, BLUE_SENSOR_2PL1, BLUE_SENSOR_2PR0, BLUE_SENSOR_2PR1, MENU_COIN, -2 };
+
+	// check for an error
+	if (bytes[0] == 'B' && bytes[1] == 'A' && bytes[2] == 'D' )
+	{
+		// according to my calculations, this can happen when the following inputs are pressed and NO others:
+		// service + MENU_LEFT_2P + UL_1P + BLUE_L0_1P + BLUE_L0_2P + coin
+		globalError(EXTIO_ERROR, "PLEASE WAIT FOR REBOOT");
+		return;
+	}
+
+	al_trace("GIVEN: %d %d %d\n", bytes[0], bytes[1], bytes[2]);
+	for ( int i = 0; i < 8; i++ )
+	{
+		if ( pins0[i] > 0 )
+		{
+			m_ioBoardStates[pins0[i]] = bytes[0] & (1 << i) ? false : true;
+		}
+		if ( pins1[i] > 0 )
+		{
+			m_ioBoardStates[pins1[i]] = bytes[1] & (1 << i) ? false : true;
+		}
+		if ( pins2[i] > 0 )
+		{
+			m_ioBoardStates[pins2[i]] = bytes[2] & (1 << i) ? false : true;
+		}
+	}
 }
 
 void InputManager::processDanceManiaxBlueSensors()

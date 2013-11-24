@@ -115,13 +115,14 @@ struct AL_POINT
 #define BOOKKEEPING_NOT_FOUND    3002
 #define CLEARED_MACHINE_SETTINGS 3003
 #define SONG_DATA_INCOMPLETE     4001
-#define ERROR_DECODING_VIDEO   4002
-#define UNABLE_TO_LOAD_AUDIO   4004
-#define INVALID_SONG_ID        4003
-#define BAD_NONSTOP_DATA       4005
-#define PLAYER_PREFS_LOST    5001
-#define PLAYER_SCORES_LOST   5002
-#define UPDATE_FAILED          6001
+#define ERROR_DECODING_VIDEO     4002
+#define UNABLE_TO_LOAD_AUDIO     4004
+#define INVALID_SONG_ID          4003
+#define BAD_NONSTOP_DATA         4005
+#define PLAYER_PREFS_LOST        5001
+#define PLAYER_SCORES_LOST       5002
+#define UPDATE_FAILED            6001
+#define EXTIO_ERROR              7001
 
 void globalError(long errorCode, char* errorInfo);
 void songIndexError(int id);
