@@ -3,11 +3,13 @@
 
 #include "extioManager.h"
 #include "inputManager.h"
+#include "lightsManager.h"
 
 #define ARDUINO_WAIT_TIME 2000
 #define ARDUINO_TIMEOUT 4000
 
 extern InputManager im;
+extern LightsManager lm;
 
 extioManager::extioManager()
 {
@@ -17,6 +19,7 @@ extioManager::extioManager()
 	isTalking = false;
 	powerOnTime = 0;
 	connectionState = 0;
+	timeSinceLastLampUpdate = 0;
 }
 
 void extioManager::initialize()
@@ -115,6 +118,7 @@ void extioManager::update(UTIME dt)
 	if ( isConnected )
 	{
 		powerOnTime += dt;
+		timeSinceLastLampUpdate += dt;
 	}
 	if ( !isReady() )
 	{
@@ -128,6 +132,43 @@ void extioManager::update(UTIME dt)
 		im.processInputFromExtio(inputBuffer);
 		WriteData("I", 1); // continue requesting input in a loop forever
 	}
+}
+
+void extioManager::updateLamps()
+{
+	char b0 = 0, b1 = 0, b2 = 0;
+
+	if ( timeSinceLastLampUpdate < 50 )
+	{
+		//al_trace("--STIFLED LAMP UPDATE-- too soon of an update.\r\n");
+		return; // don't do that
+	}
+	timeSinceLastLampUpdate = 0;
+
+	// write the LEDs
+	WriteData("1", 1);
+	for ( int i = 0; i < 8; i++ )
+	{
+		b0 |= lm.getLamp(30+i) ? 1 << i : 0;
+		b1 |= lm.getLamp(38+i) ? 1 << i : 0;
+		b2 |= lm.getLamp(46+i) ? 1 << i : 0;
+	}
+	WriteData(&b0, 1);
+	WriteData(&b1, 1);
+	WriteData(&b2, 1);
+
+	// write the other lamps
+	b0 = b1 = b2 = 0;
+	WriteData("2", 1);
+	for ( int i = 0; i < 6; i++ )
+	{
+		b0 |= lm.getLamp(24+i) ? 1 << i : 0;
+	}
+	b1 |= lm.getLamp(spotlightA) ? 1 << 0 : 0;
+	b1 |= lm.getLamp(spotlightB) ? 1 << 1 : 0;
+	b1 |= lm.getLamp(spotlightC) ? 1 << 2 : 0;
+	WriteData(&b0, 1);
+	WriteData(&b1, 1);
 }
 
 bool extioManager::attemptConnection(const char* port)
