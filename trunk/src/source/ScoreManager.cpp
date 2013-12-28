@@ -112,6 +112,8 @@ bool ScoreManager::loadPlayerFromDisk(char* name, char side)
 		int songIndex = songID_to_listID(temp.songID);
 		int chartIndex = getChartIndexFromType(temp.chartID);
 
+		temp.grade = temp.calculateGrade(); // to update old 98% = 'AA' scores to the new 98% = 'AAA' cutoff
+
 		if ( songIndex >= 0 && chartIndex >= 0 ) // otherwise would indicate a song which was cut
 		{
 			p.allTime[songIndex][chartIndex] = temp;
@@ -173,6 +175,9 @@ bool ScoreManager::loadPlayerFromDisk_v1(FILE* fp, char side)
 					temp.status = STATUS_FULL_GOOD_COMBO;
 				}
 			}
+
+			// just to be sure
+			temp.grade = temp.calculateGrade();
 
 			p.allTime[songIndex][chartIndex] = temp;
 		}
