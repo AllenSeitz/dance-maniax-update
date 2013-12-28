@@ -78,7 +78,7 @@ struct SONG_RECORD
 			}
 			else
 			{
-					status = STATUS_FULL_GOOD_COMBO;
+				status = STATUS_FULL_GOOD_COMBO;
 			}
 		}
 		else if ( getScore() >= 700000 )
@@ -99,7 +99,7 @@ struct SONG_RECORD
 		{
 			status = GRADE_NONE; // can happen, for example 2P during a single player game
 		}
-		if ( getScore() >= 990000 )
+		if ( getScore() >= 980000 )
 		{
 			grade = GRADE_AAA;
 		}
