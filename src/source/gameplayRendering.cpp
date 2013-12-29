@@ -47,6 +47,7 @@ BITMAP* m_banner1 = NULL;
 BITMAP* m_banner2 = NULL;
 BITMAP* m_fullComboAnim[11];
 BITMAP* m_fcRays[4];
+BITMAP* m_speedIcons = NULL;
 
 //BITMAP* m_notesBM[3];             // 2 colors + shock color, animations are built in
 //BITMAP* m_notesDM[6];             // 5 colors + shock color, animations are built in
@@ -115,6 +116,19 @@ int getCenterOfLanesX(int player)
 	}
 
 	return getColumnOffsetX_DMX(0)+65 + 2*columnWidth;
+}
+
+int getColumnOffsetX_ANY(int column)
+{
+	if ( gs.player[0].danceManiaxMode )
+	{
+		return getColumnOffsetX_DMX(column);
+	}
+	else if ( gs.player[0].drummaniaMode )
+	{
+		return getColumnOffsetX_DM(column);
+	}
+	return getColumnOffsetX_DDR(column);
 }
 
 void loadGameplayGraphics()
@@ -476,6 +490,9 @@ void loadGameplayGraphics()
 	m_fcRays[1] = loadImage("DATA/gameplay/fc_rays_01.tga");
 	m_fcRays[2] = loadImage("DATA/gameplay/fc_rays_02.tga");
 	m_fcRays[3] = loadImage("DATA/gameplay/fc_rays_03.tga");
+
+	// load more graphics
+	m_speedIcons = loadImage("DATA/gameplay/speed_icons.tga");
 }
 
 void renderStageDisplay()
@@ -545,15 +562,34 @@ void renderGrade(int grade, int x, int y)
 	masked_blit(m_grades, rm.m_backbuf, sx, sy, x, y, 48, 48);
 }
 
-void renderSpeedMod(int scrollRate, int speedMod, int x, int y)
+void renderSpeedMod(int player, int scrollRate, int speedMod)
 {
-	renderWhiteNumber(speedMod/10, x, y);
-	renderWhiteLetter('.', x+10, y);
-	renderWhiteNumber(speedMod%10, x+20, y);
-	renderWhiteLetter('x', x+40, y);
-	renderWhiteNumber(scrollRate*speedMod/10, x+70, y);
-	renderWhiteLetter('=', x+100, y);
-	renderWhiteNumber(MSEC_TO_BPM(scrollRate), x+120, y);
+	//renderWhiteNumber(speedMod/10, x, y);
+	//renderWhiteLetter('.', x+10, y);
+	//renderWhiteNumber(speedMod%10, x+20, y);
+	//renderWhiteLetter('x', x+40, y);
+	//renderWhiteNumber(scrollRate*speedMod/10, x+70, y);
+	//renderWhiteLetter('=', x+100, y);
+	//renderWhiteNumber(MSEC_TO_BPM(scrollRate), x+120, y);
+
+	int x = getColumnOffsetX_ANY(0) - 64;
+	int y = 360;
+	if ( player == 0 && !gs.isDoubles && !gs.isVersus && gs.player[0].isCenter() )
+	{
+		x = getColumnOffsetX_ANY(3) - 64;
+	}
+	if ( player == 1 || (player == 0 && gs.player[0].centerRight) )
+	{
+		x = getColumnOffsetX_ANY(7) +32 + 32; // should only happen in DMX mode
+	}
+	if ( gs.player[player].reverseModifier != 0 )
+	{
+		y = 84;
+	}
+
+	int index = (speedMod / 5) - 1;
+	UNUSED(scrollRate); // maybe someday render BPM somewhere on screen if it is appropriate?
+	masked_blit(m_speedIcons, rm.m_backbuf, 0, index*24, x, y, 32, 24);
 }
 
 void renderLifebar(int player)
@@ -753,10 +789,7 @@ void renderGameplay()
 		renderDMCombo(gs.player[p].displayCombo, p);
 	}
 
-	if ( gs.player[p].timeElapsed < 10000 && !gs.player[p].isColumnReversed(0) )
-	{
-		//renderSpeedMod(gs.player[p].scrollRate, gs.player[p].speedMod, centered_x-64, 380);
-	}
+	renderSpeedMod(p, gs.player[p].scrollRate, gs.player[p].speedMod);
 
 	} // done with 1P 2P loop
 
