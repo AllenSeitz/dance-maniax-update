@@ -282,13 +282,27 @@ void mainGameplayLoop(UTIME dt)
 		{
 			gs.player[0].speedMod += 5;
 		}
-		if ( gs.player[1].speedMod > 10 && im.getKeyState(MENU_LEFT_2P) == JUST_DOWN )
+		if ( gs.isVersus )
 		{
-			gs.player[1].speedMod -= 5;
+			if ( gs.player[1].speedMod > 10 && im.getKeyState(MENU_LEFT_2P) == JUST_DOWN )
+			{
+				gs.player[1].speedMod -= 5;
+			}
+			if ( gs.player[1].speedMod < 80 && im.getKeyState(MENU_RIGHT_2P) == JUST_DOWN )
+			{
+				gs.player[1].speedMod += 5;
+			}
 		}
-		if ( gs.player[1].speedMod < 80 && im.getKeyState(MENU_RIGHT_2P) == JUST_DOWN )
+		else
 		{
-			gs.player[1].speedMod += 5;
+			if ( gs.player[0].speedMod > 10 && im.getKeyState(MENU_LEFT_2P) == JUST_DOWN )
+			{
+				gs.player[0].speedMod -= 5;
+			}
+			if ( gs.player[0].speedMod < 80 && im.getKeyState(MENU_RIGHT_2P) == JUST_DOWN )
+			{
+				gs.player[0].speedMod += 5;
+			}
 		}
 	}
 
