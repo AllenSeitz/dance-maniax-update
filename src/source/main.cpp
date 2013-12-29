@@ -1229,7 +1229,7 @@ int loadSongDB()
 		allegro_message("Unexpected version number in song_db.csv: found %d expected 1", verNum);
 		return -1;
 	}
-	
+
 	fscanf_s(fp, "%[,] ", &sanityCheck, 32); // get rid of those commas
 
 	songIDs = (int *)malloc(sizeof(int) * NUM_SONGS);
@@ -1241,7 +1241,7 @@ int loadSongDB()
 
 	// now read a bunch of lines that look like:
 	// -> 101,BROKEN MY HEART,NAOKI feat.PAULA TERRY,brok.seq,4,0,7,0,6,0,6,0,1,0,0
-	for ( int i = 0; i < NUM_SONGS; i++ )
+	for ( int i = 0; i < NUM_SONGS+1; i++ )
 	{
 		int id = 0;
 		char name[64] = "";
@@ -1257,6 +1257,15 @@ int loadSongDB()
 		int isNew = 0;
 
 		fscanf_s(fp, "%d,%[^,],%[^,],%d,%d,%[^,],%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d ", &id, &name, 64, &artist, 64, &minbpm, &maxbpm, &movie, 64, &sm, &smnotes, &sw, &swnotes, &dm, &dmnotes, &dw, &dwnotes, &version, &flag, &isNew);
+
+		if ( i == NUM_SONGS )
+		{
+			if ( id == 9999 )
+			{
+				break; // good! this was another sanity check
+			}
+			return -1; // the declared NUM_SONGS was incorrect
+		}
 
 		songIDs[i] = id;
 		songTitles[i].assign(name, strlen(name));
