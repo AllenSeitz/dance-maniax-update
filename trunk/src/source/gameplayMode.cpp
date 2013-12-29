@@ -274,7 +274,7 @@ void mainGameplayLoop(UTIME dt)
 	// check for the player changing their speed-mod at the start of the song
 	//if ( gs.player[0].timeElapsed < 10000 )
 	{
-		if ( gs.player[0].speedMod > 10 && im.getKeyState(MENU_LEFT_1P) == JUST_DOWN )
+		if ( gs.player[0].speedMod > 5 && im.getKeyState(MENU_LEFT_1P) == JUST_DOWN )
 		{
 			gs.player[0].speedMod -= 5;
 		}
@@ -284,7 +284,7 @@ void mainGameplayLoop(UTIME dt)
 		}
 		if ( gs.isVersus )
 		{
-			if ( gs.player[1].speedMod > 10 && im.getKeyState(MENU_LEFT_2P) == JUST_DOWN )
+			if ( gs.player[1].speedMod > 5 && im.getKeyState(MENU_LEFT_2P) == JUST_DOWN )
 			{
 				gs.player[1].speedMod -= 5;
 			}
@@ -295,7 +295,7 @@ void mainGameplayLoop(UTIME dt)
 		}
 		else
 		{
-			if ( gs.player[0].speedMod > 10 && im.getKeyState(MENU_LEFT_2P) == JUST_DOWN )
+			if ( gs.player[0].speedMod > 5 && im.getKeyState(MENU_LEFT_2P) == JUST_DOWN )
 			{
 				gs.player[0].speedMod -= 5;
 			}
