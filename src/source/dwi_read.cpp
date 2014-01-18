@@ -404,6 +404,10 @@ int readDWI(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 			{
 				processChartString(&beats, tagLeftSide, 0);
 			}
+			else if ( _strcmpi("MANIAC", tagValue) == 0 && chartType == SINGLE_ANOTHER )
+			{
+				processChartString(&beats, tagLeftSide, 0);
+			}
 		}
 		if ( _strcmpi("DOUBLE", tagName) == 0 )
 		{
@@ -413,6 +417,11 @@ int readDWI(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 				processChartString(&beats, tagRightSide, 1);
 			}
 			else if ( _strcmpi("ANOTHER", tagValue) == 0 && chartType == DOUBLE_WILD )
+			{
+				processChartString(&beats, tagLeftSide, 0);
+				processChartString(&beats, tagRightSide, 1);
+			}
+			else if ( _strcmpi("MANIAC", tagValue) == 0 && chartType == DOUBLE_ANOTHER )
 			{
 				processChartString(&beats, tagLeftSide, 0);
 				processChartString(&beats, tagRightSide, 1);
