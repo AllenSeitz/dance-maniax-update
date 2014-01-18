@@ -5,8 +5,8 @@
 #include "inputManager.h"
 #include "lightsManager.h"
 
-#define ARDUINO_WAIT_TIME 2000
-#define ARDUINO_TIMEOUT 4000
+#define ARDUINO_WAIT_TIME 4000
+#define ARDUINO_TIMEOUT 8000
 
 extern InputManager im;
 extern LightsManager lm;
@@ -157,6 +157,8 @@ void extioManager::updateLamps()
 	WriteData(&b1, 1);
 	WriteData(&b2, 1);
 
+	al_trace("LAMP %d %d %d\n", b0, b1, b2);
+
 	// write the other lamps
 	b0 = b1 = b2 = 0;
 	WriteData("2", 1);
@@ -164,9 +166,9 @@ void extioManager::updateLamps()
 	{
 		b0 |= lm.getLamp(24+i) ? 1 << i : 0;
 	}
-	b1 |= lm.getLamp(spotlightA) ? 1 << 0 : 0;
+	b0 |= lm.getLamp(spotlightA) ? 1 << 0 : 0;
 	b1 |= lm.getLamp(spotlightB) ? 1 << 1 : 0;
-	b1 |= lm.getLamp(spotlightC) ? 1 << 2 : 0;
+	b2 |= lm.getLamp(spotlightC) ? 1 << 2 : 0;
 	WriteData(&b0, 1);
 	WriteData(&b1, 1);
 }
