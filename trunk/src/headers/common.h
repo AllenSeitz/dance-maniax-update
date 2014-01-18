@@ -95,8 +95,8 @@ struct AL_POINT
 #define VOTEMODE 17
 #define BOOTMODE 18
 #ifdef DMXDEBUG
-	#define FIRST_GAME_MODE BOOTMODE
-	//#define FIRST_GAME_MODE SONGWHEEL
+	//#define FIRST_GAME_MODE BOOTMODE
+	#define FIRST_GAME_MODE SONGWHEEL
 	//#define FIRST_GAME_MODE GAMEPLAY
 	//#define FIRST_GAME_MODE PLAYERSELECT
 	//#define FIRST_GAME_MODE ATTRACT
@@ -299,6 +299,9 @@ public:
 #define GUY_STAGE_FAILED pickRandomInt(2, 66, 67)
 #define GUY_SPECIAL_GAMEOVER pickRandomInt(2, 110, 138)
 
+#define GUY_MILD 73
+#define GUY_WILD 74
+#define GUY_MANIAX 77
 
 //////////////////////////////////////////////////////////////////////////////
 // implement the chart structure
@@ -385,8 +388,10 @@ struct SongEntry
 	int  maxBPM;
 	char mildSingle;
 	char wildSingle;
+	char maniaxSingle;
 	char mildDouble;
 	char wildDouble;
+	char maniaxDouble;
 	char version;     // for sorting
 	int numPlays;     // the only non-static data in this structure
 	char unlockFlag;
@@ -398,15 +403,17 @@ struct SongEntry
 		isNew = false;
 	}
 
-	void SongEntry::initialize(long id, int min, int max, char ms, char ws, char md, char wd, char v)
+	void SongEntry::initialize(long id, int min, int max, char ms, char ws, char xs, char md, char wd, char xd, char v)
 	{
 		songID = id;
 		minBPM = min;
 		maxBPM = max;
 		mildSingle = ms;
 		wildSingle = ws;
+		maniaxSingle = xs;
 		mildDouble = md;
 		wildDouble = wd;
+		maniaxDouble = xd;
 		version = v;
 		numPlays = 0;
 		unlockFlag = 0;
@@ -498,7 +505,7 @@ int getSampleLength(SAMPLE* sample);
 //////////////////////////////////////////////////////////////////////////////
 
 // used only while debugging to speed up the IO test
-#define TRUSTED_COM_PORT 4
+#define TRUSTED_COM_PORT 6
 
 // used for all input and output pins. also used to distinguish lamps for the LightsManager
 enum PinACIO

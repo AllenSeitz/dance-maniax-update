@@ -268,6 +268,10 @@ int main()
 
 		gs.g_currentGameMode = GAMEPLAY; // launch directly into the chart test mode
 	}
+	if ( fileExists("testboot") )
+	{
+		gs.g_currentGameMode = BOOTMODE;
+	}
 
 	if ( initializeSonglist() == -1 )
 	{
@@ -1224,9 +1228,9 @@ int loadSongDB()
 		allegro_message("Unexpected file contents in song_db.csv");
 		return -1;
 	}
-	if ( verNum != 1 )
+	if ( verNum != 2 )
 	{
-		allegro_message("Unexpected version number in song_db.csv: found %d expected 1", verNum);
+		allegro_message("Unexpected version number in song_db.csv: found %d expected 2", verNum);
 		return -1;
 	}
 
@@ -1240,7 +1244,8 @@ int loadSongDB()
 	NUM_COURSES = 0;
 
 	// now read a bunch of lines that look like:
-	// -> 101,BROKEN MY HEART,NAOKI feat.PAULA TERRY,brok.seq,4,0,7,0,6,0,6,0,1,0,0
+	// obsolete version 1 // -> 101,BROKEN MY HEART,NAOKI feat.PAULA TERRY,brok.seq,4,0,7,0,6,0,6,0,1,0,0
+	// version 2 // -> 101,BROKEN MY HEART,NAOKI feat.PAULA TERRY,brok.seq,4,0,7,0,0,0,6,0,6,0,0,0,1,0,0
 	for ( int i = 0; i < NUM_SONGS+1; i++ )
 	{
 		int id = 0;
@@ -1250,13 +1255,15 @@ int loadSongDB()
 		char movie[64] = "";
 		int sm = 0, smnotes = 0;
 		int sw = 0, swnotes = 0;
+		int sx = 0, sxnotes = 0;
 		int dm = 0, dmnotes = 0;
 		int dw = 0, dwnotes = 0;
+		int dx = 0, dxnotes = 0;
 		int version = 0;
 		int flag = 0;
 		int isNew = 0;
 
-		fscanf_s(fp, "%d,%[^,],%[^,],%d,%d,%[^,],%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d ", &id, &name, 64, &artist, 64, &minbpm, &maxbpm, &movie, 64, &sm, &smnotes, &sw, &swnotes, &dm, &dmnotes, &dw, &dwnotes, &version, &flag, &isNew);
+		fscanf_s(fp, "%d,%[^,],%[^,],%d,%d,%[^,],%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d ", &id, &name, 64, &artist, 64, &minbpm, &maxbpm, &movie, 64, &sm, &smnotes, &sw, &swnotes, &sx, &sxnotes, &dm, &dmnotes, &dw, &dwnotes, &dx, &dxnotes, &version, &flag, &isNew);
 
 		if ( i == NUM_SONGS )
 		{
@@ -1271,7 +1278,7 @@ int loadSongDB()
 		songTitles[i].assign(name, strlen(name));
 		songArtists[i].assign(artist, strlen(artist));
 		movieScripts[i].assign(movie, strlen(movie));
-		songs[i].initialize(id, minbpm, maxbpm, sm, sw, dm, dw, version); // BROKEN MY HEART
+		songs[i].initialize(id, minbpm, maxbpm, sm, sw, sx, dm, dw, dx, version); // BROKEN MY HEART
 		songs[i].unlockFlag = flag;
 		songs[i].isNew = isNew == 1;
 
@@ -1291,7 +1298,7 @@ int loadSongDB()
 			dwnotes = readXSQ(&gs.player[0].currentChart, &gs.player[0].freezeArrows, id, DOUBLE_WILD)/2;
 			al_trace("%d, %d, %d, %d, %d, %d, %d, %d, %d\r\n", id, sm, smnotes, sw, swnotes, dm, dmnotes, dw, dwnotes);
 		}
-		*/
+		//*/
 	}
 
 	fclose(fp);
@@ -1479,10 +1486,12 @@ void renderLampTest()
 	textprintf(rm.m_backbuf, font, 50, 420, makecol(196, 255, 255), "PRESS 1P LEFT / RIGHT = change target lamp");
 	textprintf(rm.m_backbuf, font, 50, 440, makecol(196, 255, 255), "PRESS 1P START BUTTON = confirm selection");
 
+#ifdef DMXDEBUG
 	if (DMXDEBUG)
 	{
 		lm.renderDebugOutput(rm.m_backbuf);
 	}
+#endif
 }
 
 void renderScreenTest()

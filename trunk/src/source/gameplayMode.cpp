@@ -1138,11 +1138,11 @@ int checkForExtraStages()
 	sumP2 /= gs.numSongsPerSet;
 	levelP1 /= gs.numSongsPerSet;
 	levelP2 /= gs.numSongsPerSet;
-	if ( levelP1 % SINGLE_ANOTHER == SINGLE_ANOTHER )
+	if ( levelP1 == SINGLE_ANOTHER || levelP1 == DOUBLE_ANOTHER )
 	{
 		levelP1 -= 1;
 	}
-	if ( levelP2 % SINGLE_ANOTHER == SINGLE_ANOTHER )
+	if ( levelP2 == SINGLE_ANOTHER )
 	{
 		levelP2 -= 1;
 	}
