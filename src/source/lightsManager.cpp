@@ -62,7 +62,11 @@ void LightsManager::setLamp(PinACIO which, int milliseconds)
 	}
 	if ( isOutputPin(which) )
 	{
-		duration[(int)which] = milliseconds;
+		int checkedIndex = (int)which; // avoids a warning
+		if ( checkedIndex < 54 )
+		{
+			duration[checkedIndex] = milliseconds;
+		}
 	}
 }
 
