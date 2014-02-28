@@ -414,6 +414,14 @@ void mainGameplayLoop(UTIME dt)
 		{
 			useAssistClap = !useAssistClap;
 		}
+		if ( k == KEY_V )
+		{
+			gs.player[0].centerLeft = !gs.player[0].centerLeft;
+		}
+		if ( k == KEY_B )
+		{
+			gs.player[0].centerRight = !gs.player[0].centerRight;
+		}
 		if ( k == KEY_M )
 		{
 			gs.player[0].danceManiaxMode = !gs.player[0].danceManiaxMode;

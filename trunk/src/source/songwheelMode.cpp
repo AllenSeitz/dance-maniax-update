@@ -740,6 +740,10 @@ void mainSongwheelLoop(UTIME dt)
 		if ( !gs.isEventMode )
 		{
 			SUBTRACT_TO_ZERO(timeRemaining, dt);
+			if ( DMXDEBUG && key[KEY_SPACE] )
+			{
+				timeRemaining = 5000;
+			}
 		}
 		if ( titleAnimTimer < TITLE_ANIM_LENGTH )
 		{
@@ -755,11 +759,7 @@ void mainSongwheelLoop(UTIME dt)
 			gs.player[0].stagesPlayed[gs.currentStage] = gs.player[1].stagesPlayed[gs.currentStage] = songlist[randIndex].songID;
 			if ( gs.isDoubles )
 			{
-				gs.player[0].stagesLevels[gs.currentStage] = gs.player[1].stagesLevels[gs.currentStage] = gs.currentStage == 0 ? DOUBLE_MILD : gs.player[1].stagesLevels[gs.currentStage-1];
-				if ( gs.player[0].stagesLevels[gs.currentStage] == DOUBLE_ANOTHER )
-				{
-					gs.player[0].stagesLevels[gs.currentStage] = DOUBLE_WILD; // can't let that happen to a random song
-				}
+				gs.player[0].stagesLevels[gs.currentStage] = gs.currentStage == 0 ? DOUBLE_MILD : DOUBLE_WILD;
 				if ( songlist[randIndex].mildDouble == 0 )
 				{
 					gs.player[0].stagesLevels[gs.currentStage] = DOUBLE_WILD;
