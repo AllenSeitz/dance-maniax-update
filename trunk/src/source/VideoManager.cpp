@@ -102,6 +102,7 @@ void VideoManager::loadScript(const char* filename)
 
 	if ( fopen_s(&fp, filename, "rb") != 0 )
 	{
+		globalError(MISSING_VIDEO_SCRIPT, filename);
 		return;
 	}
 

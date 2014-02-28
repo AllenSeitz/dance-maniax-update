@@ -119,12 +119,13 @@ struct AL_POINT
 #define UNABLE_TO_LOAD_AUDIO     4004
 #define INVALID_SONG_ID          4003
 #define BAD_NONSTOP_DATA         4005
+#define MISSING_VIDEO_SCRIPT     4006
 #define PLAYER_PREFS_LOST        5001
 #define PLAYER_SCORES_LOST       5002
 #define UPDATE_FAILED            6001
 #define EXTIO_ERROR              7001
 
-void globalError(long errorCode, char* errorInfo);
+void globalError(long errorCode, const char* errorInfo);
 void songIndexError(int id);
 
 // implement safe asset loading
