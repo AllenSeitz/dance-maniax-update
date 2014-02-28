@@ -88,7 +88,7 @@ void addLeadingZeros(char* buffer, int desiredLength)
 	}
 }
 
-void globalError(long errorCode, char* errorInfo)
+void globalError(long errorCode, const char* errorInfo)
 {
 	gs.g_currentGameMode = ERRORMODE;
 	gs.g_gameModeTransition = 1;
