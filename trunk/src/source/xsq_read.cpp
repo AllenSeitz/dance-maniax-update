@@ -167,6 +167,8 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 {
 	char filename[] = "DATA/xsq/101_sm.xsq";
 	FILE* fp = NULL;
+	//int numred = 0;
+	//int numblue = 0;
 
 	// hopefully open the target XSQ file
 	filename[ 9] = (songID/100 % 10) + '0';
@@ -300,6 +302,17 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 				a.columns[0] = col;
 				a.judgement = UNSET;
 				chart->push_back(a);
+
+				/* datamining - remove me later
+				if ( col == 0 || col == 3 || col == 4 || col == 7 )
+				{
+					numblue++;
+				}
+				else
+				{
+					numred++;
+				}
+				//*/
 			}
 		}
 
@@ -316,6 +329,8 @@ int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds,
 	chart->push_back(a);
 
 	fclose(fp);
+
+	//al_trace("SONG %d, red= %d, blue= %d\r\n", songID, numred, numblue);
 
 	// count the maximum score that this chart is worth. it is needed while the chart is being played
 	int maxScore = 0;
