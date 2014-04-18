@@ -374,6 +374,14 @@ void firstSongwheelLoop()
 	gs.killSong();
 	em.playSample(SFX_SONGWHEEL_APPEAR);
 
+	if ( gs.isFreestyleMode )
+	{
+		gs.player[0].resetAll();
+		gs.currentStage = 0;
+		gs.isVersus = false;
+		gs.isDoubles = false;
+	}
+
 	im.setCooldownTime(0);
 }
 
@@ -401,7 +409,11 @@ void mainSongwheelLoop(UTIME dt)
 
 	SUBTRACT_TO_ZERO(nextStageAnimTimer, dt);
 
-	if ( isSphereMoving )
+	if ( gs.isFreestyleMode && im.getKeyState(MENU_START_2P) == JUST_DOWN )
+	{
+		gs.isDoubles = !gs.isDoubles; // another special case for this mode
+	}
+	else if ( isSphereMoving )
 	{
 		updateSongwheelRotation(dt);
 		titleAnimTimer = 0;
@@ -622,7 +634,7 @@ void mainSongwheelLoop(UTIME dt)
 					timeRemaining = 10000;
 				}
 
-				if ( gs.currentStage >= gs.numSongsPerSet )
+				if ( gs.currentStage >= gs.numSongsPerSet || gs.isFreestyleMode )
 				{
 					gs.currentStage = 0;
 					gs.g_currentGameMode = GAMEPLAY;
@@ -737,13 +749,9 @@ void mainSongwheelLoop(UTIME dt)
 	// update the time remaining
 	if ( !isSphereMoving )
 	{
-		if ( !gs.isEventMode )
+		if ( !gs.isEventMode && !gs.isFreestyleMode )
 		{
 			SUBTRACT_TO_ZERO(timeRemaining, dt);
-			if ( DMXDEBUG && key[KEY_SPACE] )
-			{
-				timeRemaining = 5000;
-			}
 		}
 		if ( titleAnimTimer < TITLE_ANIM_LENGTH )
 		{
@@ -1026,6 +1034,22 @@ void renderPickedSongs(int percent)
 {
 	int startingX = getCoordinateOfPickedSong(0);
 	int x = startingX;
+
+	// do something totally different in convention / freestyle mode
+	if ( gs.isFreestyleMode )
+	{
+		renderBoldString("FREESTYLE MODE - 1 STAGE", 340, 30, 300, false, 3);
+		if ( gs.isDoubles )
+		{
+			renderBoldString("DOUBLES PLAY", 340, 65, 300, false, 2);
+		}
+		else
+		{
+			renderBoldString("SINGLES PLAY", 340, 65, 300, false, 1);
+		}
+		renderArtistString("Press 2P Start to switch", 340, 90, 300, 100);
+		return;
+	}
 
 	for ( int i = 0; i < gs.numSongsPerSet; i++ )
 	{

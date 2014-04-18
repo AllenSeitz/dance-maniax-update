@@ -52,6 +52,7 @@ bool allsongsDebug = false;
 bool isTestingChart = false;
 int testChartSongID = 101;
 int testChartLevel = SINGLE_MILD;
+bool SHOW_LAMPS = true;
 
 BITMAP** m_banners; // used globally
 BITMAP* m_caution;
@@ -500,6 +501,10 @@ int main()
 				{
 					renderDebugOverlay();
 				}
+				if ( key[KEY_8] )
+				{
+					SHOW_LAMPS = !SHOW_LAMPS;
+				}
 #endif
 				rm.flip();
 			}
@@ -527,7 +532,10 @@ void renderDebugOverlay()
 	}
 	//*/
 
-	lm.renderDebugOutput(rm.m_backbuf);
+	if ( SHOW_LAMPS )
+	{
+		lm.renderDebugOutput(rm.m_backbuf);
+	}
 }
 
 void firstSplashLoop()
@@ -856,11 +864,11 @@ void mainOperatorLoop(UTIME dt)
 			renderGameOptions();
 			if ( im.getKeyState(MENU_START_1P) == JUST_DOWN )
 			{
-				if ( testMenuSubIndex == 2 )
+				if ( testMenuSubIndex == 3 )
 				{
 					gs.numSongsPerSet = DEFAULT_SONGS_PER_SET;
 				}
-				if ( testMenuSubIndex == 3 )
+				if ( testMenuSubIndex == 4 )
 				{
 					testMenuMainIndex = 0;
 					testMenuSubIndex = -1;
@@ -868,11 +876,11 @@ void mainOperatorLoop(UTIME dt)
 			}
 			if ( im.getKeyState(MENU_RIGHT_1P) == JUST_DOWN || im.getKeyState(MENU_SERVICE) == JUST_DOWN )
 			{
-				testMenuSubIndex = (testMenuSubIndex + 1) % 4;
+				testMenuSubIndex = (testMenuSubIndex + 1) % 5;
 			}
 			if ( im.getKeyState(MENU_LEFT_1P) == JUST_DOWN )
 			{
-				testMenuSubIndex = (testMenuSubIndex - 1 + 4) % 4;
+				testMenuSubIndex = (testMenuSubIndex - 1 + 5) % 5;
 			}
 			if ( im.getKeyState(MENU_RIGHT_2P) == JUST_DOWN || im.getKeyState(MENU_LEFT_2P) == JUST_DOWN )
 			{
@@ -890,6 +898,10 @@ void mainOperatorLoop(UTIME dt)
 					break;
 				case 1:
 					gs.isEventMode = !gs.isEventMode;
+					break;
+				case 2:
+					gs.isFreestyleMode = !gs.isFreestyleMode;
+					gs.player[0].resetAll();
 					break;
 				}
 			}
@@ -1579,12 +1591,14 @@ void renderGameOptions()
 	textprintf_centre(rm.m_backbuf, font, 320, 50, WHITE, "GAME OPTIONS");
 
 	textprintf(rm.m_backbuf, font, 50, 100, testMenuSubIndex == 0 ? RED : WHITE, "SONGS PER CREDIT");
-	textprintf(rm.m_backbuf, font, 50, 130, testMenuSubIndex == 1 ? RED : WHITE, "EVENT MODE");
-	textprintf(rm.m_backbuf, font, 50, 310, testMenuSubIndex == 2 ? RED : WHITE, "FACTORY SETTINGS");
-	textprintf(rm.m_backbuf, font, 50, 340, testMenuSubIndex == 3 ? RED : WHITE, "SAVE AND EXIT");
+	textprintf(rm.m_backbuf, font, 50, 130, testMenuSubIndex == 1 ? RED : WHITE, "DISABLE MENU TIMER");
+	textprintf(rm.m_backbuf, font, 50, 160, testMenuSubIndex == 2 ? RED : WHITE, "CONTINUOUS PLAY MODE");
+	textprintf(rm.m_backbuf, font, 50, 310, testMenuSubIndex == 3 ? RED : WHITE, "FACTORY SETTINGS");
+	textprintf(rm.m_backbuf, font, 50, 340, testMenuSubIndex == 4 ? RED : WHITE, "SAVE AND EXIT");
 
 	textprintf(rm.m_backbuf, font, 236, 100, gs.numSongsPerSet == DEFAULT_SONGS_PER_SET ? GREEN : RED, "%d", gs.numSongsPerSet );
 	textprintf(rm.m_backbuf, font, 236, 130, GREEN, GET_ON_OFF(gs.isEventMode));
+	textprintf(rm.m_backbuf, font, 236, 160, GREEN, GET_ON_OFF(gs.isFreestyleMode));
 
 	textprintf(rm.m_backbuf, font, 50, 400, makecol(196, 255, 255), "PRESS 1P LEFT / RIGHT = select item");
 	textprintf(rm.m_backbuf, font, 50, 420, makecol(196, 255, 255), "PRESS 2P LEFT / RIGHT = modify setting");

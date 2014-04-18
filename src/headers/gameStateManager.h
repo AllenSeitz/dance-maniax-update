@@ -59,6 +59,7 @@ public:
 	bool isVersusPremium;
 	bool isDoublePremium;
 	bool isEventMode;
+	bool isFreestyleMode;
 
 	class PLAYER
 	{
@@ -277,6 +278,7 @@ public:
 		isVersusPremium = false;
 		isDoublePremium = false;
 		isEventMode = false;
+		isFreestyleMode = false;
 	}
 
 	void loadSong(int songID)
