@@ -96,7 +96,7 @@ void mainResultsLoop(UTIME dt)
 {
 	resultFadeTimer += dt;
 	secondAnimTimer = (secondAnimTimer + dt) % 750;
-	if ( !gs.isEventMode )
+	if ( !gs.isEventMode && !gs.isFreestyleMode )
 	{
 		SUBTRACT_TO_ZERO(timeRemaining, dt);
 	}
@@ -228,6 +228,13 @@ void mainResultsLoop(UTIME dt)
 			{
 				gs.g_currentGameMode = GAMEOVER;
 			}
+
+			if ( gs.isFreestyleMode )
+			{
+				gs.player[0].resetAll();
+				gs.g_currentGameMode = SONGWHEEL;
+			}
+
 			gs.g_gameModeTransition = 1;
 		}
 	}
