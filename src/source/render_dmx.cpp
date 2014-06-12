@@ -417,7 +417,7 @@ void renderUnderFrameDMX()
 	{
 		int blink = gs.player[0].stepZoneBlinkTimer > 0 ? 0 : 1;
 		int lv = blink ? gs.player[0].stagesLevels[gs.currentStage] % DOUBLE_MILD : 3;
-		masked_blit(m_leftSideHalo[lv][0], rm.m_backbuf, 0, 0, 0, 12, 320, 64); // for singles and doubles combine the two into one big halo
+		masked_blit(m_leftSideHalo[lv][0], rm.m_backbuf, 0, 0, 0, 12, 320, 64); // for singles and doubles, join the two halves of the halo together
 		masked_blit(m_rightSideHalo[lv][0], rm.m_backbuf, 0, 0, 320, 12, 320, 64);
 
 		masked_blit(m_leftSideHalo[lv][1], rm.m_backbuf, 0, 0, 0, 402, 320, 48); // the bottom halo
@@ -429,7 +429,7 @@ void renderUnderFrameDMX()
 		int lvl = blink ? gs.player[0].stagesLevels[gs.currentStage] % DOUBLE_MILD : 3;
 		blink = gs.player[1].stepZoneBlinkTimer > 0 ? 0 : 1; // probably useless
 		int lvr = blink ? gs.player[1].stagesLevels[gs.currentStage] % DOUBLE_MILD : 3;
-		masked_blit(m_leftSideHalo[lvl][0], rm.m_backbuf, 0, 0, 0, 12, 320, 64);
+		masked_blit(m_leftSideHalo[lvl][0], rm.m_backbuf, 0, 0, 0, 12, 320, 64); // 1P is the left half, 2P colors the right half
 		masked_blit(m_rightSideHalo[lvr][0], rm.m_backbuf, 0, 0, 320, 12, 320, 64);
 
 		masked_blit(m_leftSideHalo[lvl][1], rm.m_backbuf, 0, 0, 0, 402, 320, 48);
