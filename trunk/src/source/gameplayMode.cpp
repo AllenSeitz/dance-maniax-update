@@ -1105,9 +1105,9 @@ void arrangeChart(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *
 {
 	char arrangeMatrix[4][2][8] = { 
 		{ {0,1,2,3,4,5,6,7}, {0,1,2,3,4,5,6,7} }, // original chart
-		{ {3,2,1,0,3,2,1,0}, {7,6,5,4,3,2,1,0} }, // mirror
-		{ {1,0,3,2,1,0,3,2}, {1,0,3,2,5,4,7,6} }, // upside down
-		{ {2,1,0,3,2,1,0,3}, {0,1,2,3,4,5,6,7} }, // one shuffle pattern
+		{ {3,2,1,0,7,6,5,4}, {7,6,5,4,3,2,1,0} }, // mirror
+		{ {1,0,3,2,5,4,7,6}, {1,0,3,2,5,4,7,6} }, // upside down
+		{ {2,1,0,3,6,5,4,7}, {0,1,2,3,4,5,6,7} }, // one shuffle pattern
 	};
 	char doubles = isDoubles ? 1 : 0;
 
