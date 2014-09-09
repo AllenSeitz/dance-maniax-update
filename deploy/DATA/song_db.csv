@@ -1,4 +1,4 @@
-DMXDB,December 29th 2013,117,2,,,,,,,,,,,,,,,,,
+DMXDB,August 2nd 2014,120,2,,,,,,,,,,,,,,,,,
 101,BROKEN MY HEART,NAOKI feat.PAULA TERRY,160,160,DATA/mov/brok.seq,4,206,7,281,0,0,6,210,6,291,0,0,1,0,0
 102,PUT YOUR FAITH IN ME,UZI-LAY,120,120,DATA/mov/puty.seq,1,128,5,176,0,0,3,176,5,222,0,0,1,0,0
 103,GORGEOUS 2012,THE SURRENDERS,135,135,DATA/mov/gorg.seq,6,235,7,222,0,0,6,227,7,387,0,0,1,0,0
@@ -85,7 +85,7 @@ DMXDB,December 29th 2013,117,2,,,,,,,,,,,,,,,,,
 249,Non Stop Special 2 |(tt edit),Non Stop Mix Special,180,190,DATA/mov/boss2.seq,5,366,9,438,0,0,5,390,9,437,0,0,4,1,0
 250,Non Stop Special 2 |(yh edit),Non Stop Mix Special,180,190,DATA/mov/boss2.seq,5,322,9,523,0,0,5,365,9,501,0,0,4,1,0
 301,Wuv U,kors k,173,173,DATA/mov/wuvu.seq,3,199,6,272,0,0,3,202,6,260,0,0,5,0,0
-302,Daisuke,Y&Co,157,157,DATA/mov/dais.seq,4,275,6,284,1,0,5,290,7,292,1,0,5,0,0
+302,Daisuke,Y&Co,157,157,DATA/mov/dais.seq,4,275,6,310,1,418,5,290,7,354,1,0,5,0,0
 303,POSSESSION,TAG,185,370,DATA/mov/poss.seq,6,351,9,491,0,0,4,252,8,419,0,0,5,1,0
 304,Unreal,Black Rose Garden,180,180,DATA/mov/unre.seq,5,273,8,409,0,0,4,235,8,372,0,0,5,0,0
 305,DM STAR |~kansai energy style~,Naoki for DM STAR,155,155,DATA/mov/dmst.seq,4,277,7,393,0,0,4,261,7,385,0,0,5,0,0
@@ -98,21 +98,24 @@ DMXDB,December 29th 2013,117,2,,,,,,,,,,,,,,,,,
 312,Unbelievable |(Sparky Remix),jun feat. Sarah-Jane,87,185,DATA/mov/llsb.seq,4,240,8,417,0,0,5,235,9,421,0,0,5,0,0
 313,qwerty,qwerty,0,0,no,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 314,qwerty,qwerty,0,0,no,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-315,TYCOON,SOUND HOLIC f. Nana Takahashi,170,170,DATA/mov/meal.seq,3,195,5,230,0,0,3,190,6,266,0,0,5,0,0
-316,Yuuyake |~Fading Day~,JAKAZiD,174,174,DATA/mov/yuuy.seq,6,337,9,479,0,0,6,347,8,427,0,0,5,0,0
+315,TYCOON,SOUND HOLIC f. Nana Takahashi,170,170,DATA/mov/meal.seq,3,194,5,227,0,0,3,188,7,300,0,0,5,0,0
+316,Yuuyake |~Fading Day~,JAKAZiD,174,174,DATA/mov/yuuy.seq,6,337,9,479,0,0,6,347,8,420,0,0,5,0,0
 317,Non Stop Mix Special 3,Non Stop Mix Special,199,199,no,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0
 318,Luv To Me |~super euro version~,tiger YAMATO and Y&Co.,160,160,DATA/mov/luv2.seq,4,215,6,263,0,0,2,144,4,186,0,0,5,0,0
 319,Night of Fire,NIKO,155,155,DATA/mov/bfor.seq,4,136,6,190,0,0,3,143,6,226,0,0,5,0,0
-320,FLOWER,DJ YOSHITAKA,173,173,DATA/mov/twin.seq,4,0,7,0,0,0,4,0,7,0,0,0,5,0,0
-321,Keep it |-AKIBA KOUBOU MIX-,DJ Command feat. NAGISA,166,166,DATA/mov/bfor.seq,4,0,8,0,0,0,6,0,8,0,0,0,5,0,0
+320,FLOWER,DJ YOSHITAKA,173,173,DATA/mov/twin.seq,4,279,8,450,0,0,4,268,8,445,0,0,5,0,0
+321,Keep it |-AKIBA KOUBOU MIX-,DJ Command feat. NAGISA,166,166,DATA/mov/bfor.seq,4,0,8,0,0,0,6,232,8,340,8,356,5,0,0
 322,DYNAMITE RAVE |~super euro ver.~,NAOKI and Y&Co.,150,150,DATA/mov/luv2.seq,4,0,6,0,0,0,4,0,6,0,0,0,5,0,0
-323,Popteen,Domino,151,151,DATA/mov/luv2.seq,2,0,6,0,0,0,3,0,6,0,0,0,5,0,0
+323,Popteen,Domino,151,151,DATA/mov/luv2.seq,2,217,6,334,0,0,3,224,6,367,0,0,5,0,0
 324,Elemental Creation,dj TAKA meets DJ YOSHITAKA,212,424,DATA/mov/boss2.seq,6,310,9,527,0,0,6,312,10,541,0,0,5,1,0
 325,Follow Tomorrow,HHHxMMxST,140,140,DATA/mov/peti.seq,4,0,8,0,0,0,5,0,8,0,0,0,5,0,0
 326,Koko Soko |(Akiba Koubou Remix),SMILE.DK,152,152,DATA/mov/peti.seq,3,0,7,0,0,0,5,0,7,0,0,0,5,0,0
 327,Silver*Dream,Jun,96,192,DATA/mov/peti.seq,4,284,8,453,0,0,3,267,7,415,0,0,5,0,0
-328,Miracle 5ympho X,USAO,210,210,DATA/mov/punk.seq,4,250,7,400,9,484,4,250,7,402,9,468,5,0,1
-329,C18H27NO3,Team Grimoire ,210,210,DATA/mov/punk.seq,5,329,8,492,0,0,5,299,8,473,0,0,5,0,1
+328,Miracle 5ympho X,USAO,210,210,DATA/mov/punk.seq,4,250,7,428,9,484,4,250,7,410,9,474,5,0,0
+329,C18H27NO3,Team Grimoire ,210,210,DATA/mov/punk.seq,5,329,8,492,0,0,5,299,8,473,0,0,5,0,0
+330,Monkey Business,kors k,80,160,DATA/mov/dxye.seq,4,253,8,475,0,0,4,249,8,461,0,0,5,0,0
+331,Gimme a Big Beat,kors k,138,138,DATA/mov/dyna.seq,3,211,7,321,7,368,3,223,7,313,7,339,5,0,1
+332,test,test,1,1,DATA/mov/bfor.seq,1,0,1,0,0,0,1,0,1,0,0,0,0,0,0
 385,SUPER EURO NOW |~NONSTOP~ ,MIXED BY GU TEAM ,160,160,DATA/mov/bfor.seq,0,0,7,0,0,0,0,0,8,0,0,0,101,0,0
 386,HIGH SPEED CONCLUSION,Ryutaro Nakahara,183,185,DATA/mov/bfor.seq,0,0,8,0,0,0,0,0,8,0,0,0,101,0,0
 387,House Maniax,MIXED BY GU TEAM ,125,130,DATA/mov/disc.seq,0,0,6,0,0,0,0,0,6,0,0,0,101,0,0
