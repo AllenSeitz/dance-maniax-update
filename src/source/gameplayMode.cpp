@@ -401,11 +401,6 @@ void mainGameplayLoop(UTIME dt)
 			}
 		}
 
-		if ( k == KEY_PRTSCR )
-		{
-			rm.screenshot();
-		}
-
 		if ( k == KEY_F10 )
 		{
 			autoplay = !autoplay;
