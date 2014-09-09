@@ -53,6 +53,7 @@ bool isTestingChart = false;
 int testChartSongID = 101;
 int testChartLevel = SINGLE_MILD;
 bool SHOW_LAMPS = true;
+bool held_printscreen = false;
 
 BITMAP** m_banners; // used globally
 BITMAP* m_caution;
@@ -507,6 +508,17 @@ int main()
 				}
 #endif
 				rm.flip();
+
+				// allow screenshots anywhere, even in release mode
+				if ( key[KEY_PRTSCR] && !held_printscreen )
+				{
+					held_printscreen = true;
+					rm.screenshot();
+				}
+				else
+				{
+					held_printscreen = false;
+				}
 			}
 		}
 
@@ -995,21 +1007,24 @@ void mainOperatorLoop(UTIME dt)
 						songs[i].numPlays = 0;
 					}			
 				}
-				if ( testMenuSubIndex == 1 ) // reset last logins
+				if ( testMenuSubIndex == 1 ) // disallow name entry
+				{
+				}
+				if ( testMenuSubIndex == 2 ) // reset last logins
 				{
 					resetPrevNames();
 				}
-				if ( testMenuSubIndex == 2 ) // delete player
+				if ( testMenuSubIndex == 3 ) // delete player
 				{
 				}
-				if ( testMenuSubIndex == 3 ) // change player pin
+				if ( testMenuSubIndex == 4 ) // change player pin
 				{
 				}
-				if ( testMenuSubIndex == 4 ) // update software
+				if ( testMenuSubIndex == 5 ) // update software
 				{
 					getUpdateAndRestart();
 				}
-				if ( testMenuSubIndex == 5 )
+				if ( testMenuSubIndex == 6 )
 				{
 					testMenuMainIndex = 0;
 					testMenuSubIndex = -1;
@@ -1017,11 +1032,18 @@ void mainOperatorLoop(UTIME dt)
 			}
 			if ( im.getKeyState(MENU_RIGHT_1P) == JUST_DOWN || im.getKeyState(MENU_SERVICE) == JUST_DOWN )
 			{
-				testMenuSubIndex = (testMenuSubIndex + 1) % 6;
+				testMenuSubIndex = (testMenuSubIndex + 1) % 7;
 			}
 			if ( im.getKeyState(MENU_LEFT_1P) == JUST_DOWN )
 			{
-				testMenuSubIndex = (testMenuSubIndex - 1 + 6) % 6;
+				testMenuSubIndex = (testMenuSubIndex - 1 + 7) % 7;
+			}
+			if ( im.getKeyState(MENU_LEFT_2P) == JUST_DOWN || im.getKeyState(MENU_RIGHT_2P) == JUST_DOWN )
+			{
+				if ( testMenuSubIndex == 0 )
+				{
+					gs.allowLogins = !gs.allowLogins;
+				}
 			}
 
 			break;
@@ -1106,6 +1128,21 @@ void mainCautionLoop(UTIME dt)
 		gs.g_gameModeTransition = 1;
 		gs.g_currentGameMode = PLAYERSELECT;
 	}
+
+	// allow a second player to add in?
+	bool enoughCreditsForVersus = gs.isVersusPremium || gs.isFreeplay || (gs.numCoins >= gs.numCoinsPerCredit*2);
+	bool leftPlayerAdding = !gs.leftPlayerPresent && im.getKeyState(MENU_START_1P) == JUST_DOWN;
+	bool rightPlayerAdding = !gs.rightPlayerPresent && im.getKeyState(MENU_START_2P) == JUST_DOWN;
+	if ( leftPlayerAdding && enoughCreditsForVersus )
+	{
+		gs.leftPlayerPresent = true;
+		em.playSample(SFX_CREDIT_BEGIN);
+	}
+	if ( rightPlayerAdding && enoughCreditsForVersus )
+	{
+		gs.rightPlayerPresent = true;
+		em.playSample(SFX_CREDIT_BEGIN);
+	}
 }
 
 void firstBootLoop()
@@ -1117,7 +1154,7 @@ void firstBootLoop()
 
 void mainBootLoop(UTIME dt)
 {
-	static char results[6][5] = { ".", "..", "...", "....", "OK", "BAD" };
+	static char results[7][5] = { ".", "..", "...", "....", "OK", "BAD", "SKIP" };
 	int dotdotdot = (bootStepTime / 333) % 3;
 
 	bootStepTime += dt;
@@ -1153,7 +1190,7 @@ void mainBootLoop(UTIME dt)
 	}
 	else if ( currentBootStep == 1 )
 	{
-		textprintf(rm.m_backbuf, font, 154, 140, GREEN, results[4]);
+		textprintf(rm.m_backbuf, font, 154, 140, extio.isReady() ? GREEN : WHITE, extio.isReady() ? results[4] : results[6]);
 		textprintf(rm.m_backbuf, font, 154, 160, WHITE, results[dotdotdot]);
 
 		if ( bootStepTime >= 3000 )
@@ -1164,7 +1201,7 @@ void mainBootLoop(UTIME dt)
 	}
 	else if ( currentBootStep == 2 )
 	{
-		textprintf(rm.m_backbuf, font, 154, 140, GREEN, results[4]);
+		textprintf(rm.m_backbuf, font, 154, 140, extio.isReady() ? GREEN : WHITE, extio.isReady() ? results[4] : results[6]);
 		textprintf(rm.m_backbuf, font, 154, 160, GREEN, results[4]);
 		textprintf(rm.m_backbuf, font, 154, 180, WHITE, results[dotdotdot]);
 
@@ -1176,7 +1213,14 @@ void mainBootLoop(UTIME dt)
 	}
 	else
 	{
-		textprintf(rm.m_backbuf, font, 154, 140, (bootStepTime/75) %2 == 0 && bootStepTime < 2500 ? WHITE : GREEN, results[4]);
+		if ( extio.isReady() )
+		{
+			textprintf(rm.m_backbuf, font, 154, 140, (bootStepTime/75) %2 == 0 && bootStepTime < 2500 ? WHITE : GREEN, results[4]);
+		}
+		else
+		{
+			textprintf(rm.m_backbuf, font, 154, 140, WHITE, results[6]);
+		}
 		textprintf(rm.m_backbuf, font, 154, 160, (bootStepTime/75) %2 == 0 && bootStepTime < 2500 ? WHITE : GREEN, results[4]);
 		textprintf(rm.m_backbuf, font, 154, 180, (bootStepTime/75) %2 == 0 && bootStepTime < 2500 ? WHITE : GREEN, results[4]);
 
@@ -1283,9 +1327,15 @@ int loadSongDB()
 			{
 				break; // good! this was another sanity check
 			}
+			allegro_message("The declared number of songs in song_db.csv might be incorrect. Check for errors.");
 			return -1; // the declared NUM_SONGS was incorrect
 		}
 
+		if ( id < 100 || id > 400 )
+		{
+			allegro_message("Unexpected file contents in song_db.csv - check line %d.", i-1);
+			return -1;
+		}
 		songIDs[i] = id;
 		songTitles[i].assign(name, strlen(name));
 		songArtists[i].assign(artist, strlen(artist));
@@ -1330,7 +1380,7 @@ void savePlayersHitList()
 
 	// write the version
 	fprintf(fp, "DMXH");
-	int vnum = CURRENT_VERSION_NUMBER;
+	int vnum = CURRENT_HITLIST_VERSION_NUMBER;
 	fwrite(&vnum, sizeof(long), 1, fp);
 	
 	// write everything out
@@ -1355,7 +1405,7 @@ void loadPlayersHitList()
 
 	// check the version
 	int vnum = checkFileVersion(fp, "DMXH");
-	if ( vnum != CURRENT_VERSION_NUMBER )
+	if ( vnum != CURRENT_HITLIST_VERSION_NUMBER )
 	{
 		TRACE("Wrong hitlist version number.");
 		return; // later when multiple versions exist, ideas for converting them
@@ -1745,14 +1795,16 @@ void renderDataOptions()
 {
 	textprintf_centre(rm.m_backbuf, font, 320, 50, WHITE, "DATA OPTIONS");
 
-	textprintf(rm.m_backbuf, font, 50, 100, testMenuSubIndex == 0 ? RED : WHITE, "RESET PLAYERS HITS CHART");
-	textprintf(rm.m_backbuf, font, 50, 130, testMenuSubIndex == 1 ? RED : WHITE, "RESET PREVIOUS LOGIN LIST");
-	textprintf(rm.m_backbuf, font, 50, 160, testMenuSubIndex == 2 ? RED : WHITE, "DELETE PLAYER");
-	textprintf(rm.m_backbuf, font, 50, 190, testMenuSubIndex == 3 ? RED : WHITE, "MODIFY PLAYER PIN");
-	textprintf(rm.m_backbuf, font, 50, 220, testMenuSubIndex == 4 ? RED : WHITE, "UPDATE SOFTWARE");
-	textprintf(rm.m_backbuf, font, 50, 340, testMenuSubIndex == 5 ? RED : WHITE, "EXIT");
+	textprintf(rm.m_backbuf, font, 50, 100, testMenuSubIndex == 0 ? RED : WHITE, "ALLOW PLAYER LOGIN");
+	textprintf(rm.m_backbuf, font, 236, 100, gs.allowLogins ? GREEN : RED, gs.allowLogins ? "ON" : "OFF" );
+	textprintf(rm.m_backbuf, font, 50, 130, testMenuSubIndex == 1 ? RED : WHITE, "RESET PLAYERS HITS CHART");
+	textprintf(rm.m_backbuf, font, 50, 160, testMenuSubIndex == 2 ? RED : WHITE, "RESET PREVIOUS LOGIN LIST");
+	textprintf(rm.m_backbuf, font, 50, 190, testMenuSubIndex == 3 ? RED : WHITE, "DELETE PLAYER");
+	textprintf(rm.m_backbuf, font, 50, 220, testMenuSubIndex == 4 ? RED : WHITE, "MODIFY PLAYER PIN");
+	textprintf(rm.m_backbuf, font, 50, 260, testMenuSubIndex == 5 ? RED : WHITE, "UPDATE SOFTWARE");
+	textprintf(rm.m_backbuf, font, 50, 340, testMenuSubIndex == 6 ? RED : WHITE, "EXIT");
 
 	textprintf(rm.m_backbuf, font, 50, 400, makecol(196, 255, 255), "PRESS 1P LEFT / RIGHT = select item");
-	//textprintf(rm.m_backbuf, font, 50, 420, makecol(196, 255, 255), "PRESS 2P LEFT / RIGHT = modify setting");
+	textprintf(rm.m_backbuf, font, 50, 420, makecol(196, 255, 255), "PRESS 2P LEFT / RIGHT = modify setting");
 	textprintf(rm.m_backbuf, font, 50, 440, makecol(196, 255, 255), "PRESS 1P START BUTTON = confirm selection");
 }
