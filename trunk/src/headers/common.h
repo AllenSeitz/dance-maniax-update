@@ -33,8 +33,11 @@
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 
-#define CURRENT_VERSION_NUMBER 1
+#define CURRENT_SETTING_VERSION_NUMBER 2
+#define CURRENT_BKEEP_VERSION_NUMBER 1
+#define CURRENT_HITLIST_VERSION_NUMBER 1
 #define CURRENT_SCORE_VERSION_NUMBER 2
+#define CURRENT_PLAYER_VERSION_NUMBER 2
 
 // for the operator menu
 #define WHITE makeacol(255,255,255, 255)
@@ -101,7 +104,7 @@ struct AL_POINT
 	//#define FIRST_GAME_MODE PLAYERSELECT
 	//#define FIRST_GAME_MODE ATTRACT
 #else
-	#define FIRST_GAME_MODE ATTRACT
+	#define FIRST_GAME_MODE BOOTMODE
 #endif
 
 // play modes, for logging with bookkeeping
