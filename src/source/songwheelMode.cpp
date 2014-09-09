@@ -30,7 +30,7 @@ extern bool allsongsDebug;
 //////////////////////////////////////////////////////////////////////////////
 // Constants
 //////////////////////////////////////////////////////////////////////////////
-#define WHEEL_STEP_TIME 250
+#define WHEEL_STEP_TIME 180
 
 #define NUM_BANNERS 12
 int shadowQuads[NUM_BANNERS][8] = 
@@ -458,17 +458,16 @@ void mainSongwheelLoop(UTIME dt)
 				{
 					if ( isManiaxChartAvailableHere() )
 					{
-						separateSubmenu[0] = 3;
+						separateSubmenu[0] = 1;
 						submenuDone[0] = true;
 						gs.player[0].stagesPlayed[gs.currentStage] = gs.player[1].stagesPlayed[gs.currentStage] = songlist[songwheelIndex].songID;
-						gs.player[0].stagesLevels[gs.currentStage] = separateSubmenu[0] == 3 ? SINGLE_ANOTHER : separateSubmenu[0];
+						gs.player[0].stagesLevels[gs.currentStage] = SINGLE_ANOTHER;
 						if ( submenuDone[0] && submenuDone[1] )
 						{
 							skippingSubmenu = true;
-							gs.player[1].stagesLevels[gs.currentStage] = separateSubmenu[1] == 3 ? SINGLE_ANOTHER : separateSubmenu[1];
 						}
-						em.playSample(GUY_MANIAX);
 						em.playSample(SFX_MENU_PICK);
+						em.playSample(GUY_MANIAX);
 					}
 					else
 					{
@@ -494,16 +493,15 @@ void mainSongwheelLoop(UTIME dt)
 				{
 					if ( isManiaxChartAvailableHere() )
 					{
-						separateSubmenu[1] = 3;
+						separateSubmenu[1] = 1;
 						submenuDone[1] = true;
 						gs.player[0].stagesPlayed[gs.currentStage] = gs.player[1].stagesPlayed[gs.currentStage] = songlist[songwheelIndex].songID;
-						gs.player[1].stagesLevels[gs.currentStage] = separateSubmenu[1] == 3 ? SINGLE_ANOTHER : separateSubmenu[1];
+						gs.player[1].stagesLevels[gs.currentStage] = SINGLE_ANOTHER;
 						if ( submenuDone[0] && submenuDone[1] )
 						{
 							skippingSubmenu = true;
-							gs.player[0].stagesLevels[gs.currentStage] = separateSubmenu[0] == 3 ? SINGLE_ANOTHER : separateSubmenu[0];
 						}
-						em.playSample(GUY_MANIAX);
+						em.announcerQuip(GUY_MANIAX);
 						em.playSample(SFX_MENU_PICK);
 					}
 					else
@@ -532,18 +530,13 @@ void mainSongwheelLoop(UTIME dt)
 				{
 					if ( isManiaxChartAvailableHere() )
 					{
+						currentSubmenu = 1;
 						submenuDone[0] = true;
 						skippingSubmenu = true;
-						gs.player[0].stagesPlayed[gs.currentStage] = gs.player[1].stagesPlayed[gs.currentStage] = songlist[songwheelIndex].songID;
-						gs.player[0].stagesLevels[gs.currentStage] = SINGLE_ANOTHER;
-						gs.player[1].stagesLevels[gs.currentStage] = SINGLE_ANOTHER; // doesn't matter
-						currentSubmenu = 1;
+						gs.player[0].stagesPlayed[gs.currentStage] = songlist[songwheelIndex].songID;
+						gs.player[0].stagesLevels[gs.currentStage] = gs.isDoubles ? DOUBLE_ANOTHER : SINGLE_ANOTHER;
 						maniaxSelect[0] = maniaxSelect[1] = 0;
-						if ( gs.isDoubles )
-						{
-							gs.player[0].stagesLevels[gs.currentStage] = separateSubmenu[0] == 3 ? DOUBLE_ANOTHER : separateSubmenu[0] + DOUBLE_MILD;
-						}
-						em.playSample(GUY_MANIAX);
+						em.announcerQuip(GUY_MANIAX);
 						em.playSample(SFX_MENU_PICK);
 					}
 					else
@@ -1197,6 +1190,12 @@ void renderTitleArea(int percent)
 	if ( percent >= 85 )
 	{
 		masked_blit(m_versions, rm.m_backbuf, 0, songlist[songwheelIndex].version*60, 33, 178, 96, 60);
+
+		// render the semi-secret maniax indicator (a red star near the version icon)
+		if ( gs.isDoubles ? songlist[songwheelIndex].maniaxDouble : songlist[songwheelIndex].maniaxSingle > 0 )
+		{
+			draw_trans_sprite(rm.m_backbuf, m_stars[1][0], 10, 178);
+		}
 	}
 }
 
