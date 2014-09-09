@@ -50,6 +50,9 @@ public:
 	int  currentStage;
 	int  numCoins;
 	int  currentGameType;		// 0 = nonstop, 1 = free, 2 = mission
+	bool allowLogins;
+	bool leftPlayerPresent;		// used when starting a game
+	bool rightPlayerPresent;	// used when starting a game
 
 	// operator data
 	bool isInitialized;
@@ -269,6 +272,8 @@ public:
 		{
 			//isVersus = true; // for debugging - otherwise this cannot happen
 		}
+		allowLogins = true;
+		leftPlayerPresent = rightPlayerPresent = false;
 
 		// operator settings
 		isInitialized = false;
@@ -374,21 +379,29 @@ public:
 
 		// read a short version number
 		int vnum = checkFileVersion(fp, "DMXM");
-		if ( vnum != CURRENT_VERSION_NUMBER )
+		if ( vnum > CURRENT_SETTING_VERSION_NUMBER || vnum <= 0 )
 		{
-			TRACE("Wrong msettings version number.");
+			globalError(CLEARED_MACHINE_SETTINGS, "Existing machine settings could not be read.");
 			return; // later when multiple versions exist, ideas for converting them
 		}
 
 		// okay, read everything
-		fread(&numSongsPerSet, sizeof(long), 1, fp);
-		fread(&numCoinsPerCredit, sizeof(long), 1, fp);
-		fread(&n, sizeof(long), 1, fp);
-		isFreeplay = n != 0;
-		fread(&n, sizeof(long), 1, fp);
-		isVersusPremium = n != 0;
-		fread(&n, sizeof(long), 1, fp);
-		isDoublePremium = n != 0;
+		if ( vnum >= 1 )
+		{
+			fread(&numSongsPerSet, sizeof(long), 1, fp);
+			fread(&numCoinsPerCredit, sizeof(long), 1, fp);
+			fread(&n, sizeof(long), 1, fp);
+			isFreeplay = n != 0;
+			fread(&n, sizeof(long), 1, fp);
+			isVersusPremium = n != 0;
+			fread(&n, sizeof(long), 1, fp);
+			isDoublePremium = n != 0;
+		}
+		if ( vnum >= 2 )
+		{
+			fread(&n, sizeof(long), 1, fp);
+			allowLogins = n != 0;
+		}
 
 		isInitialized = true;
 		fclose(fp);
@@ -407,7 +420,7 @@ public:
 
 		// write the version
 		fprintf(fp, "DMXM");
-		int vnum = CURRENT_VERSION_NUMBER;
+		int vnum = CURRENT_SETTING_VERSION_NUMBER;
 		fwrite(&vnum, sizeof(long), 1, fp);
 		fwrite(&numSongsPerSet, sizeof(long), 1, fp);
 		fwrite(&numCoinsPerCredit, sizeof(long), 1, fp);
@@ -416,6 +429,8 @@ public:
 		n = isVersusPremium ? 1 : 0;
 		fwrite(&n, sizeof(long), 1, fp);
 		n = isDoublePremium ? 1 : 0;
+		fwrite(&n, sizeof(long), 1, fp);
+		n = allowLogins ? 1 : 0;
 		fwrite(&n, sizeof(long), 1, fp);
 
 		safeCloseFile(fp, MSETTING_FILENAME);

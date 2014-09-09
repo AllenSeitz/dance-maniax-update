@@ -173,6 +173,8 @@ void firstAttractLoop()
 	attractSubState = submodeTimer = 0;
 	advanceToNextMode();
 	gs.killSong(); // when time runs out on the main menu
+
+	gs.leftPlayerPresent = gs.rightPlayerPresent = false;
 }
 
 void mainAttractLoop(UTIME dt)
@@ -198,6 +200,14 @@ void mainAttractLoop(UTIME dt)
 	{
 		if ( im.getKeyState(MENU_START_1P) == JUST_DOWN || im.getKeyState(MENU_START_2P) == JUST_DOWN )
 		{
+			if ( im.getKeyState(MENU_START_1P) == JUST_DOWN )
+			{
+				gs.leftPlayerPresent = true; // intentionally only set one of these here
+			}
+			else
+			{
+				gs.rightPlayerPresent = true; // intentionally only set one of these here
+			}
 			gs.g_currentGameMode = CAUTIONMODE;
 			gs.g_gameModeTransition = 1;
 			em.playSample(SFX_CREDIT_BEGIN);

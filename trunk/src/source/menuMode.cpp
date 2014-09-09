@@ -120,6 +120,10 @@ void firstMenuLoop()
 		timeRemaining = 15999;
 		currentRow = 0;
 		playersChoice = 0;
+		if ( gs.leftPlayerPresent && gs.rightPlayerPresent ) // you both pressed start during the attract/caution, so here you go
+		{
+			playersChoice = 2;
+		}
 
 		modesY = MODE_Y_TOP;
 		modesDirection = 0;
@@ -168,7 +172,7 @@ void mainMenuLoop(UTIME dt)
 	}
 	playTimeLowSFX(dt);
 
-	// proces the unfolding animation
+	// process the unfolding animation
 	if ( modesDirection != 0 )
 	{
 		modeMovingTimer += dt;
@@ -204,39 +208,68 @@ void mainMenuLoop(UTIME dt)
 
 	bool noDouble = !gs.isFreeplay && !gs.isDoublePremium && gs.numCoins < gs.numCoinsPerCredit*2;
 	bool noVersus = !gs.isFreeplay && !gs.isVersusPremium && gs.numCoins < gs.numCoinsPerCredit*2;
+	bool forcedVersus = gs.leftPlayerPresent && gs.rightPlayerPresent;
 	int numModRows = gs.isDoubles || gs.isVersus ? 3 : 4; // only show the last modifier (which side) for singles play
 
 	// check input
 	if ( currentRow == 0 && modesDirection == 0 )
 	{
-		if ( im.getKeyState(MENU_LEFT_1P) == JUST_DOWN || im.getKeyState(MENU_LEFT_2P) == JUST_DOWN )
+		// here the triangle buttons choose between single/double/versus
+		if ( forcedVersus )
 		{
-			int originalSelection = playersChoice;
-			playersChoice = playersChoice == 0 ? 0 : playersChoice - 1;
-			if ( playersChoice == 1 && noDouble )
+			// if we're in forced versus mode then the triangles don't matter
+			if ( im.getKeyState(MENU_LEFT_1P) == JUST_DOWN || im.getKeyState(MENU_LEFT_2P) == JUST_DOWN || im.getKeyState(MENU_RIGHT_1P) == JUST_DOWN || im.getKeyState(MENU_RIGHT_2P) == JUST_DOWN )
 			{
-				playersChoice = 0; // singles
+				em.playSample(SFX_MENU_STUCK);
 			}
-
-			em.playSample(originalSelection == playersChoice ? SFX_MENU_STUCK : SFX_MENU_MOVE);
 		}
-		if ( im.getKeyState(MENU_RIGHT_1P) == JUST_DOWN || im.getKeyState(MENU_RIGHT_2P) == JUST_DOWN )
+		else
 		{
-			int originalSelection = playersChoice;
-			playersChoice = playersChoice == 2 ? 2 : playersChoice + 1;
-			if ( playersChoice == 2 && noVersus )
+			// select single/double/versus except skip double or versus if either is locked out due to a lack of credits
+			if ( im.getKeyState(MENU_LEFT_1P) == JUST_DOWN || im.getKeyState(MENU_LEFT_2P) == JUST_DOWN )
 			{
-				playersChoice = 1; // doubles
-			}
-			if ( playersChoice == 1 && noDouble )
-			{
-				playersChoice = noVersus ? 0 : 2; // single or versus
-			}
+				int originalSelection = playersChoice;
+				playersChoice = playersChoice == 0 ? 0 : playersChoice - 1;
+				if ( playersChoice == 1 && noDouble )
+				{
+					playersChoice = 0; // singles
+				}
 
-			em.playSample(originalSelection == playersChoice ? SFX_MENU_STUCK : SFX_MENU_MOVE);
+				em.playSample(originalSelection == playersChoice ? SFX_MENU_STUCK : SFX_MENU_MOVE);
+			}
+			if ( im.getKeyState(MENU_RIGHT_1P) == JUST_DOWN || im.getKeyState(MENU_RIGHT_2P) == JUST_DOWN )
+			{
+				int originalSelection = playersChoice;
+				playersChoice = playersChoice == 2 ? 2 : playersChoice + 1;
+				if ( playersChoice == 2 && noVersus )
+				{
+					playersChoice = 1; // doubles
+				}
+				if ( playersChoice == 1 && noDouble )
+				{
+					playersChoice = noVersus ? 0 : 2; // single or versus
+				}
+
+				em.playSample(originalSelection == playersChoice ? SFX_MENU_STUCK : SFX_MENU_MOVE);
+			}
 		}
+
+		// pressing start will confirm the current selection and potentially add a second player
 		if ( im.getKeyState(MENU_START_1P) == JUST_DOWN || im.getKeyState(MENU_START_2P) == JUST_DOWN )
 		{
+			bool leftPlayerAdding = !gs.leftPlayerPresent && im.getKeyState(MENU_START_1P) == JUST_DOWN;
+			bool rightPlayerAdding = !gs.rightPlayerPresent && im.getKeyState(MENU_START_2P) == JUST_DOWN;
+			bool enoughCreditsForVersus = gs.isVersusPremium || gs.isFreeplay || (gs.numCoins >= gs.numCoinsPerCredit*2);
+			
+			// second player added! versus mode is auto-confirmed
+			if ( (leftPlayerAdding || rightPlayerAdding) && enoughCreditsForVersus )
+			{
+				gs.leftPlayerPresent = true;
+				playersChoice = 2;
+				em.playSample(SFX_CREDIT_BEGIN);
+			}
+
+			// sanity check
 			if ( (playersChoice == 1 && noDouble) || (playersChoice == 2 && noVersus) )
 			{
 				em.playSample(SFX_MENU_STUCK);
@@ -255,7 +288,14 @@ void mainMenuLoop(UTIME dt)
 					em.announcerQuipChance(71, 33);
 				}
 
-				modesDirection = 1; // automatically starts the unfolding animation
+				if ( gs.allowLogins )
+				{
+					modesDirection = 1; // automatically starts the unfolding animation
+				}
+				else
+				{
+					currentRow = 1; // skip directly to the mode selection
+				}
 				return;
 			}
 		}
@@ -501,6 +541,12 @@ void renderMenuLoop()
 			color = 2;
 		}
 		if ( i == 2 && !gs.isFreeplay && !gs.isVersusPremium && gs.numCoins < gs.numCoinsPerCredit*2 )
+		{
+			color = 2;
+		}
+
+		// if this is forced versus time then single and double should be darkened as well
+		if ( (i == 0 || i == 1) && gs.leftPlayerPresent && gs.rightPlayerPresent )
 		{
 			color = 2;
 		}
