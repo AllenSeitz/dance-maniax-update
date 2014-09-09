@@ -54,7 +54,7 @@ void BookManager::loadData()
 
 	// read a short version number
 	int vnum = checkFileVersion(fp, "DMXB");
-	if ( vnum != CURRENT_VERSION_NUMBER )
+	if ( vnum != CURRENT_BKEEP_VERSION_NUMBER )
 	{
 		TRACE("Wrong bookkeeping version number.");
 		return; // later when multiple versions exist, ideas for converting them
@@ -121,7 +121,7 @@ void BookManager::saveData()
 
 	// write the version and the last power-on time
 	fprintf(fp, "DMXB");
-	int vnum = CURRENT_VERSION_NUMBER;
+	int vnum = CURRENT_BKEEP_VERSION_NUMBER;
 	fwrite(&vnum, sizeof(long), 1, fp);
 	fwrite(&lastPowerOnMonth, sizeof(long), 1, fp);
 	fwrite(&lastPowerOnDay, sizeof(long), 1, fp);

@@ -52,7 +52,7 @@ bool ScoreManager::loadPlayerFromDisk(char* name, char side)
 
 	// read a short version number
 	int vnum = checkFileVersion(fp, "DMXp");
-	if ( vnum != CURRENT_VERSION_NUMBER )
+	if ( vnum != CURRENT_PLAYER_VERSION_NUMBER )
 	{
 		globalError(PLAYER_PREFS_LOST, prefsFilename);
 	}
@@ -308,7 +308,7 @@ void ScoreManager::savePlayerToDisk(PLAYER_DATA &p)
 	}
 
 	fprintf(fp, "DMXp");
-	int vnum = CURRENT_VERSION_NUMBER;
+	int vnum = CURRENT_PLAYER_VERSION_NUMBER;
 	fwrite(&vnum, sizeof(long), 1, fp);
 
 	fwrite(&p.displayName, sizeof(char), 8, fp);
