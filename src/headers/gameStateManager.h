@@ -109,6 +109,7 @@ public:
 		int  lifebarPercent;			// a number from 0 (empty) to 1000 (full)
 		int  lifebarLives;				// when using the battery, lives lift
 		bool useBattery;				// switches the lifebar mode
+		bool useHazard;					// uses a 1-life battery
 
 		// special trick rendering modes
 		bool drummaniaMode;             // pretty much switches the combo and enables "column judgements"
@@ -187,6 +188,7 @@ public:
 			// lifebar related
 			lifebarLives = 4;
 			useBattery = false;
+			useHazard = false;
 
 			// tricky Variables
 			drummaniaMode = false;

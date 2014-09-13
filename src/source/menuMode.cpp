@@ -37,6 +37,7 @@ BITMAP* m_mainPlayers;
 BITMAP* m_modRect;
 BITMAP* m_modHeadings;
 BITMAP* m_mods[4];
+BITMAP* m_hazard;
 
 BITMAP* m_startButton;
 BITMAP* m_triangles;
@@ -57,6 +58,8 @@ UTIME introTimer = 0;
 UTIME modeMovingTimer = 0;
 int modesY = 118;
 int modesDirection = 0; // -1 = up, 1 = down, 0 = stationary
+
+int hazardCount[2] = { 0, 0 }; // for the hidden hazard code
 
 const int MOD_LIMITS[4] = { 6, 2, 2, 2 }; // how many options are in each row
 const int SPEED_MOD_EFFECTS[10] = { 10, 15, 20, 25, 30, 50, 80, 5, 3 };
@@ -107,6 +110,7 @@ void firstMenuLoop()
 		m_mods[1] = loadImage("DATA/menus/mods_reverse.tga");
 		m_mods[2] = loadImage("DATA/menus/mods_mirror.tga");
 		m_mods[3] = loadImage("DATA/menus/mods_appear.tga");
+		m_hazard = loadImage("DATA/menus/hazard_flash.png");
 	}
 	if ( m_startButton == NULL )
 	{
@@ -158,6 +162,7 @@ void firstMenuLoop()
 	mods[0][0] = mods[0][1] = mods[0][2] = mods[0][3] = 0;
 	mods[1][0] = mods[1][1] = mods[1][2] = mods[1][3] = 0;
 	modeMovingTimer = 0;
+	hazardCount[0] = hazardCount[1] = 0;
 
 	im.setCooldownTime(0);
 }
@@ -350,11 +355,32 @@ void mainMenuLoop(UTIME dt)
 				{
 					mods[0][p1row] = mods[0][p1row] == 0 ? 0 : mods[0][p1row] - 1;
 					em.playSample(SFX_MOD_MOVE);
+
+					// 1P: hazard is 6 lefts of the speed mod
+					if ( p1row == 0 && mods[0][p1row] == 0 )
+					{
+						hazardCount[0]++;
+						if ( hazardCount[0] == 7 )
+						{
+							hazardCount[0] = 0;
+							gs.player[0].useHazard = !gs.player[0].useHazard;
+							if ( gs.player[0].useHazard )
+							{
+								em.playSample(10);
+								em.announcerQuip(79);
+							}
+							else
+							{
+								em.playSample(18);
+							}
+						}
+					}
 				}
 				if ( im.getKeyState(MENU_RIGHT_1P) == JUST_DOWN || im.getKeyState(MENU_RIGHT_2P) == JUST_DOWN )
 				{
 					mods[0][p1row] = mods[0][p1row] == MOD_LIMITS[p1row] ? MOD_LIMITS[p1row] : mods[0][p1row] + 1;
 					em.playSample(SFX_MOD_MOVE);
+					hazardCount[0] = 0;
 				}
 			}
 			if ( im.getKeyState(MENU_START_1P) == JUST_DOWN || im.getKeyState(MENU_START_2P) == JUST_DOWN )
@@ -592,6 +618,7 @@ void renderMenuLoop()
 	// render the modifers
 	if ( currentRow == 2 )
 	{
+		int blinkFrame = blinkTimer/84;
 		if ( playersChoice < 2 ) // render single player mods
 		{
 			renderMods(172, 200, 0, mods[0][0], p1row);
@@ -600,6 +627,10 @@ void renderMenuLoop()
 			if ( gs.isSingles() )
 			{
 				renderMods(172, 380, 3, mods[0][3], p1row);
+			}
+			if ( gs.player[0].useHazard )
+			{
+				masked_blit(m_hazard, rm.m_backbuf, 0, blinkFrame*23, 44, 200, 84, 23);
 			}
 		}
 		else // render one set of mods for each player
@@ -612,6 +643,15 @@ void renderMenuLoop()
 			renderMods(332, 260, 1, mods[1][1], p2row);
 			renderMods(332, 320, 2, mods[1][2], p2row);
 			//renderMods(332, 380, 3, mods[1][3], p2row);
+
+			if ( gs.player[0].useHazard )
+			{
+				masked_blit(m_hazard, rm.m_backbuf, 0, blinkFrame*23, 44, 380, 84, 23);
+			}
+			if ( gs.player[1].useHazard )
+			{
+				masked_blit(m_hazard, rm.m_backbuf, 0, ((blinkFrame+1)%3)*23, 512, 380, 84, 23);
+			}
 		}
 	}
 

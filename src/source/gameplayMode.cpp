@@ -357,18 +357,40 @@ void mainGameplayLoop(UTIME dt)
 		}
 	}
 
-	// check for the game ending suddenly due ot the battery lifebar
+	// check for the game ending suddenly due t0 the battery lifebar
 	if ( gs.player[0].useBattery && gs.player[0].lifebarLives <= 0 )
 	{
 		if ( !gs.isVersus || (gs.player[1].useBattery && gs.player[1].lifebarLives <= 0) )
 		{
-			gs.g_currentGameMode = FAILURE;
+			// don't leave the clear status blank
+			sm.player[0].currentSet[gs.currentStage].status = STATUS_FAILED;
+			sm.player[1].currentSet[gs.currentStage].status = gs.isVersus ? STATUS_FAILED : STATUS_NONE;
+			sm.savePlayersToDisk();
+
+			// where are we going?
+			if ( gs.player[0].useHazard||gs.player[1].useHazard )
+			{
+				if ( gs.currentStage+1 >= gs.numSongsPerSet )
+				{
+					gs.g_currentGameMode = FAILURE;
+					em.announcerQuip(GUY_STAGE_HAZARD_FAILED);
+				}
+				else
+				{
+					gs.currentStage++;
+					gs.g_currentGameMode = GAMEPLAY;
+					em.announcerQuip(GUY_STAGE_HAZARD_FAILED);
+				}
+			}
+			else
+			{
+				gs.g_currentGameMode = FAILURE;
+				em.announcerQuip(GUY_STAGE_FAILED);
+			}
+
 			gs.g_gameModeTransition = 1;
 			gs.killSong();
-			sm.savePlayersToDisk();
 			em.playSample(SFX_FAILURE_WHOOSH);
-			em.announcerQuip(GUY_STAGE_FAILED);
-			return;
 		}
 	}
 
@@ -1088,6 +1110,16 @@ void loadNextSong()
 	vm.play();
 	isMidTransition = true;
 	songTransitionTime = BANNER_ANIM_LENGTH;
+
+	// implement hazard mode
+	for ( int i = 0; i < 2; i++ )
+	{
+		if ( gs.player[i].useHazard )
+		{
+			gs.player[i].useBattery = true;
+			gs.player[i].lifebarLives = 1;
+		}
+	}
 
 	announcerTargetSpeak = (p1maxscore + p2maxscore)/7; // speak approximately 7 times per song (although it is both random and dependant on other factors)
 }
