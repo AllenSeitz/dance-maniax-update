@@ -1281,7 +1281,7 @@ int loadSongDB()
 	fscanf_s(fp, "%[^,],%[^,],%d,%d ", &sanityCheck, 8, &date, 32, &NUM_SONGS, &verNum);
 	if ( _stricmp(sanityCheck, "DMXDB") != 0 )
 	{
-		allegro_message("Unexpected file contents in song_db.csv");
+		allegro_message("Unexpected file contents in song_db.csv - not a song_db file");
 		return -1;
 	}
 	if ( verNum != 2 )
@@ -1331,9 +1331,13 @@ int loadSongDB()
 			return -1; // the declared NUM_SONGS was incorrect
 		}
 
+		if ( id == 9999 )
+		{
+			allegro_message("The declared number of songs in song_db.csv is too high. (Expected: %d, found: %d)", NUM_SONGS, i-1);
+		}
 		if ( id < 100 || id > 400 )
 		{
-			allegro_message("Unexpected file contents in song_db.csv - check line %d.", i-1);
+			allegro_message("Unexpected file contents in song_db.csv - check line %d. (SongID = %d)", i-1, id);
 			return -1;
 		}
 		songIDs[i] = id;
@@ -1347,6 +1351,10 @@ int loadSongDB()
 		if ( version == 101 )
 		{
 			NUM_COURSES++;
+		}
+		else if ( version < 0 || version > 5 )
+		{
+			allegro_message("Unexpected file contents in song_db.csv - check line %d. (Version = %d)", i-1, version);
 		}
 
 		// do some datamining? sure whatev's
