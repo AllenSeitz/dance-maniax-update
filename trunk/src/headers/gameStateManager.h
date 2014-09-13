@@ -175,6 +175,7 @@ public:
 		void resetAll()
 		{
 			nextStage();
+			resetStages();
 
 			// scroll rate
 			scrollRate = 150;

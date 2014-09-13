@@ -137,6 +137,8 @@ void firstMenuLoop()
 
 		gs.player[0].resetAll();
 		gs.player[1].resetAll();
+		sm.player[0].resetData();
+		sm.player[1].resetData();
 	}
 	else // MAINMENU
 	{
