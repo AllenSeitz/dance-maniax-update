@@ -301,6 +301,7 @@ public:
 #define GUY_EARN_EXTRA pickRandomInt(2, 115, 85) // one more time, made just for you, 
 #define GUY_EARN_SPECIAL_EXTRA pickRandomInt(2, 82, 81) // wow youre a real dancer, can you do this, 
 #define GUY_STAGE_FAILED pickRandomInt(2, 66, 67)
+#define GUY_STAGE_HAZARD_FAILED pickRandomInt(2, 146, 131)
 #define GUY_SPECIAL_GAMEOVER pickRandomInt(2, 110, 138)
 
 #define GUY_MILD 73
