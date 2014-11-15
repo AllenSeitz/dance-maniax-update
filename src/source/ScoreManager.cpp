@@ -54,7 +54,7 @@ bool ScoreManager::loadPlayerFromDisk(char* name, char side)
 	int vnum = checkFileVersion(fp, "DMXp");
 	if ( vnum != CURRENT_PLAYER_VERSION_NUMBER )
 	{
-		globalError(PLAYER_PREFS_LOST, prefsFilename);
+		globalError(PLAYER_PREFS_LOST, "version number mismatch");
 	}
 
 	fread(&p.displayName, sizeof(char), 8, fp);
@@ -83,7 +83,7 @@ bool ScoreManager::loadPlayerFromDisk(char* name, char side)
 		}
 		else
 		{
-			globalError(PLAYER_SCORES_LOST, scoreFilename);
+			globalError(PLAYER_SCORES_LOST, "version number mismatch");
 		}
 	}
 
