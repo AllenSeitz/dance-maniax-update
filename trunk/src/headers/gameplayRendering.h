@@ -161,7 +161,7 @@ void renderLifebar(int player);
 //
 //
 
-void renderFullComboAnim(int x, int time, int step);
+void renderFullComboAnim(int x, int time, int step, bool isPerfect);
 //
 //
 

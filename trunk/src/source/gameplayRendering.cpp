@@ -21,6 +21,8 @@ extern int fullComboAnimStep; // 0 = not started, 1 = started
 extern int fullComboAnimTimer;
 extern bool fullComboP1;
 extern bool fullComboP2;
+extern bool fullComboPerfectP1;
+extern bool fullComboPerfectP2;
 
 // song transition
 extern bool isMidTransition;
@@ -45,8 +47,9 @@ BITMAP* m_stageDisplay;
 BITMAP* m_grades;
 BITMAP* m_banner1 = NULL;
 BITMAP* m_banner2 = NULL;
-BITMAP* m_fullComboAnim[11];
+BITMAP* m_fullComboAnim[11][2];
 BITMAP* m_fcRays[4];
+BITMAP* m_fcPerfect;
 BITMAP* m_speedIcons = NULL;
 
 //BITMAP* m_notesBM[3];             // 2 colors + shock color, animations are built in
@@ -481,15 +484,17 @@ void loadGameplayGraphics()
 	// load full combo graphics
 	temp = loadImage("DATA/gameplay/full_combo_anim.tga");
 	for ( frame = 0; frame < 11; frame++ )
+	for ( int color = 0; color < 2; color++ )
 	{
-		m_fullComboAnim[frame] = create_bitmap_ex(32, 266, 32);
-		blit(temp, m_fullComboAnim[frame], 0, frame*32, 0, 0, 266, 32);
+		m_fullComboAnim[frame][color] = create_bitmap_ex(32, 266, 32);
+		blit(temp, m_fullComboAnim[frame][color], color*266, frame*32, 0, 0, 266, 32);
 	}
 	destroy_bitmap(temp);
 	m_fcRays[0] = loadImage("DATA/gameplay/fc_rays_00.tga");
 	m_fcRays[1] = loadImage("DATA/gameplay/fc_rays_01.tga");
 	m_fcRays[2] = loadImage("DATA/gameplay/fc_rays_02.tga");
 	m_fcRays[3] = loadImage("DATA/gameplay/fc_rays_03.tga");
+	m_fcPerfect = loadImage("DATA/gameplay/perfect_fc.tga");
 
 	// load more graphics
 	m_speedIcons = loadImage("DATA/gameplay/speed_icons.tga");
@@ -633,11 +638,12 @@ void renderLifebar(int player)
 	}
 }
 
-void renderFullComboAnim(int x, int time, int step)
+void renderFullComboAnim(int x, int time, int step, bool isPerfect)
 {
 	int frame = (time / 50) % 4;
 	int y = 86;
 	//y = (gs.player[player].isColumnReversed(i) ? DMX_STEP_ZONE_REV_Y-34 : DMX_STEP_ZONE_Y)-46;
+
 	time %= 1000;
 
 	x -= 64; // because we pass in the CENTER of the player's play area, and this animation is 128 pixels wide
@@ -651,19 +657,45 @@ void renderFullComboAnim(int x, int time, int step)
 	}
 	else if ( step == 2 ) // "FULL COMBO" fading in
 	{
-		frame = MIN(time/60, 10);
-		draw_trans_sprite(rm.m_backbuf, m_fullComboAnim[frame], x-69, 320);
+		if ( isPerfect )
+		{
+			// render the green animation, then the yellow one to turn the green gold
+			frame = MIN(time/30, 20);
+			if ( frame <= 10 )
+			{
+				draw_trans_sprite(rm.m_backbuf, m_fullComboAnim[frame][0], x-69, 320);
+			}
+			else
+			{
+				masked_blit(m_fcPerfect, rm.m_backbuf, 0, 0, x-69, 320-50, 24*(frame-10), 42);
+				draw_trans_sprite(rm.m_backbuf, m_fullComboAnim[10][0], x-69, 320);
+				draw_trans_sprite(rm.m_backbuf, m_fullComboAnim[frame-10][1], x-69, 320);
+			}
+		}
+		else
+		{
+			frame = MIN(time/60, 10);
+			draw_trans_sprite(rm.m_backbuf, m_fullComboAnim[frame][isPerfect ? 1 : 0], x-69, 320);
+		}
 	}
 	else if ( step == 3 ) // stationary text
 	{
-		draw_trans_sprite(rm.m_backbuf, m_fullComboAnim[10], x-69, 320);
+		draw_trans_sprite(rm.m_backbuf, m_fullComboAnim[10][isPerfect ? 1 : 0], x-69, 320);
+		if ( isPerfect )
+		{
+			masked_blit(m_fcPerfect, rm.m_backbuf, 0, 0, x-69, 320-50, 240, 42);
+		}
 	}
 	else if ( step > 3 ) // "FULL COMBO" fading out
 	{
 		frame = 10 - time/60;
 		if ( frame >= 0 )
 		{
-			draw_trans_sprite(rm.m_backbuf, m_fullComboAnim[frame], x-69, 320);
+			draw_trans_sprite(rm.m_backbuf, m_fullComboAnim[frame][isPerfect ? 1 : 0], x-69, 320);
+			if ( isPerfect )
+			{
+				masked_blit(m_fcPerfect, rm.m_backbuf, 0, 0, x-69, 320-50, 24*(frame), 42);
+			}
 		}
 	}
 }
@@ -823,12 +855,12 @@ void renderGameplay()
 	if ( fullComboP1 )
 	{
 		int centerx = getCenterOfLanesX(0);
-		renderFullComboAnim(centerx, fullComboAnimTimer, fullComboAnimStep);
+		renderFullComboAnim(centerx, fullComboAnimTimer, fullComboAnimStep, fullComboPerfectP1 );
 	}
 	if ( fullComboP2 )
 	{
 		int centerx = getCenterOfLanesX(1);
-		renderFullComboAnim(centerx, fullComboAnimTimer, fullComboAnimStep);
+		renderFullComboAnim(centerx, fullComboAnimTimer, fullComboAnimStep, fullComboPerfectP2 );
 	}
 }
 

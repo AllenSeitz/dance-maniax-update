@@ -88,6 +88,8 @@ int fullComboAnimStep = 0; // 0 = not started, 1 = started
 int fullComboAnimTimer = 0;
 bool fullComboP1 = false;
 bool fullComboP2 = false;
+bool fullComboPerfectP1 = false;
+bool fullComboPerfectP2 = false;
 
 // announcer
 int announcerPlusPoints = 0;
@@ -239,6 +241,7 @@ void mainGameplayLoop(UTIME dt)
 		{
 			fullComboAnimStep = fullComboAnimTimer = 0;
 			fullComboP1 = fullComboP2 = false;
+			fullComboPerfectP1 = fullComboPerfectP2 = false;
 		}
 	}
 
@@ -1031,12 +1034,20 @@ void scoreNote(int p, int judgement, int column)
 		if ( p == 0 )
 		{
 			fullComboP1 = true;
+			fullComboPerfectP1 = comboType == 2;
 			createFullComboParticles(0, comboType);
 		}
 		else
 		{
 			fullComboP2 = true;
+			fullComboPerfectP2 = comboType == 2;
 			createFullComboParticles(1, comboType);
+		}
+
+		if ( fullComboPerfectP1 || fullComboPerfectP2 )
+		{
+			em.announcerQuip(129); // perfect
+			em.playSample(9);
 		}
 	}
 }
