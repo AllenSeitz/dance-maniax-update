@@ -222,6 +222,7 @@ int main()
 	im.updateKeyStates(1);
 	em.initialize();
 	lm.initialize();
+	vm.initialize();
 
 	extio.initialize();
 
@@ -317,7 +318,7 @@ int main()
 			// update the core classes and check for lag
 			im.updateKeyStates(dt);
 			bm.logTime(dt, gs.g_currentGameMode);
-			vm.update(dt, fpsLastFrame < fpsHappyThreshold); // if we're not getting enoguh fps, then pause the movie
+			vm.update(dt);
 			lm.update(dt);
 			extio.update(dt);
 

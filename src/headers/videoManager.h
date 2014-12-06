@@ -4,6 +4,8 @@
 #ifndef _VIDEOMANAGER_H_
 #define _VIDEOMANAGER_H_
 
+#include <apeg.h>
+
 #include "common.h"
 
 // this structure is borrowed from DMX2ja directly and has not been fully reverse engineered
@@ -40,16 +42,17 @@ class VideoManager
 public:
 	VideoManager::VideoManager();
 
-	void update(UTIME dt, bool skipLoad);
+	void initialize();
+	// precondition: this is called once during startup
+	// postcondition: sets internal state and allocates memory for a movie buffer
+
+	void update(UTIME dt);
 	// precondition: dt is in milliseconds, the video script should already be loaded
 	// postcondition: advances the movie script
-	// NOTE: skipLoad will prevent loading the next frame from disk, if applicable
 
 	void reset()
 	{
-		currentTime = currentStep = currentFrame = 0;
-		frameData = NULL;
-		msPerFrame = msSinceFrame = playDirection = numFrames = 0;
+		currentTime = currentStep = 0;
 		isStopped = true;
 	}
 
@@ -61,12 +64,6 @@ public:
 	void stop()
 	{
 		isStopped = true;
-	}
-
-	// used by the attract loop for extra long movies with hardcoded lengths
-	void alternateSetNumFrames(int frames)
-	{
-		numFrames = frames;
 	}
 
 	void renderToSurface(BITMAP* surface, int x, int y);
@@ -82,25 +79,18 @@ private:
 	struct MOVIE_SEQ_STEP script[100]; // nothing will ever be larger, probably
 	int currentTime;   // counts milliseconds as they pass
 	int currentStep;   // which script step we're on
-	int currentFrame;  // for the current movie, which frame we're on
-	BITMAP* frameData; // the pixel contents of the current frame
-	int msPerFrame;    // basically the framerate for the current movie
-	int msSinceFrame;  // time since the last frame change
-	int playDirection; // which direction to step for the current movie
-	int numFrames;     // the number of frames in the currently loaded video
 	bool isStopped;    // pause movie playback
 
 	bool haxLowerFramerate; // option for less stressful video loading
 	bool haxNoVideos;       // option for computers which just cannot handle it
 	BITMAP* m_noVideo;		// used with haxNoVideos
 
-	void loadFrame();
-	// precondition: should only be called from within update()
-	// postcondition: frameData has been updated from disk or set to NULL
+	BITMAP* frameData; // the pixel contents of the current frame
+	APEG_STREAM* cmov; // the current file on disk being streamed
 
-	int calculateNumFrames();
-	// precondition: the current movie exists
-	// postcondition: returns 75 or 80
+	void loadVideoAtCurrentStep();
+	// precondition: loadScript() loaded a video script, currentStep is within the number of steps
+	// postcondition: replaces cmov or stops the movie when there is an error
 };
 
 #endif // end include guard
