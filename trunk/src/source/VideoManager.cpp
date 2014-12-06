@@ -4,67 +4,56 @@
 #include <string>
 #include "videoManager.h"
 
+// include ffmpeg
+//#include <libavcodec/avcodec.h>
+//#include <libavformat/avformat.h>
+
+// include apeg
+#include <apeg.h>
+
 VideoManager::VideoManager()
 {
 	haxLowerFramerate = haxNoVideos = false;
 	m_noVideo = loadImage("DATA/gameplay/no_video.png");
 
-	if ( fileExists("videofix") )
-	{
-		haxLowerFramerate = true;
-	}
 	if ( fileExists("novideo") )
 	{
 		haxNoVideos = true;
 	}
-	reset();
 }
 
-void VideoManager::update(UTIME dt, bool skipLoad)
+void VideoManager::initialize()
 {
-	bool reloadFrame = false;
-	if ( isStopped )
+	reset();
+	//apeg_ignore_audio(true);
+
+	frameData = create_bitmap_ex(32, 320, 192);
+	clear_to_color(frameData, 0);
+}
+
+void VideoManager::update(UTIME dt)
+{
+	if ( isStopped || haxNoVideos )
 	{
 		return;
 	}
 	currentTime += dt;
-	msSinceFrame += dt;
-
-	// check for a frame advance
-	if ( msSinceFrame >= msPerFrame && numFrames > 0 )
-	{
-		currentFrame = playDirection == 1 ? currentFrame+1 : currentFrame-1;
-		currentFrame = (currentFrame + numFrames) % numFrames; // implement looping fowards and backwards
-
-		msSinceFrame -= msPerFrame;
-		reloadFrame = true;		
-	}
 
 	// check for a script step advance
 	if ( (script[currentStep+1].timing != -1) && currentTime/10 >= script[currentStep+1].timing/3 ) // because there are 300 ticks per second
 	{
 		currentStep++;
-
-		msSinceFrame = 0;
-		msPerFrame = 33;
-		currentFrame = 0;
-		playDirection = 1; // foward
-		reloadFrame = true;
-		numFrames = calculateNumFrames();
-
-		if ( numFrames <= 80 && haxLowerFramerate )
-		{
-			msPerFrame = 100; // slow it down a bunch. sync be damned
-		}
-		if ( numFrames <= 80 && haxNoVideos )
-		{
-			msPerFrame = 99999999; // STOP
-		}
+		loadVideoAtCurrentStep();
 	}
 
-	if ( reloadFrame && !skipLoad )
+	if ( apeg_advance_stream(cmov, true) != APEG_OK)
 	{
-		loadFrame();
+		al_trace("Problem!\r\n"); // doesn't really matter if it fails
+	}
+
+	if( cmov->frame_updated > 0 && cmov->bitmap != NULL )
+	{
+		stretch_blit(cmov->bitmap, frameData, 0, 0, cmov->w, cmov->h, 0, 0, 320, 192);
 	}
 }
 
@@ -112,6 +101,7 @@ void VideoManager::loadScript(const char* filename)
 		currentStep++;
 	}
 	script[currentStep].clear(); // so that I'll know later when the script has ended
+
 	if ( currentStep > 1 && script[2].timing == 0 )
 	{
 		currentStep = 0; // skip the loading crap (start at 5000 then drop to a lower time) that is present in the original files
@@ -120,80 +110,19 @@ void VideoManager::loadScript(const char* filename)
 	{
 		currentStep = 0; // start at the beginning like normal
 	}
+	isStopped = false;
 
 	fclose(fp);
+	loadVideoAtCurrentStep();
 }
 
-void VideoManager::loadFrame()
+void VideoManager::loadVideoAtCurrentStep()
 {
-	// are hax required?
-	if ( numFrames <= 80 && haxNoVideos )
-	{
-		frameData = m_noVideo;
-		return;
-	}
-
-	// yes this is expensive to do every frame!
 	char filename[256] = "MOV/";
-	if ( script[currentStep].filename[1] == 0 ) // a simple test for null filenames and "*" filenames
-	{
-		destroy_bitmap(frameData);
-		frameData = NULL;
-		return;
-	}
 	strcat_s(filename, 256, script[currentStep].filename);
-	strcat_s(filename, 256, "/000");
-	filename[strlen(filename)-3] = (currentFrame/100 % 10) + '0';
-	filename[strlen(filename)-2] = (currentFrame/10 % 10) + '0';
-	filename[strlen(filename)-1] = (currentFrame/1 % 10) + '0';
-	strcat_s(filename, 256, ".png");
+	strcat_s(filename, 256, ".ogg");
 
-	destroy_bitmap(frameData);
-	frameData = load_bitmap(filename, NULL);
+	strcpy_s(filename, 256, "MOV/N_OPUTY0.ogg");
 
-	if ( frameData == NULL )
-	{
-		frameData = create_bitmap(320, 192);
-		clear_to_color(frameData, makecol(255,255,255));
-		textprintf_centre(frameData, font, 160, 90, makecol(0,0,0), "%s", script[currentStep].filename);
-	}
-}
-
-int VideoManager::calculateNumFrames()
-{
-	// first check for special videos - with "E_" as the prefix
-	if ( _stricmp(script[currentStep].filename, "E_DMX1") == 0 )
-	{
-		return 255;
-	}
-	else if ( _stricmp(script[currentStep].filename, "E_TITLE0") == 0 )
-	{
-		return 450;
-	}
-	else if ( _stricmp(script[currentStep].filename, "E_HOWTO0") == 0 )
-	{
-		return 512;
-	}
-	else if ( _stricmp(script[currentStep].filename, "E_DMX1") == 0 )
-	{
-		return 255;
-	}
-	else if ( script[currentStep].filename[0] == 'E' && script[currentStep].filename[2] != 'I' )
-	{
-		return 302; // the demo loop videos of the girls playing one of four songs
-	}
-	else if ( script[currentStep].filename[0] == 'J' )
-	{
-		return 150; // the four videos extracted from the flash memory
-	}
-
-	// the video is a generic video, so it will always be 75 or 80 frames
-	char filename[256] = "DATA/mov/";
-	strcat_s(filename, 256, script[currentStep].filename);
-	strcat_s(filename, 256, "/079.png");
-	if ( fileExists(filename) )
-	{
-		return 80;
-	}
-	return 75;
+	cmov = apeg_open_stream(filename);
 }

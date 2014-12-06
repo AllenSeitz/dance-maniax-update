@@ -38,13 +38,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>DMX_Debug</TargetName>
-    <IncludePath>..\..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\..\lib\fmodapi375win\api\inc;..\..\..\lib\libpng\include\libpng12;..\..\..\lib\libpng\include;..\..\..\lib\loadpng;..\..\..\src\headers;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\..\lib\fmodapi375win\api\lib;..\..\..\lib\libpng\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\..\lib\fmodapi375win\api\inc;..\..\..\lib\libpng\include\libpng12;..\..\..\lib\libpng\include;..\..\..\lib\loadpng;..\..\..\src\headers;..\..\..\lib\apeg\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\..\lib\fmodapi375win\api\lib;..\..\..\lib\libpng\lib;..\..\..\lib\apeg\lib\release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>DMX</TargetName>
-    <IncludePath>..\..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\..\lib\fmodapi375win\api\inc;..\..\..\lib\libpng\include\libpng12;..\..\..\lib\libpng\include;..\..\..\lib\loadpng;..\..\..\src\headers;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\..\lib\fmodapi375win\api\lib;..\..\..\lib\libpng\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\..\lib\fmodapi375win\api\inc;..\..\..\lib\libpng\include\libpng12;..\..\..\lib\libpng\include;..\..\..\lib\loadpng;..\..\..\src\headers;..\..\..\lib\apeg\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\..\lib\fmodapi375win\api\lib;..\..\..\lib\libpng\lib;..\..\..\lib\apeg\lib\release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -54,8 +54,10 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>allegro-4.4.2-mt.lib;loadpng-1.5-mt.lib;logg-1.0-mt.lib;zlib-1.2.5-static-mt.lib;fmodvc.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>allegro-4.4.2-mt.lib;loadpng-1.5-mt.lib;logg-1.0-mt.lib;zlib-1.2.5-static-mt.lib;fmodvc.lib;apeg_r.lib;ogg_static.lib;vorbis_static.lib;libtheora.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -69,7 +71,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>allegro-4.4.2-mt.lib;loadpng-1.5-mt.lib;logg-1.0-mt.lib;zlib-1.2.5-static-mt.lib;fmodvc.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>allegro-4.4.2-mt.lib;loadpng-1.5-mt.lib;logg-1.0-mt.lib;zlib-1.2.5-static-mt.lib;fmodvc.lib;apeg_r.lib;ogg_static.lib;vorbis_static.lib;libtheora.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
