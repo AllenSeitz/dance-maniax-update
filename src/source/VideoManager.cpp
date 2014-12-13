@@ -46,14 +46,17 @@ void VideoManager::update(UTIME dt)
 		loadVideoAtCurrentStep();
 	}
 
-	if ( apeg_advance_stream(cmov, true) != APEG_OK)
+	if ( cmov != NULL )
 	{
-		al_trace("Problem!\r\n"); // doesn't really matter if it fails
-	}
-
-	if( cmov->frame_updated > 0 && cmov->bitmap != NULL )
-	{
-		stretch_blit(cmov->bitmap, frameData, 0, 0, cmov->w, cmov->h, 0, 0, 320, 192);
+		if ( apeg_advance_stream(cmov, true) != APEG_OK)
+		{
+			al_trace("Video problem! Breakpoint!\r\n"); // doesn't really matter if it fails
+		}
+		if( cmov->frame_updated > 0 && cmov->bitmap != NULL )
+		{
+			//stretch_blit(cmov->bitmap, frameData, 0, 0, cmov->w, cmov->h, 0, 0, 320, 192);
+			blit(cmov->bitmap, frameData, 0, 0, 0, 0, 320, 192);
+		}
 	}
 }
 
@@ -118,11 +121,24 @@ void VideoManager::loadScript(const char* filename)
 
 void VideoManager::loadVideoAtCurrentStep()
 {
-	char filename[256] = "MOV/";
+	char filename[256] = "DATA/video/";
 	strcat_s(filename, 256, script[currentStep].filename);
 	strcat_s(filename, 256, ".ogg");
 
-	strcpy_s(filename, 256, "MOV/N_OPUTY0.ogg");
+	if ( fileExists(filename) )
+	{
+		cmov = apeg_open_stream(filename);
+		if ( cmov != NULL )
+		{
+			//al_trace("%s opened successfully\r\n", filename);
+			return;
+		}
+	}
 
-	cmov = apeg_open_stream(filename);
+	cmov = NULL;
+	//al_trace("Something is wrong with %s\r\n", filename);
+
+	// default case: show a placeholder texture
+	clear_to_color(frameData, makecol(255,255,255));
+	textprintf_centre(frameData, font, 160, 90, makecol(0,0,0), "%s", script[currentStep].filename);
 }
