@@ -87,10 +87,18 @@ private:
 
 	BITMAP* frameData; // the pixel contents of the current frame
 	APEG_STREAM* cmov; // the current file on disk being streamed
+	void* videoBuffer; // holds the ENTIRE video in memory while it is loaded
 
 	void loadVideoAtCurrentStep();
 	// precondition: loadScript() loaded a video script, currentStep is within the number of steps
 	// postcondition: replaces cmov or stops the movie when there is an error
+
+	void loadVideo(char* filename);
+	// NOTE: helper function for loadVideoAtCurrentStep()
+	// postcondition: replaces cmov or stops the movie when there is an error
+
+	void unloadVideo();
+	// postcondition: unloads cmov and is safe to call at any time, even if cmov is NULL
 };
 
 #endif // end include guard
