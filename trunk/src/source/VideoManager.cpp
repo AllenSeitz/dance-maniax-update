@@ -25,10 +25,11 @@ VideoManager::VideoManager()
 void VideoManager::initialize()
 {
 	reset();
-	//apeg_ignore_audio(true);
+	apeg_ignore_audio(true);
 
 	frameData = create_bitmap_ex(32, 320, 192);
 	clear_to_color(frameData, 0);
+	videoBuffer = NULL;
 }
 
 void VideoManager::update(UTIME dt)
@@ -65,7 +66,6 @@ void VideoManager::renderToSurface(BITMAP* surface, int x, int y)
 	//renderWhiteNumber(currentTime, 100, 84);
 	if ( frameData == NULL )
 	{
-		renderWhiteString("stop", 100, 52);
 		return;
 	}
 	blit(frameData, surface, 0, 0, x, y, 320, 192);
@@ -105,14 +105,19 @@ void VideoManager::loadScript(const char* filename)
 	}
 	script[currentStep].clear(); // so that I'll know later when the script has ended
 
+	// in the original game step 1 was always one of the four J_ movies
+	// these were stored on the onboard flash for speed
+	// they would play for the first 1-5 seconds while the CD-ROM streamed the mp3
+	// the play length was listed as 0, since the videos on disc would resume as soon as the CD-ROM was ready
+	// I could omit the J_ step entirely, since it is no longer needed to mask load times anywmore
+	// but those videos are part of the game, so I show them for 1500ms, then switch to the real script
 	if ( currentStep > 1 && script[2].timing == 0 )
 	{
-		currentStep = 0; // skip the loading crap (start at 5000 then drop to a lower time) that is present in the original files
+		script[1].timing = 0; // should be overwriting 1500
+		script[2].timing = 1500; // should be overwriting 0
 	}
-	else
-	{
-		currentStep = 0; // start at the beginning like normal
-	}
+
+	currentStep = 1;
 	isStopped = false;
 
 	fclose(fp);
@@ -125,20 +130,63 @@ void VideoManager::loadVideoAtCurrentStep()
 	strcat_s(filename, 256, script[currentStep].filename);
 	strcat_s(filename, 256, ".ogg");
 
-	if ( fileExists(filename) )
-	{
-		cmov = apeg_open_stream(filename);
-		if ( cmov != NULL )
-		{
-			//al_trace("%s opened successfully\r\n", filename);
-			return;
-		}
-	}
-
-	cmov = NULL;
-	//al_trace("Something is wrong with %s\r\n", filename);
+	//ffmpeg -f image2 -i E_HOWTO0\%3d.png E_HOWTO0.ogg
 
 	// default case: show a placeholder texture
+	unloadVideo();
 	clear_to_color(frameData, makecol(255,255,255));
 	textprintf_centre(frameData, font, 160, 90, makecol(0,0,0), "%s", script[currentStep].filename);
+
+	loadVideo(filename);
+	if ( cmov == NULL )
+	{
+		al_trace("Movie %s did not open for whatever reason.\r\n", filename);
+		return;
+	}
+	blit(cmov->bitmap, frameData, 0, 0, 0, 0, 320, 192);
+}
+
+void VideoManager::loadVideo(char* filename)
+{
+	FILE* fp = NULL;
+	if ( fopen_s(&fp, filename, "rb") != 0 )
+	{
+		al_trace("Movie %s is missing.\r\n", filename);
+		return; // do NOT summon error mode for this because the application might in debugging/lite mode
+	}
+
+	// get the length of the video
+	fseek(fp, 0, SEEK_END);
+    long fsize = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+	
+	// load the entire video into an unreasonably large memory buffer!
+	videoBuffer = malloc(fsize);
+	fread(videoBuffer, fsize, 1, fp);
+
+	// sanity check the buffer contents or else APEG may hang
+	if ( ((char*)videoBuffer)[0] == 'O' && ((char*)videoBuffer)[1] == 'g' && ((char*)videoBuffer)[2] == 'g' && ((char*)videoBuffer)[3] == 'S' )
+	{
+		cmov = apeg_open_memory_stream(videoBuffer, fsize);
+	}
+	else
+	{
+		al_trace("Video stream did not seem to contain Ogg data.\r\n");
+		unloadVideo();
+	}
+}
+
+void VideoManager::unloadVideo()
+{
+	if ( cmov != NULL )
+	{
+		apeg_reset_stream(cmov);
+		apeg_close_stream(cmov);
+	}
+	if ( videoBuffer != NULL )
+	{
+		free(videoBuffer);
+	}
+	videoBuffer = NULL;
+	cmov = NULL;
 }
