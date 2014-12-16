@@ -157,7 +157,7 @@ void extioManager::updateLamps()
 	WriteData(&b1, 1);
 	WriteData(&b2, 1);
 
-	al_trace("LAMP %d %d %d\n", b0, b1, b2);
+	//al_trace("LAMP %d %d %d\n", b0, b1, b2);
 
 	// write the other lamps
 	b0 = b1 = b2 = 0;
