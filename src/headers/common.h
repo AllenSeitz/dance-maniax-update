@@ -98,11 +98,12 @@ struct AL_POINT
 #define VOTEMODE 17
 #define BOOTMODE 18
 #ifdef DMXDEBUG
-	#define FIRST_GAME_MODE BOOTMODE
+	//#define FIRST_GAME_MODE VIDEOTEST
+	//#define FIRST_GAME_MODE BOOTMODE
 	//#define FIRST_GAME_MODE SONGWHEEL
 	//#define FIRST_GAME_MODE GAMEPLAY
 	//#define FIRST_GAME_MODE PLAYERSELECT
-	//#define FIRST_GAME_MODE ATTRACT
+	#define FIRST_GAME_MODE ATTRACT
 #else
 	#define FIRST_GAME_MODE BOOTMODE
 #endif
@@ -126,6 +127,7 @@ struct AL_POINT
 #define PLAYER_PREFS_LOST        5001
 #define PLAYER_SCORES_LOST       5002
 #define UPDATE_FAILED            6001
+#define REBOOT_FAILED            6002
 #define EXTIO_ERROR              7001
 
 void globalError(long errorCode, const char* errorInfo);

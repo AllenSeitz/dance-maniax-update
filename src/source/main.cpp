@@ -131,6 +131,7 @@ void mainCautionLoop(UTIME dt);
 
 void renderCreditsDisplay();
 void getUpdateAndRestart();
+void giveUpAndRestart();
 void renderDebugOverlay();
 
 // operator menus
@@ -305,6 +306,7 @@ int main()
 		if ( time > last_utime )
 		{
 			UTIME dt = time - last_utime;
+			//dt *= 1000; // FOR SOAK TESTING, CAUSES HILLARIOUS THINGS TO HAPPEN
 			last_utime = time;
 			totalGameTime += dt;
 
@@ -596,11 +598,11 @@ void mainErrorLoop(UTIME dt)
 	textprintf_centre(rm.m_backbuf, font, 320, 300, makecol(255,255,255), "PLEASE PRESS TEST BUTTON");
 	textprintf_centre(rm.m_backbuf, font, 320, 410, makecol(255,255,255), "time = %d", accumulate/1000);
 
-	// nevermind? no one is coming to the rescue? just carry on after 10 minutes
+	// nevermind? no one is coming to the rescue? just reboot after 10 minutes
 	if ( accumulate/1000 > 600 ) 
 	{
-		gs.g_currentGameMode = MAINMENU;
-		gs.g_gameModeTransition = 1;
+		giveUpAndRestart();
+		accumulate = 600000 - 10000;
 	}
 }
 
@@ -692,6 +694,16 @@ void getUpdateAndRestart()
 	if ( _execl("update.bat", "update.bat", NULL) == -1 )
 	{
 		globalError(UPDATE_FAILED, "please reboot the machine");
+	}
+}
+
+// This is used in the event of a fatal error.
+void giveUpAndRestart()
+{
+	if ( _execl("dmx.exe", "dmx.exe", NULL) == -1 )
+	{
+		globalError(REBOOT_FAILED, "please reboot the machine");
+		em.playSample(SFX_LOUD_BELL);
 	}
 }
 
