@@ -163,6 +163,7 @@ void VideoManager::loadVideo(char* filename)
 	// load the entire video into an unreasonably large memory buffer!
 	videoBuffer = malloc(fsize);
 	fread(videoBuffer, fsize, 1, fp);
+	fclose(fp);
 
 	// sanity check the buffer contents or else APEG may hang
 	if ( ((char*)videoBuffer)[0] == 'O' && ((char*)videoBuffer)[1] == 'g' && ((char*)videoBuffer)[2] == 'g' && ((char*)videoBuffer)[3] == 'S' )

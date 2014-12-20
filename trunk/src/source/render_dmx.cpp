@@ -700,6 +700,10 @@ void renderBatteryLivesDMX(int player)
 	for ( int i = 0; i < gs.player[player].lifebarLives; i++ )
 	{
 		int frame = getValueFromRange(0, 7, (gs.player[player].stepZoneBeatTimer*100 / gs.player[player].stepZoneTimePerBeat));
+		if ( frame < 0 || frame > 7 )
+		{
+			frame = 7;
+		}
 		masked_stretch_blit(m_notesDMX[2], rm.m_backbuf, 0, frame*40, 40, 40, xpos, ypos, 20, 20);
 		ypos += 20*direction;
 	}
