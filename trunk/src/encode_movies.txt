@@ -1,0 +1,1 @@
+for /f %f in ('dir /b') do ffmpeg -framerate 15 -start_number 0 -i %f\%03d.png -c:v libtheora -pix_fmt yuv420p -qscale:v 10 %f.ogg
