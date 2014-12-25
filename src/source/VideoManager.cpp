@@ -130,8 +130,6 @@ void VideoManager::loadVideoAtCurrentStep()
 	strcat_s(filename, 256, script[currentStep].filename);
 	strcat_s(filename, 256, ".ogg");
 
-	//ffmpeg -f image2 -i E_HOWTO0\%3d.png E_HOWTO0.ogg
-
 	// default case: show a placeholder texture
 	unloadVideo();
 	clear_to_color(frameData, makecol(255,255,255));
@@ -142,6 +140,11 @@ void VideoManager::loadVideoAtCurrentStep()
 	{
 		al_trace("Movie %s did not open for whatever reason.\r\n", filename);
 		return;
+	}
+
+	if ( apeg_advance_stream(cmov, true) != APEG_OK)
+	{
+		al_trace("Video problem! Breakpoint!\r\n"); // doesn't really matter if it fails
 	}
 	blit(cmov->bitmap, frameData, 0, 0, 0, 0, 320, 192);
 }
