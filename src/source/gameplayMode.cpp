@@ -9,6 +9,7 @@
 
 #include "gameStateManager.h"
 #include "inputManager.h"
+#include "lightsManager.h"
 #include "scoreManager.h"
 #include "gameplayRendering.h"
 #include "particleSprites.h"
@@ -61,6 +62,7 @@ const UTIME RETIRE_TIMEOUT = 30000;
 // graphics
 extern RenderingManager rm;
 extern GameStateManager gs;
+extern LightsManager lm;
 extern VideoManager vm;
 extern ScoreManager sm;
 extern EffectsManager em;
@@ -82,6 +84,7 @@ bool useAssistClap = false;
 bool debugCheats = false;
 extern InputManager im;
 int retireTimer = 0; // for ending the game early when there is a lack of input
+int lampCycle = 0;
 
 // full combo
 int fullComboAnimStep = 0; // 0 = not started, 1 = started
@@ -172,6 +175,7 @@ void firstGameplayLoop()
 			announcerQuipCycle = rand()%4;
 			retireTimer = fullComboAnimTimer = fullComboAnimStep = 0;
 			fullComboP1 = fullComboP2 = false;
+			gs.player[p].stepZoneTimePerBeat = BPM_TO_MSEC(gs.player[p].scrollRate);
 		}
 	}
 	rememberedCurrentStage = gs.currentStage; // this won't change during the transition. for most of the song it will remain the same
@@ -212,6 +216,7 @@ void firstGameplayLoop()
 
 	loadNextSong();
 	gameplayInitialized = true;
+	lampCycle = 0;
 
 	im.setCooldownTime(67); // 1/15th of a second
 }
@@ -397,6 +402,14 @@ void mainGameplayLoop(UTIME dt)
 		}
 	}
 
+	// update the lamps
+	static int orbCycle[4] = { 0, 2, 1, 2 }; // red, purple, blue, purple, each 4/4 measure
+	for ( int orb = 0; orb < 4; orb++ )
+	{
+		lm.setOrbColor(0, orb, orbCycle[lampCycle%4], 100);
+		lm.setOrbColor(1, orb, orbCycle[lampCycle%4], 100);
+	}
+
 	// these should only work in debug mode
 	while (keypressed() == TRUE && (debugCheats || isTestingChart) )
 	{
@@ -485,7 +498,9 @@ void doStepZoneLogic(UTIME dt, int p)
 	{
 		gs.player[p].stepZoneBeatTimer -= gs.player[p].stepZoneTimePerBeat;
 		gs.player[p].stepZoneBlinkTimer = gs.player[p].stepZoneTimePerBeat / 4;
-		gs.player[p].colorCycle = gs.player[p].colorCycle == 3 ? 0 : gs.player[p].colorCycle + 1;
+		lampCycle++;
+		gs.player[p].stepZoneTimePerBeat = BPM_TO_MSEC(gs.player[p].scrollRate);
+		gs.player[p].colorCycle = gs.player[p].colorCycle == 3 ? 0 : gs.player[p].colorCycle + 1; // used by DDR for the 4-frame DDR arrow animation
 	}
 	//al_trace("%d\n", stepZoneBlinkTimer);
 }

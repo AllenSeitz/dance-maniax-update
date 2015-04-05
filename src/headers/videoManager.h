@@ -31,7 +31,8 @@ public:
 
 	void MOVIE_SEQ_STEP::clear()
 	{
-		alpha = beta = gamma = delta = epsilon = zeta = omega = 0;
+		alpha = beta = epsilon = zeta = omega = 0;
+		gamma = delta = 0;
 		timing = -1;
 		memset(filename, 0, 14);
 	}

@@ -4,6 +4,7 @@
 #include "common.h"
 #include "GameStateManager.h"
 #include "inputManager.h"
+#include "lightsManager.h"
 #include "ScoreManager.h"
 #include "songwheelMode.h"
 
@@ -12,6 +13,7 @@
 extern GameStateManager gs;
 extern RenderingManager rm;
 extern InputManager im;
+extern LightsManager lm;
 extern ScoreManager sm;
 extern EffectsManager em;
 
@@ -382,6 +384,7 @@ void firstSongwheelLoop()
 		gs.isDoubles = false;
 	}
 
+	lm.loadLampProgram("songwheel.txt");
 	im.setCooldownTime(0);
 }
 
@@ -792,7 +795,17 @@ void mainSongwheelLoop(UTIME dt)
 		stop_sample(currentPreview);
 	}
 
-	if ( gs.g_currentGameMode == SONGWHEEL )
+	// light the menu buttons for whoever is logged in (although either works)
+	bool use1P = gs.isDoubles || gs.isVersus || gs.leftPlayerPresent;
+	bool use2P = gs.isDoubles || gs.isVersus || gs.rightPlayerPresent;
+	lm.setLamp(lampStart, use1P ? 100 : 0);
+	lm.setLamp(lampLeft, use1P ? 100 : 0);
+	lm.setLamp(lampRight, use1P ? 100 : 0);
+	lm.setLamp(lampStart+1, use2P ? 100 : 0);
+	lm.setLamp(lampLeft+1, use2P ? 100 : 0);
+	lm.setLamp(lampRight+1, use2P ? 100 : 0);
+
+	if ( gs.g_currentGameMode == SONGWHEEL ) // fixes a bug with calling this function after transitioning away
 	{
 		renderSongwheelLoop();
 	}

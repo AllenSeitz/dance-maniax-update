@@ -213,6 +213,18 @@ void mainAttractLoop(UTIME dt)
 			em.playSample(SFX_CREDIT_BEGIN);
 			em.announcerQuip(GUY_GAME_BEGIN);
 		}
+
+		// blink the start buttons
+		if ( (blinkTimer / 250) % 2 == 0 )
+		{
+			lm.setLamp(lampStart, 100);
+			lm.setLamp(lampStart+1, 100);
+		}
+		else
+		{
+			lm.setLamp(lampStart, 0);
+			lm.setLamp(lampStart+1, 0);
+		}
 	}
 
 	// skip to the next submode?

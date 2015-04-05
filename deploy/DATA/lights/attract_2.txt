@@ -1,5 +1,4 @@
 @version 1
-@loop
 
 # simple for each new song - 5 seconds each
 
@@ -9,4 +8,4 @@
 1375,	15,	1000
 5000,	13,	0
 
-#no LEDs
+# no LEDs

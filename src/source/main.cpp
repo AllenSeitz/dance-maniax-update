@@ -356,6 +356,8 @@ int main()
 				totalGameTime = 0;
 				killPreviewClip(); // mainly for pressing TEST during the songwheel
 				hideCreditsTimer = 2000;
+				lm.stopLampProgram();
+				lm.setAll(0);
 
 				// do the first frame different from the rest
 				switch (gs.g_currentGameMode)
@@ -480,7 +482,7 @@ int main()
 				case BOOTMODE:
 					mainBootLoop(dt);
 					break;
-				default:
+ 				default:
 					break;
 				}
 				++frameCounter;
@@ -501,7 +503,7 @@ int main()
 				SUBTRACT_TO_ZERO(hideCreditsTimer, dt);
 
 #ifdef DMXDEBUG
-				if ( gs.g_currentGameMode != TESTMODE )
+				if ( gs.g_currentGameMode != TESTMODE || key[KEY_F8] )
 				{
 					renderDebugOverlay();
 				}
@@ -787,7 +789,7 @@ void mainOperatorLoop(UTIME dt)
 			// turn lamps on or off
 			if ( testMenuSubIndex == 0 && im.isKeyDown(MENU_START_2P) )
 			{
-				lm.setAll(-1);
+				lm.setAll(500);
 			}
 			else
 			{
@@ -1121,6 +1123,7 @@ void firstCautionLoop()
 	{
 		m_caution = loadImage("DATA/menus/caution.png");
 	}
+	lm.loadLampProgram("caution.txt");
 	cautionTimer = 0;
 }
 

@@ -1,0 +1,10 @@
+@version 1
+@loop
+
+# for each player turn the spots on in order, then hold them for awhile
+1000,	13,	4000
+1150,	14,	3850
+1300,	15,	3700
+5000,	13,	0
+
+# no LEDs

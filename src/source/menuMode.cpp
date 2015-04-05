@@ -5,6 +5,7 @@
 #include "GameStateManager.h"
 #include "inputManager.h"
 #include "bookManager.h"
+#include "lightsManager.h"
 #include "scoreManager.h"
 #include "songwheelMode.h"
 
@@ -12,6 +13,7 @@ extern GameStateManager gs;
 extern RenderingManager rm;
 extern InputManager im;
 extern EffectsManager em;
+extern LightsManager lm;
 extern ScoreManager sm;
 extern BookManager bm;
 
@@ -134,6 +136,7 @@ void firstMenuLoop()
 
 		gs.loadSong(BGM_MODE);
 		gs.playSong();
+		lm.loadLampProgram("menu_0.txt");
 
 		gs.player[0].resetAll();
 		gs.player[1].resetAll();
@@ -153,6 +156,7 @@ void firstMenuLoop()
 		}
 		currentRow = 1;
 		timeRemaining = 30999;
+		lm.loadLampProgram("menu_1.txt");
 
 		modesY = MODE_Y_LOW;
 		modesDirection = -1;
@@ -525,6 +529,34 @@ void mainMenuLoop(UTIME dt)
 		endMenuMode();
 	}
 
+	// set lamps for players
+	int numPlayers = gs.isVersus ? 2 : 1;
+	for ( int pnum = 0; pnum < numPlayers; pnum++ )
+	{
+		int duration = sm.player[pnum].isLoggedIn ? 500 : 0; // duration of 0 turns the lamp off
+		for ( int i = 0; i < 4; i++ )
+		{
+			lm.setOrbColor(pnum, i, 2, duration);
+			if ( gs.isDoubles )
+			{
+				lm.setOrbColor(1, i, 2, duration); // also set the other side for doubles
+			}
+			if ( gs.rightPlayerPresent && !gs.leftPlayerPresent && gs.isSingles() )
+			{
+				lm.setOrbColor(0, i, 2, 0); // super special case for one player on the right: turn off the left and turn on the right
+				lm.setOrbColor(1, i, 2, 500);
+			}
+		}
+	}
+	bool use1P = gs.isDoubles || gs.isVersus || gs.leftPlayerPresent;
+	bool use2P = gs.isDoubles || gs.isVersus || gs.rightPlayerPresent;
+	lm.setLamp(lampStart, use1P ? 100 : 0);
+	lm.setLamp(lampLeft, use1P ? 100 : 0);
+	lm.setLamp(lampRight, use1P ? 100 : 0);
+	lm.setLamp(lampStart+1, use2P ? 100 : 0);
+	lm.setLamp(lampLeft+1, use2P ? 100 : 0);
+	lm.setLamp(lampRight+1, use2P ? 100 : 0);
+
 	renderMenuLoop();
 }
 
@@ -597,7 +629,7 @@ void renderMenuLoop()
 		//numStagesDesc[0] = gs.numSongsPerSet + '0';
 		char numSongsDesc[16] = "";
 		char numCoursesDesc[16] = "";
-		sprintf_s(numSongsDesc, "%d+ songs", /*NUM_SONGS*/ 40); // TODO: fix this
+		sprintf_s(numSongsDesc, "%d songs", NUM_SONGS);
 		sprintf_s(numCoursesDesc, "%d courses", NUM_COURSES);
 
 		sx = currentRow > 1 ? 420 : 210;
