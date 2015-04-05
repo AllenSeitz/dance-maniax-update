@@ -5,12 +5,14 @@
 #include "bookManager.h"
 #include "GameStateManager.h"
 #include "inputManager.h"
+#include "lightsManager.h"
 #include "scoreManager.h"
 #include "songwheelMode.h"
 
 extern GameStateManager gs;
 extern RenderingManager rm;
 extern InputManager im;
+extern LightsManager lm;
 extern ScoreManager sm;
 extern EffectsManager em;
 extern BookManager bm;
@@ -87,6 +89,10 @@ const int UNFOLDED_Y = 416;
 //////////////////////////////////////////////////////////////////////////////
 // Functions
 //////////////////////////////////////////////////////////////////////////////
+void setLampsForPlayer(int player, char status);
+//
+//
+
 void renderLoginLoop();
 //
 //
@@ -192,6 +198,7 @@ void firstLoginLoop()
 	memcpy(sm.player[0].displayName, "PLAYER 1", 8);
 	memcpy(sm.player[1].displayName, "PLAYER 2", 8);
 
+	lm.loadLampProgram("menu_0.txt");
 	loadRecentNames();
 }
 
@@ -608,7 +615,53 @@ void mainLoginLoop(UTIME dt)
 		}
 	}
 
+	bool use1P = gs.isDoubles || gs.isVersus || gs.leftPlayerPresent;
+	bool use2P = gs.isDoubles || gs.isVersus || gs.rightPlayerPresent;
+	setLampsForPlayer(0, currentStatusP1);
+	setLampsForPlayer(1, currentStatusP2);
+	lm.setLamp(lampStart, use1P ? 100 : 0);
+	lm.setLamp(lampLeft, use1P ? 100 : 0);
+	lm.setLamp(lampRight, use1P ? 100 : 0);
+	lm.setLamp(lampStart+1, use2P ? 100 : 0);
+	lm.setLamp(lampLeft+1, use2P ? 100 : 0);
+	lm.setLamp(lampRight+1, use2P ? 100 : 0);
+
 	renderLoginLoop();
+}
+
+void setLampsForPlayer(int player, char status)
+{
+	int color = -1;
+
+	if ( isUse[player] )
+	{
+		color = 0; // yes I want to login -> red
+	}
+	if ( isUse[player] && status > 1 ) // anywhere in the pin number process
+	{
+		color = 1; // name entered -> blue
+	}
+	if ( isUse[player] && (status == LOGIN_PIN_CORRECT || status == LOGIN_WAITING) )
+	{
+		color = 2; // pin entered -> purple
+	}
+
+	if ( color >= 0 )
+	{
+		for ( int i = 0; i < 4; i++ )
+		{
+			lm.setOrbColor(player, i, color, 500);
+			if ( gs.isDoubles )
+			{
+				lm.setOrbColor(1, i, color, 500); // also set the other side for doubles
+			}
+			if ( gs.rightPlayerPresent && !gs.leftPlayerPresent && gs.isSingles() )
+			{
+				lm.setOrbColor(0, i, color, 0); // super special case for one player on the right: turn off the left and turn on the right
+				lm.setOrbColor(1, i, color, 500);
+			}
+		}
+	}
 }
 
 void renderLoginLoop()

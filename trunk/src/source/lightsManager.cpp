@@ -232,6 +232,7 @@ void LightsManager::loadLampProgram(const char* filename)
 	fopen_s(&fp, temp, "rt");
 	if ( fp == NULL )
 	{
+		globalError(MISSING_LAMP_SCRIPT, filename);
 		return;
 	}
 

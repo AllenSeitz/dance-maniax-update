@@ -1,0 +1,13 @@
+@version 1
+@loop
+
+# used while going through the login/mode menu
+# the leds for a player will light up if they login
+
+# spots go outer to inner
+0,	13,	250
+250,	14,	250
+500,	15,	250
+1000,	0,	0,	0
+
+# no LEDs lit except by source code

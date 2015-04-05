@@ -5,12 +5,14 @@
 
 #include "gameStateManager.h"
 #include "inputManager.h"
+#include "lightsManager.h"
 #include "scoreManager.h"
 #include "songwheelMode.h"
 
 extern RenderingManager rm;
 extern GameStateManager gs;
 extern ScoreManager     sm;
+extern LightsManager	lm;
 extern InputManager     im;
 extern EffectsManager   em;
 extern unsigned long int frameCounter;
@@ -88,6 +90,7 @@ void firstResultsLoop()
 
 	em.playSample(SFX_RESULTS_APPEAR);
 	timeRemaining = 20000;
+	lm.loadLampProgram("results.txt");
 
 	im.setCooldownTime(0);
 }
