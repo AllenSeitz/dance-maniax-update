@@ -29,9 +29,9 @@ void extioManager::initialize()
 		inputBuffer[i] = 0;
 	}
 
-#ifdef DMXDEBUG
-	comPort = TRUSTED_COM_PORT - 1;
-#endif
+//#ifdef DMXDEBUG
+//	comPort = TRUSTED_COM_PORT - 1;
+//#endif
 }
 
 bool extioManager::updateInitialize(UTIME dt)
@@ -166,9 +166,9 @@ void extioManager::updateLamps()
 	{
 		b0 |= lm.getLamp(24+i) ? 1 << i : 0;
 	}
-	b0 |= lm.getLamp(spotlightA) ? 1 << 0 : 0;
+	b1 |= lm.getLamp(spotlightA) ? 1 << 0 : 0;
 	b1 |= lm.getLamp(spotlightB) ? 1 << 1 : 0;
-	b2 |= lm.getLamp(spotlightC) ? 1 << 2 : 0;
+	b1 |= lm.getLamp(spotlightC) ? 1 << 2 : 0;
 	WriteData(&b0, 1);
 	WriteData(&b1, 1);
 }
