@@ -1259,50 +1259,10 @@ int checkForExtraStages()
 				numMissesP2 += sm.player[1].currentSet[i].misses;
 			}
 
-			// if this player is a VIP, give them a special extra stage
-			if ( numSpecialP1 >= 4 || numSpecialP2 >= 4 )
+			// give them something EXTREME if they nearly full comboed their set or averaged an 'S' rank
+			if ( numMissesP1 < gs.numSongsPerSet || sumP1 >= 950000 || (gs.isVersus && numMissesP2 < gs.numSongsPerSet) || sumP2 >= 950000 )
 			{
-				// just give them whatever, since they've already done them all
-				if ( numSpecialP1 >= 10 || numSpecialP2 >= 10 )
-				{
-					songToPlay = pickRandomInt(2, 303, 324);
-					if ( rand() % 2 == 0 )
-					{
-						songToPlay = pickRandomInt(6, 245, 246, 247, 248, 249, 250);
-					}
-				}
-				// give them a special song made just for them ;)
-				else
-				{
-					songToPlay = pickRandomInt(8, 245, 246, 247, 248, 249, 250, 303, 324);
-
-					// try in an intentionally half-hearted way to give them a song that they 'need'
-					for ( int i = 0; i < 3; i++ )
-					{
-						bool isdone = sm.player[0].allTime[songID_to_listID(songToPlay)][levelP1].unlockStatus > 0 || (gs.isVersus && sm.player[1].allTime[songID_to_listID(songToPlay)][levelP2].unlockStatus);
-						if ( sm.player[0].getStatusOnSong(songToPlay, levelP1) < STATUS_FULL_GOOD_COMBO || (gs.isVersus && sm.player[1].getStatusOnSong(songToPlay, levelP2) < STATUS_FULL_GOOD_COMBO) )
-						{
-							break; // keep this one
-						}
-						songToPlay = pickRandomInt(8, 245, 246, 247, 248, 249, 250, 303, 324);
-					}
-				}
-			}
-			// give them a random edit if they full comboed their set or averaged an 'S' rank
-			else if ( numMissesP1 == 0 || sumP1 >= 950000 || (gs.isVersus && numMissesP2 == 0) || sumP2 >= 950000 )
-			{
-				songToPlay = pickRandomInt(6, 245, 246, 247, 248, 249, 250);
-
-				// try in an intentionally half-hearted way to give them an edit that they 'need'
-				for ( int i = 0; i < 3; i++ )
-				{
-					bool isdone = sm.player[0].allTime[songID_to_listID(songToPlay)][levelP1].unlockStatus > 0 || (gs.isVersus && sm.player[1].allTime[songID_to_listID(songToPlay)][levelP2].unlockStatus);
-					if ( sm.player[0].getStatusOnSong(songToPlay, levelP1) < STATUS_FULL_GOOD_COMBO || (gs.isVersus && sm.player[1].getStatusOnSong(songToPlay, levelP2) < STATUS_FULL_GOOD_COMBO) )
-					{
-						break; // keep this one
-					}
-					songToPlay = pickRandomInt(6, 245, 246, 247, 248, 249, 250);
-				}
+				songToPlay = pickRandomInt(2, 303, 324); // POSSESSION, Elemental Creation
 			}
 			// ... or give them megamix 1 for sure if they picked 3 songs from 1st mix
 			else if ( gs.player[0].pickedAllFromVersion(1) || (gs.isVersus && gs.player[1].pickedAllFromVersion(1)) )
