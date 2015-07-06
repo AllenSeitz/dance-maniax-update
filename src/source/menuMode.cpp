@@ -167,6 +167,10 @@ void firstMenuLoop()
 	p2row = 0;
 	mods[0][0] = mods[0][1] = mods[0][2] = mods[0][3] = 0;
 	mods[1][0] = mods[1][1] = mods[1][2] = mods[1][3] = 0;
+	if ( gs.isSingles() )
+	{
+		mods[0][3] = gs.leftPlayerPresent ? 1 : 2; // pick "LEFT" or "RIGHT" over "CENTER" as the default
+	}
 	modeMovingTimer = 0;
 	hazardCount[0] = hazardCount[1] = 0;
 
