@@ -132,7 +132,7 @@ void mainResultsLoop(UTIME dt)
 			averageScore /= numStages;
 		}
 
-		if ( averageScore >= 950000 )
+		if ( averageScore >= 900000 )
 		{
 			em.announcerQuip(GUY_RESULT_S);
 		}
@@ -144,9 +144,13 @@ void mainResultsLoop(UTIME dt)
 		{
 			em.announcerQuip(GUY_RESULT_C);
 		}
-		else if ( averageScore > 0 )
+		else if ( averageScore > 400000 )
 		{
 			em.announcerQuip(GUY_RESULT_D);
+		}
+		else
+		{
+			em.announcerQuip(GUY_RESULT_E);
 		}
 	}
 	if ( !doneIntroAnim && resultFadeTimer < (INTRO_ANIM_LENGTH/2) )

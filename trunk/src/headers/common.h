@@ -298,8 +298,9 @@ public:
 
 #define GUY_RESULT_S pickRandomInt(2, 100, 101)
 #define GUY_RESULT_B pickRandomInt(2, 97, 104)
-#define GUY_RESULT_C pickRandomInt(2, 103, 108)
-#define GUY_RESULT_D pickRandomInt(2, 91, 95)
+#define GUY_RESULT_C pickRandomInt(2, 123, 133)
+#define GUY_RESULT_D pickRandomInt(2, 88, 108)
+#define GUY_RESULT_E pickRandomInt(2, 91, 95)
 
 #define GUY_EARN_EXTRA pickRandomInt(2, 115, 85) // one more time, made just for you, 
 #define GUY_EARN_SPECIAL_EXTRA pickRandomInt(2, 82, 81) // wow youre a real dancer, can you do this, 
