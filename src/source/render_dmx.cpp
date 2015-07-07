@@ -581,8 +581,8 @@ void renderDMXCombo(int combo, int time, int centerX, int color)
 		masked_blit(m_comboDMX, rm.m_backbuf, 0, 0, centerX-48, DMX_COMBO_Y-26, 96, 24);
 	}
 
-	// combo "FEVER" is when combo >= 1000 and it has been some time since the last judgement
-	if ( combo >= 1000 && time > 1000 )
+	// combo "FEVER" displays every 2 seconds is when combo >= 1000
+	if ( combo >= 1000 && (totalGameTime / 2000) % 2 == 0 )
 	{
 		masked_blit(m_dmxFevers[frame], rm.m_backbuf, 0, 0, centerX-92, DMX_COMBO_Y, 184, 54);
 	}
