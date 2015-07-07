@@ -183,6 +183,7 @@ void firstGameplayLoop()
 	announcerMinusPoints = 0;
 	announcerLastCheckTotal = 0;
 	announcerTargetSpeak = 0;
+	
 
 	// load certain sound effects only during the first run of the game
 	if ( !gameplayInitialized )
@@ -336,7 +337,7 @@ void mainGameplayLoop(UTIME dt)
 			// index 0 and 2 are "long", index 1 and 3 are "short"
 			static int GUY_PLAYING_PERFECT[4] = { 107, 132,  99, 140 };
 			static int GUY_PLAYING_GREAT[4]   = {  65, 117,  98, 119 };
-			static int GUY_PLAYING_UNWELL[4]  = { 102, 144, 111, 146 };
+			static int GUY_PLAYING_UNWELL[4]  = { 116, 144, 111, 146 };
 			static int GUY_PLAYING_GIVEUP[4]  = {  93, 127,  94, 128 };
 			bool talked = false;
 
