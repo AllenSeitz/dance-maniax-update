@@ -163,6 +163,20 @@ int main()
 	}
 	key_led_flag = 0;
 
+	// set a refresh rate BEFORE the display is created
+	if ( fileExists("refreshrate") )
+	{
+		FILE* rfile = NULL;
+		fopen_s(&rfile, "refreshrate", "rt");
+		if ( rfile )
+		{
+			int rate = 0;
+			fscanf_s(rfile, "%d", &rate);
+			fclose(rfile);
+			request_refresh_rate(rate);
+		}
+	}
+
 	// timer initalization
 	if ( timeBeginPeriod(1) != TIMERR_NOERROR )
 	{
