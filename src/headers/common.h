@@ -97,6 +97,7 @@ struct AL_POINT
 #define PLAYERSELECT 16
 #define VOTEMODE 17
 #define BOOTMODE 18
+#define UPDATEMODE 19
 #ifdef DMXDEBUG
 	//#define FIRST_GAME_MODE VIDEOTEST
 	#define FIRST_GAME_MODE BOOTMODE
@@ -129,6 +130,7 @@ struct AL_POINT
 #define PLAYER_SCORES_LOST       5002
 #define UPDATE_FAILED            6001
 #define REBOOT_FAILED            6002
+#define UPDATE_MISSING_MANIFEST  6003
 #define EXTIO_ERROR              7001
 
 void globalError(long errorCode, const char* errorInfo);
@@ -171,7 +173,8 @@ void renderNameLetter(char letter, int x, int y, int color);
 class RenderingManager
 {
 public:
-	void Initialize();
+	void Initialize(bool installMode);
+	// NOTE: set installMode to true to skip loading fonts which are still being downloaded
 
 	BITMAP* m_backbuf;
 	BITMAP* m_backbuf1;

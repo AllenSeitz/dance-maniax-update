@@ -9,6 +9,7 @@
 
 #include "common.h"
 #include "bookManager.h"
+#include "downloadManager.h"
 #include "extioManager.h"
 #include "inputManager.h"
 #include "gameStateManager.h"
@@ -30,6 +31,8 @@ std::string* movieScripts;
 
 #define HITLIST_FILENAME "conf/hitlist.dat"
 #define SONGDB_FILENAME "DATA/song_db.csv"
+#define UPSCRIPT_FILENAME "update.bat"
+#define UNZIP_FILENAME "unzip.exe"
 
 int initializeSonglist();
 int loadSongDB();
@@ -54,6 +57,7 @@ int testChartSongID = 101;
 int testChartLevel = SINGLE_MILD;
 bool SHOW_LAMPS = true;
 bool held_printscreen = false;
+bool beginInitialInstall = false;
 
 BITMAP** m_banners; // used globally
 BITMAP* m_caution;
@@ -64,6 +68,8 @@ UTIME hideCreditsTimer = 0;
 UTIME totalBootTime = 0;
 UTIME bootStepTime = 0;
 int currentBootStep = 0;
+bool updateInProgress = false;
+UTIME updateCloseTimer = 0;
 
 BookManager bm;
 RenderingManager rm;
@@ -74,6 +80,7 @@ VideoManager vm;
 EffectsManager em;
 LightsManager lm;
 extioManager extio;
+DownloadManager dm;
 
 void firstSplashLoop();
 void mainSplashLoop(UTIME dt);
@@ -129,8 +136,12 @@ void mainVideoTestLoop(UTIME dt);
 void firstCautionLoop();
 void mainCautionLoop(UTIME dt);
 
+void firstUpdateLoop();
+void mainUpdateLoop(UTIME dt);
+void alternateMainUpdateLoop();
+
 void renderCreditsDisplay();
-void getUpdateAndRestart();
+bool checkForUpdates();
 void giveUpAndRestart();
 void renderDebugOverlay();
 
@@ -228,25 +239,48 @@ int main()
 	set_display_switch_mode(SWITCH_BACKGROUND); //SWITCH_PAUSE
 	text_mode(-1);
 	set_alpha_blender(); // the game assumes the graphics are left in this mode
+	register_bitmap_file_type("png", load_png, NULL);
 
 	if ( fileExists("allsongs") )
 	{
 		allsongsDebug = true;
 	}
-	rm.Initialize();
-	im.updateKeyStates(1);
-	em.initialize();
-	lm.initialize();
-	vm.initialize();
 
+	if ( !fileExists("initial_install_complete.txt") )
+	{
+		beginInitialInstall = true; // a special flag that prevents gameplay and just downloads files
+		NUM_SONGS = 0;
+
+		system("mkdir backup");
+		system("mkdir conf");
+		system("mkdir update");
+		system("mkdir PLAYER");
+		system("mkdir DATA");
+		rm.Initialize(true); // flag to skip loading fonts while the initial install is happening
+		checkForUpdates();
+	}
+	else
+	{
+		// normal initialization happens when the game is properly installed
+		rm.Initialize(false);
+		em.initialize();
+		lm.initialize();
+		vm.initialize();
+
+		loadGameplayGraphics();	// these stay loaded the ENTIRE program
+
+		if ( initializeSonglist() == -1 )
+		{
+			allegro_message("Error loading song database.");
+			return 0;
+		}
+		sm.resetData();
+	}
+
+	im.updateKeyStates(1);
 	extio.initialize();
 
-	loadGameplayGraphics();	// these stay loaded the ENTIRE program
-
-	if ( fileExists("alphalanes") )
-	{
-		rm.useAlphaLanes = true; // temporary for testing
-	}
+	// check options
 	if ( fileExists("revpolarityred") )
 	{
 		im.reverseRedSensorPolarity = true; // temporary for testing
@@ -286,34 +320,30 @@ int main()
 
 		gs.g_currentGameMode = GAMEPLAY; // launch directly into the chart test mode
 	}
-	if ( fileExists("testboot") )
+	if ( fileExists("nomenutimer") )
 	{
-		gs.g_currentGameMode = BOOTMODE;
+		gs.isEventMode = true;	// override this (intentionally unsaved) setting after the normal settings are loaded
 	}
-
-	if ( initializeSonglist() == -1 )
-	{
-		allegro_message("Error loading song database.");
-		return 0;
-	}
-	sm.resetData();
 
 	// booting while holding service down? delete (overwrite) machine settings
-	if ( im.isKeyDown(MENU_SERVICE) ) // doesn't seem to work in visual studio
+	if ( !beginInitialInstall )
 	{
-		globalError(CLEARED_MACHINE_SETTINGS, "");
-	}
-	else
-	{
-		gs.loadOperatorSettings();
-		if ( !gs.isInitialized )
+		if ( im.isKeyDown(MENU_SERVICE) ) // doesn't seem to work in visual studio
 		{
-			globalError(UNSET_MACHINE_SETTINGS, "PLEASE REBOOT WHILE HOLDING SERVICE");
+			globalError(CLEARED_MACHINE_SETTINGS, "");
+		}
+		else
+		{
+			gs.loadOperatorSettings();
+			if ( !gs.isInitialized )
+			{
+				globalError(UNSET_MACHINE_SETTINGS, "PLEASE REBOOT WHILE HOLDING SERVICE");
+			}
 		}
 	}
 
 	// main game loop
-	while ( !(key[KEY_ESC] /*&& key[KEY_SPACE]*/) )
+	while ( !key[KEY_ESC] )
 	{
 		UTIME time = timeGetTime();
 
@@ -432,6 +462,10 @@ int main()
 					break;
 				case BOOTMODE:
 					firstBootLoop();
+					break;
+				case UPDATEMODE:
+					firstUpdateLoop();
+					break;
 				default:
 					break;
 				}
@@ -496,6 +530,9 @@ int main()
 				case BOOTMODE:
 					mainBootLoop(dt);
 					break;
+				case UPDATEMODE:
+					mainUpdateLoop(dt);
+					break;
  				default:
 					break;
 				}
@@ -554,6 +591,11 @@ END_OF_MAIN();
 
 void renderDebugOverlay()
 {
+	if ( beginInitialInstall )
+	{
+		return;
+	}
+
 	//* FPS display
 	if ( totalGameTime > 1000 )
 	{
@@ -673,6 +715,11 @@ void mainFailureLoop(UTIME dt)
 // this function ultimately renders the bottom twenty pixels
 void renderCreditsDisplay()
 {
+	if ( beginInitialInstall )
+	{
+		return;
+	}
+
 	if ( gs.g_currentGameMode != GAMEPLAY )
 	{
 		rectfill(rm.m_backbuf, 0, 460, 640, 480, makecol(0,0,0));
@@ -705,12 +752,36 @@ void renderCreditsDisplay()
 }
 
 // update.bat is exepected to relaunch this program. The point is that this program may be modified.
-void getUpdateAndRestart()
+bool checkForUpdates()
 {
-	if ( _execl("update.bat", "update.bat", NULL) == -1 )
+	bool startedDownload = true;
+	if ( !fileExists(MANIFEST_FILENAME) )
 	{
-		globalError(UPDATE_FAILED, "please reboot the machine");
+		dm.downloadFile(MANIFEST_FILENAME, MANIFEST_FILENAME);
 	}
+	else if ( !fileExists(UPSCRIPT_FILENAME) )
+	{
+		dm.downloadFile(UPSCRIPT_FILENAME, UPSCRIPT_FILENAME);
+	}
+	else if ( !fileExists(UNZIP_FILENAME) )
+	{
+		dm.downloadFile(UNZIP_FILENAME, UNZIP_FILENAME);
+	}
+	else if ( dm.doWeNeedAnyUpdates().length() != 0 )
+	{
+		dm.downloadFile(dm.doWeNeedAnyUpdates().c_str(), dm.doWeNeedAnyUpdates().c_str());
+	}
+	else
+	{
+		startedDownload = false;
+	}
+
+	// always enter the update mode, either to show a progress bar or to say "up to date"
+	gs.g_currentGameMode = UPDATEMODE;
+	gs.g_gameModeTransition = 1;
+	updateInProgress = startedDownload;
+
+	return startedDownload;
 }
 
 // This is used in the event of a fatal error.
@@ -1051,7 +1122,7 @@ void mainOperatorLoop(UTIME dt)
 				}
 				if ( testMenuSubIndex == 5 ) // update software
 				{
-					getUpdateAndRestart();
+					checkForUpdates();
 				}
 				if ( testMenuSubIndex == 6 )
 				{
@@ -1173,6 +1244,79 @@ void mainCautionLoop(UTIME dt)
 		gs.rightPlayerPresent = true;
 		em.playSample(SFX_CREDIT_BEGIN);
 	}
+}
+
+void firstUpdateLoop()
+{
+	updateCloseTimer = 0;
+}
+
+void mainUpdateLoop(UTIME dt)
+{
+	clear_to_color(rm.m_backbuf, 0);
+
+	textprintf_centre(rm.m_backbuf, font, 320, 50, WHITE, "DanceManiax System Update");
+	if ( updateInProgress )
+	{
+		textprintf(rm.m_backbuf, font, 50, 140, WHITE, "FILE: %s", dm.getCurrentDownloadFilename().c_str());
+		textprintf(rm.m_backbuf, font, 50, 160, WHITE, "PROGRESS: %d", dm.getCurrentDownloadProgress());
+		textprintf(rm.m_backbuf, font, 50, 180, WHITE, "TIME ELAPSED: %ld", frameCounter);
+	}
+	else
+	{
+		textprintf(rm.m_backbuf, font, 50, 140, WHITE, "ALL FILES UP TO DATE!");
+	}
+
+	// is the update done?
+	if ( dm.isDownloadComplete() && updateInProgress )
+	{
+		al_trace("DOWNLOADED FILE %s\n", dm.getCurrentDownloadFilename().c_str());
+
+		// if the update was a zip then decompress it
+		if ( dm.getCurrentDownloadFilename().find(".zip") == -1 )
+		{
+			dm.resetState();
+
+			// non-zipped files are left as-is in the root folder. since this is only for "update.bat" and "unzip.exe" we should immediately check for a zip
+			if ( !checkForUpdates() )
+			{
+				updateInProgress = false;
+			}
+		}
+		else
+		{
+			// a zip file was downloaded - decompress it (potentially overwriting this exe) and restart
+			if ( _execl("update.bat", dm.getCurrentDownloadFilename().c_str(), NULL) == -1 )
+			{
+				al_trace("DOWNLOAD ERROR: unable to run update.bat\n");
+				globalError(UPDATE_FAILED, "please reboot the machine");
+			}
+		}
+	}
+
+	// when it's time to leave, hang around for 3 seconds so the text can be read, then leave
+	if ( !updateInProgress )
+	{
+		updateCloseTimer += dt;
+		if ( updateCloseTimer > 3000 )
+		{
+			gs.g_gameModeTransition = 1;
+			gs.g_currentGameMode = TESTMODE;				
+		}
+	}
+}
+
+// only called while there is definitely a file download in progress
+void alternateMainUpdateLoop()
+{
+	static long framesElapsed = 0;
+	framesElapsed++;
+	clear_to_color(rm.m_backbuf, 0);
+
+	textprintf_centre(rm.m_backbuf, font, 320, 50, WHITE, "DanceManiax System Update");
+	textprintf(rm.m_backbuf, font, 50, 140, WHITE, "FILE: %s", dm.getCurrentDownloadFilename().c_str());
+	textprintf(rm.m_backbuf, font, 50, 160, WHITE, "PROGRESS: %d", dm.getCurrentDownloadProgress());
+	textprintf(rm.m_backbuf, font, 50, 180, WHITE, "TIME ELAPSED: %ld", framesElapsed);
 }
 
 void firstBootLoop()

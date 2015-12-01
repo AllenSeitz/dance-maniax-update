@@ -16,11 +16,9 @@ extern std::string* songTitles;
 extern std::string* songArtists;
 extern std::string* movieScripts;
 
-void RenderingManager::Initialize()
+void RenderingManager::Initialize(bool installMode)
 {
-	register_bitmap_file_type("png", load_png, NULL); // needed for certain asset loading
-
-	useAlphaLanes = false;
+	useAlphaLanes = true;
 
 	// set up double buffering
 	m_backbuf1 = create_system_bitmap(640, 480);
@@ -30,21 +28,24 @@ void RenderingManager::Initialize()
 	currentPage = 1;
 	m_backbuf = rm.m_backbuf1;
 
-	// load other stuff
-	m_whiteFont = loadImage("DATA/etc/white_font.bmp");
-	m_textFont = loadImage("DATA/etc/text_font.bmp");
-	m_boldFont[0] = loadImage("DATA/etc/bold_font.bmp");
-	m_boldFont[1] = loadImage("DATA/etc/bold_font.bmp");
-	m_boldFont[2] = loadImage("DATA/etc/bold_font.bmp");
-	m_boldFont[3] = loadImage("DATA/etc/bold_font.bmp");
-	replaceColor(m_boldFont[1], makecol(248,248,248), makecol(170,255,170));
-	replaceColor(m_boldFont[2], makecol(248,248,248), makecol(255,170,170));
-	replaceColor(m_boldFont[3], makecol(248,248,248), makecol(170,170,255));
-	m_artistFont = loadImage("DATA/etc/artist_font.bmp");
-	m_scoreFont = loadImage("DATA/etc/score_font.bmp");
-	m_nameFont[0] = loadImage("DATA/etc/name_font_white.bmp");
-	m_nameFont[1] = loadImage("DATA/etc/name_font_green.bmp");
-	m_nameFont[2] = loadImage("DATA/etc/name_font_red.bmp");
+	// load other stuff - these can be NULL during the install process!
+	if ( !installMode )
+	{
+		m_whiteFont = loadImage("DATA/etc/white_font.bmp");
+		m_textFont = loadImage("DATA/etc/text_font.bmp");
+		m_boldFont[0] = loadImage("DATA/etc/bold_font.bmp");
+		m_boldFont[1] = loadImage("DATA/etc/bold_font.bmp");
+		m_boldFont[2] = loadImage("DATA/etc/bold_font.bmp");
+		m_boldFont[3] = loadImage("DATA/etc/bold_font.bmp");
+		replaceColor(m_boldFont[1], makecol(248,248,248), makecol(170,255,170));
+		replaceColor(m_boldFont[2], makecol(248,248,248), makecol(255,170,170));
+		replaceColor(m_boldFont[3], makecol(248,248,248), makecol(170,170,255));
+		m_artistFont = loadImage("DATA/etc/artist_font.bmp");
+		m_scoreFont = loadImage("DATA/etc/score_font.bmp");
+		m_nameFont[0] = loadImage("DATA/etc/name_font_white.bmp");
+		m_nameFont[1] = loadImage("DATA/etc/name_font_green.bmp");
+		m_nameFont[2] = loadImage("DATA/etc/name_font_red.bmp");
+	}
 }
 
 int pickRandomInt(int n, ...)
