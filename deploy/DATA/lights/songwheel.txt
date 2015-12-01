@@ -1,9 +1,0 @@
-@version 1
-@loop
-
-# spots stay solid on
-0,	13,	500
-0,	14,	500
-0,	15,	500
-
-# give the LEDs a rest

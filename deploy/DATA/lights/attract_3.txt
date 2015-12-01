@@ -1,3 +1,0 @@
-@version 1
-
-# no lights during the "how to play" sequence yet
