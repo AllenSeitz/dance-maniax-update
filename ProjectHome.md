@@ -1,0 +1,1 @@
+Dance Maniax Update by Catastrophe. This project is a Windows port of the 1999 arcade game, Dance Maniax.
