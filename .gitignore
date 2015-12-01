@@ -1,0 +1,15 @@
+*.pdb
+*.ipch
+*.obj
+*.suo
+*.sdf
+*.tlog
+*.lastbuildstate
+src/DMX_Remake/DMX_Remake/Debug/DMX_Debug.exe.intermediate.manifest
+*.cache
+*.idb
+*.log
+src/DMX_Remake/DMX_Remake/Release/DMX.exe.intermediate.manifest
+*.user
+src/DMX_Remake/Debug/DMX_Debug.exe
+src/DMX_Remake/Release/DMX.exe

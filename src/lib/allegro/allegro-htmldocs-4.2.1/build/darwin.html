@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><head><title>
+Notes on building the Darwin/X11 version of Allegro
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="stylesheet" title="Default" type="text/css" href="../allegro.css"></head><body bgcolor=white text=black link="#0000ee" alink="#ff0000" vlink="#551a8b">
+<pre>
+     ______   ___    ___
+    /\  _  \ /\_ \  /\_ \
+    \ \ \L\ \\//\ \ \//\ \      __     __   _ __   ___ 
+     \ \  __ \ \ \ \  \ \ \   /'__`\ /'_ <tt>`\/\`'</tt>__\/ __`\
+      \ \ \/\ \ \_\ \_ \_\ \_/\  __//\ \L\ \ \ \//\ \L\ \
+       \ \_\ \_\/\____\/\____\ \____\ \____ \ \_\\ \____/
+        \/_/\/_/\/____/\/____/\/____/\/___L\ \/_/ \/___/
+                                       /\____/
+                                       \_/__/
+
+   Notes on building the Darwin/X11 version of Allegro.
+
+   Written by Jeremiah Blanchard.
+
+   See <a href="unix.html">docs/build/unix.txt</a> for general Unix information.
+
+   See <a href="../readme.html">readme.txt</a> for a more general overview.
+</pre>
+
+
+
+<p><br>
+<h1><a name="Darwin Notes">Darwin Notes</a></h1>
+
+<p>
+   This file explains how to build the X Window port of Allegro on a Darwin
+   system.
+
+<p>
+   <b>If you are running MacOS X, you are strongly encouraged to use the MacOS
+   X native port; read <tt><a href="macosx.html">docs/build/macosx.txt</a></tt> for more info.</b>
+
+<p>
+   It is important to note that there is no sound because the sound drivers
+   have not yet been ported.
+
+<p>
+   This library cannot yet be compiled as a shared library, only static.
+
+
+<p><br>
+<h1><a name="Required software">Required software</a></h1>
+
+<p>
+   If you are running MacOS X, you must download the developer tools. This
+   requires free registration with Apple. You can register and download the
+   tools at:
+<blockquote>
+<p>
+      <a href="http://connect.apple.com">http://connect.apple.com</a>
+</blockquote>
+<p>
+   Recently, GCC 3.1 has been released which supports the Mach-O binary
+   format, and you may be able to use it directly (if you compile it
+   yourself or find a binary distribution.)
+
+<p>
+   You will also need X Window. You can use either the Darwin/MacOS X port
+   of XFree86 from the XonX project or Xtools, a proprietary version. The
+   XonX project is located at:
+<blockquote>
+<p>
+      <a href="http://sourceforge.net/projects/xonx">http://sourceforge.net/projects/xonx</a>
+</blockquote>
+
+
+<p><br>
+<h1><a name="Installing Allegro">Installing Allegro</a></h1>
+
+<p>
+   First, decompress the .tar or .zip file into some directory. Next, open
+   up a terminal (in MacOS X, this can be found in Applications/Utilities).
+   From here, enter the directory into which Allegro has been decompressed.
+
+<p>
+   If you are using the .zip file, type the following:
+<blockquote class="text"><pre>
+      chmod +x fix.sh
+      ./fix.sh unix
+</pre></blockquote>
+   From here on everything is a pretty standard Unix-style install process. 
+   First you configure it with at least the following options:
+<blockquote class="text"><pre>
+      ./configure --enable-static --disable-shared --disable-pthreads
+</pre></blockquote>
+   It should automatically build dependencies.
+
+<p>
+   Then you build it:
+<blockquote class="text"><pre>
+      make
+</pre></blockquote>
+   If you are using an older version of Apple's tools, you will probably see
+   lots of preprocessing errors. Just ignore them (they are due to Apple's
+   modifications to GCC and do not affect the resulting object code).
+
+<p>
+   To install Allegro, you will need root permissions. If you don't have 
+   root permissions set up on your system (in MacOS X, for example), you 
+   will first need to activate the root account. This can be done by running
+   the program "NetInfo Manager" in Applications/Utilites. From within the
+   program, go to the "Domain" menu, select "Security" and "Authenticate".
+   Type in your password and go to "Domain", "Security", "Root User Enable".
+   I strongly urge you to set your root password in the same menu.
+
+<p>
+   Now, type the following in the terminal:
+<blockquote class="text"><pre>
+      su -c "make install"
+</pre></blockquote>
+   To install the man pages, type:
+<blockquote class="text"><pre>
+      su -c "make install-man"
+</pre></blockquote>
+   If prompted for a password, type in your root password.
+
+
+
+<p><br>
+<h1><a name="Using Allegro">Using Allegro</a></h1>
+
+<p>
+   When compiling a program using Allegro, you will have to link to the
+   following libraries:
+<blockquote class="text"><pre>
+      -lalleg -lX11 -lXext
+</pre></blockquote>
+   If you are using the XFree86 port, you will also have to add:
+<blockquote class="text"><pre>
+      -lXxf86vm
+</pre></blockquote>
+
+
+</body>
+</html>

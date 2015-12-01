@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><head><title>
+Allegro QNX-specific information
+</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="stylesheet" title="Default" type="text/css" href="../allegro.css"></head><body bgcolor=white text=black link="#0000ee" alink="#ff0000" vlink="#551a8b">
+<pre>
+     ______   ___    ___
+    /\  _  \ /\_ \  /\_ \
+    \ \ \L\ \\//\ \ \//\ \      __     __   _ __   ___ 
+     \ \  __ \ \ \ \  \ \ \   /'__`\ /'_ <tt>`\/\`'</tt>__\/ __`\
+      \ \ \/\ \ \_\ \_ \_\ \_/\  __//\ \L\ \ \ \//\ \L\ \
+       \ \_\ \_\/\____\/\____\ \____\ \____ \ \_\\ \____/
+        \/_/\/_/\/____/\/____/\/____/\/___L\ \/_/ \/___/
+                                       /\____/
+                                       \_/__/
+
+
+                 QNX-specific information.
+
+         See <a href="../readme.html">readme.txt</a> for a more general overview.
+</pre>
+
+
+
+<p><br>
+<h1><a name="QNX notes">QNX notes</a></h1>
+
+<p>
+   Status: it works. Only annoying bug left seems to be the display switching
+   in fullscreen mode; just don't try to change workspace while in fullscreen
+   or your program will crash... Also, video bitmaps and hardware acceleration
+   are still not yet implemented.
+
+
+
+<p><br>
+<h1><a name="Required software">Required software</a></h1>
+
+<p>
+   The library works with QNX 6.0 RTP. You need the development tools
+   installed on your system; if you don't have them, you can get them from the
+   QNX online repository using the Package Manager.
+
+
+
+<p><br>
+<h1><a name="Installing Allegro">Installing Allegro</a></h1>
+
+<p>
+   As Allegro is a multiplatform library, you first need to set it up for use
+   on QNX RTP, by running:
+<blockquote class="text"><pre>
+      chmod +x fix.sh
+      ./fix.sh qnx
+</pre></blockquote>
+   Now you may want to generate the dependencies; this step is optional if
+   you are using an official release, but it is required if you got a CVS
+   snapshot of the library.
+<blockquote class="text"><pre>
+      make depend
+</pre></blockquote>
+   Then you need to build Allegro:
+<blockquote class="text"><pre>
+      make
+</pre></blockquote>
+   And finally install it (you need to be root for this):
+<blockquote class="text"><pre>
+      su -c "make install"
+</pre></blockquote>
+   Installing the library will copy the header files to <tt>/usr/include</tt>, the
+   library file to <tt>/usr/lib</tt> and the <tt>allegro-config</tt> script into <tt>/usr/bin</tt>.
+   
+   
+
+<p><br>
+<h1><a name="Using Allegro">Using Allegro</a></h1>
+
+<p>
+   Linking with Allegro requires you to link also other libraries to your
+   executables. To avoid you having to work out the right linker commands for
+   yourself, the installation creates a script, <tt>allegro-config</tt>, that will
+   print out a suitable commandline. You can use this inside a backtick 
+   command substitution, for example:
+<blockquote class="text"><pre>
+      gcc myfile.c -o myprogram `allegro-config --libs`
+</pre></blockquote>
+   Or if you want to build a debug version of your program, assuming that 
+   you have installed the debug version of Allegro:
+<blockquote class="text"><pre>
+      gcc myfile.c -o myprogram `allegro-config --libs debug`
+</pre></blockquote>
+   Unix newbies, take note that these are ` backticks, not normal ' quotes!
+
+<p>
+   There are also switches for printing out the Allegro version number and
+   overriding the install paths. Run <tt>allegro-config</tt> without any arguments
+   for a full list of options.
+
+<p>
+   Don't forget that you need to use the <code>END_OF_MAIN()</code> macro right after
+   your <code>main()</code> function!
+
+
+
+<p><br>
+<h1><a name="Final notes">Final notes</a></h1>
+
+<p>
+   Allegro for QNX requires you to be running the Photon MicroGUI environment;
+   if Photon cannot be found, the library will fail to initialize. If this
+   happens, you're probably in a text console; just run "<tt>ph</tt>" to start Photon.
+
+
+
+</body>
+</html>
