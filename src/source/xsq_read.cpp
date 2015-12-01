@@ -163,6 +163,26 @@ int hackGuessBPM(int songID, int currentTime)
 	return 150;
 }
 
+bool doesExistXSQ(int songID)
+{
+	char filename[] = "DATA/xsq/101_sm.xsq";
+	FILE* fp = NULL;
+
+	// hopefully open the target XSQ file
+	filename[ 9] = (songID/100 % 10) + '0';
+	filename[10] = (songID/10 % 10) + '0';
+	filename[11] = (songID % 10) + '0';
+
+	if ( fopen_s(&fp, filename, "rb") != 0 )
+	{
+		return false;
+	}
+
+	// the file exists! assume the song is complete
+	fclose(fp);
+	return true;
+}
+
 int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds, int songID, int chartType)
 {
 	char filename[] = "DATA/xsq/101_sm.xsq";

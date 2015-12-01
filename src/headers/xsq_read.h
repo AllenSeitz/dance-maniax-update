@@ -8,6 +8,10 @@
 
 #include "common.h"
 
+bool doesExistXSQ(int songID);
+// precondition: songID is in the song database and is three digits or less
+// postconditionL returns true if xxx.xsq exists on disk, false otherwise
+
 int readXSQ(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds, int songID, int chartType);
 // precondition: it is safe to overwrite chart and holds, and songID and chartType exist
 // postcondition: will write new values for chart and holds, or leave them untouched if there is an error

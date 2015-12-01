@@ -1077,7 +1077,7 @@ void loadNextSong()
 	int (*readChartCenter)(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds, int songID, int chartType) = &readDWICenter;
 
 	// For original songs, use xsq files. Else use dwi files.
-	if ( gs.player[0].stagesPlayed[gs.currentStage] < 300 )
+	if ( doesExistXSQ(gs.player[0].stagesPlayed[gs.currentStage]) )
 	{
 		readChart = &readXSQ;
 		readChart2P = &readXSQ2P;
