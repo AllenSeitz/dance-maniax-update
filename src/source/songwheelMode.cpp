@@ -128,7 +128,6 @@ int  displayBPM = 150;              // oscillates between min and max
 int  displayBPMTimer = 0;
 char displayBPMState = 0;
 
-SAMPLE* currentPreview = NULL;
 UTIME previewTimeStarted = 0;
 UTIME previewTimeRemaining = 0;
 int previewSongID = 0;
@@ -229,7 +228,8 @@ bool isManiaxChartAvailableHere()
 
 void killPreviewClip()
 {
-	stop_sample(currentPreview);
+	gs.killSong();
+	//stop_sample(currentPreview);
 }
 
 void firstSongwheelLoop()
@@ -365,7 +365,7 @@ void firstSongwheelLoop()
 	}
 	//*/
 
-	currentPreview = NULL;
+	//currentPreview = NULL;
 	previewTimeStarted = last_utime;
 	previewTimeRemaining = 0;
 	previewSongID = 0;
@@ -635,7 +635,8 @@ void mainSongwheelLoop(UTIME dt)
 					gs.currentStage = 0;
 					gs.g_currentGameMode = GAMEPLAY;
 					gs.g_gameModeTransition = 1;
-					stop_sample(currentPreview);
+					//stop_sample(currentPreview);
+					killPreviewClip();
 					em.playSample(SFX_FORCEFUL_SELECTION);
 				}
 				else
@@ -792,7 +793,8 @@ void mainSongwheelLoop(UTIME dt)
 		gs.currentStage = 0;
 		gs.g_currentGameMode = GAMEPLAY;
 		gs.g_gameModeTransition = 1;
-		stop_sample(currentPreview);
+		killPreviewClip();
+		//stop_sample(currentPreview);
 	}
 
 	// light the menu buttons for whoever is logged in (although either works)
@@ -1010,7 +1012,8 @@ void prepareForSongwheelRotation()
 	isSphereMoving = true;
 	rotateAnimTime = introAnimTimer > 0 ? INTRO_ANIM_STEP_TIME : WHEEL_STEP_TIME;
 	updateSongwheelRotation(0);
-	stop_sample(currentPreview);
+	killPreviewClip();
+	//stop_sample(currentPreview);
 }
 
 void postSongwheelRotation()
@@ -1377,16 +1380,27 @@ void updatePreview(UTIME dt)
 		loadPreview(previewSongID);
 		if ( isRandomSelect )
 		{
-			play_sample(currentPreview, 255, 127, pickRandomInt(3,12,15,20)*100, 1); 
+			gs.playSongPreview(pickRandomInt(3,12,15,20)*100);
+			//play_sample(currentPreview, 255, 127, pickRandomInt(3,12,15,20)*100, 1); 
 		}
 		else
 		{
-			play_sample(currentPreview, 255, 127, 1000, 1); 
+			gs.playSongPreview(0);
+			//play_sample(currentPreview, 255, 127, 1000, 1); 
 		}
-		previewTimeRemaining = getSampleLength(currentPreview);
+		//previewTimeRemaining = getSampleLength(currentPreview);
+		previewTimeRemaining = gs.currentSongLength;
 	}
 }
 
+void loadPreview(int songid)
+{
+	previewSongID = songid;
+	gs.loadSong(songid, true);
+}
+
+/*
+// switched to mp3s because 300 MB of wav files was inappropriate, but made dynamic pitched previews easier
 void loadPreview(int songid)
 {
 	char filename[] = "DATA/sfx/pre_000.wav";
@@ -1404,3 +1418,4 @@ void loadPreview(int songid)
 	destroy_sample(currentPreview);
 	currentPreview = load_sample(filename);
 }
+//*/

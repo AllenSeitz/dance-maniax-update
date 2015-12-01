@@ -289,21 +289,37 @@ public:
 		isFreestyleMode = false;
 	}
 
-	void loadSong(int songID)
+	void loadSong(int songID, bool preview = false)
 	{
-		char filename[] = "DATA/audio/112.mp3";
+		char filename[64] = "DATA/audio/112.mp3";
 		filename[11] = (songID/100 % 10) + '0';
 		filename[12] = (songID/10 % 10) + '0';
 		filename[13] = (songID % 10) + '0';
+		if ( preview )
+		{
+			strcpy_s(filename, 64, "DATA/audio/pre_112.mp3");
+			filename[15] = (songID/100 % 10) + '0';
+			filename[16] = (songID/10 % 10) + '0';
+			filename[17] = (songID % 10) + '0';
+		}
 
 		killSong();
 		currentSongSample = FSOUND_Sample_Load(FSOUND_UNMANAGED, filename, FSOUND_NORMAL | FSOUND_MPEGACCURATE, 0, 0);
 		if ( currentSongSample == NULL )
 		{
 			// try again as an ogg
-			filename[15] = 'o';
-			filename[16] = 'g';
-			filename[17] = 'g';
+			if ( preview )
+			{
+				filename[19] = 'o';
+				filename[20] = 'g';
+				filename[21] = 'g';
+			}
+			else
+			{
+				filename[15] = 'o';
+				filename[16] = 'g';
+				filename[17] = 'g';
+			}
 			currentSongSample = FSOUND_Sample_Load(FSOUND_UNMANAGED, filename, FSOUND_NORMAL, 0, 0);
 
 			if ( currentSongSample == NULL )
@@ -319,7 +335,6 @@ public:
 	void killSong()
 	{
 		if ( currentSongSample != NULL )
-
 		{
 			FSOUND_Sample_Free(currentSongSample);
 			currentSongChannel = -1;
@@ -333,6 +348,17 @@ public:
 		currentSongChannel = FSOUND_PlaySound(FSOUND_FREE, currentSongSample);
 		FSOUND_SetVolume(currentSongChannel, DONT_WANNA_HEAR_IT ? 0 : 128); // '64' leaves room to grow/shrink (turn up other volume controls)
 		FSOUND_SetLoopMode(currentSongChannel, currentSong < 100 ? FSOUND_LOOP_NORMAL : FSOUND_LOOP_OFF); // menu music should loop
+	}
+
+	void playSongPreview(int frequency)
+	{
+		currentSongChannel = FSOUND_PlaySound(FSOUND_FREE, currentSongSample);
+		FSOUND_SetVolume(currentSongChannel, DONT_WANNA_HEAR_IT ? 0 : 128); // '64' leaves room to grow/shrink (turn up other volume controls)
+		FSOUND_SetLoopMode(currentSongChannel, FSOUND_LOOP_NORMAL); // menu music should loop
+		if ( frequency != 0 )
+		{
+			FSOUND_SetFrequency(currentSongChannel, frequency);
+		}
 	}
 
 	void pauseSong()
@@ -460,6 +486,7 @@ public:
 		case 6000: return "UNSPECIFIC UPDATE ERROR";
 		case UPDATE_FAILED: return "FAILED TO START UPDATE PROCESS";
 		case REBOOT_FAILED: return "UNABLE TO SELF-RESTART";
+		case UPDATE_MISSING_MANIFEST: return "UNABLE TO PARSE UPDATE LIST";
 		case 7000: return "UNSPECIFIC HARDWARE ERROR";
 		case EXTIO_ERROR: return "I/O BOARD SYNC ERROR";
 		}
