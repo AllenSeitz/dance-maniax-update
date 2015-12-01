@@ -228,19 +228,46 @@ void processChartString(std::vector<struct BEAT_NOTE> *chart, char* string, int 
 		{
 			int currentColumn = 0;
 			currentIndex++;
+			bool startedHolds = false;
 
 			while ( string[currentIndex] != '>' )
 			{
 				ch = string[currentIndex];
-				if ( getColumn(ch, 0) != -1 )
+				if ( startedHolds == false )
 				{
-					columns[currentColumn] = getColumn(ch, 0);
-					currentColumn = currentColumn == 3 ? 3 : currentColumn + 1;
+					if ( ch == '!' )
+					{
+						startedHolds = true; // a triple is starting a hold
+						currentIndex++;
+						continue;
+					}
+					if ( getColumn(ch, 0) != -1 )
+					{
+						columns[currentColumn] = getColumn(ch, 0);
+						currentColumn = currentColumn == 3 ? 3 : currentColumn + 1;
+					}
+					if ( getColumn(ch, 1) != -1 )
+					{
+						columns[currentColumn] = getColumn(ch, 1);
+						currentColumn = currentColumn == 3 ? 3 : currentColumn + 1;
+					}
 				}
-				if ( getColumn(ch, 1) != -1 )
+				else
 				{
-					columns[currentColumn] = getColumn(ch, 1);
-					currentColumn = currentColumn == 3 ? 3 : currentColumn + 1;
+					/* TODO: fix this crazy corner case
+					// this hold is string from inside a < > combination tag, so use the current time
+					int col0 = getColumn(ch, 0);
+					int col1 = getColumn(ch, 1);
+
+					if ( col0 != -1 && beatOfHold[col0] == -1 )
+					{
+						beatOfHold[col0] = totalBeatsProcessed; // store when the hold starts
+					}
+					if ( col1 != -1 && beatOfHold[col1] == -1 )
+					{
+						beatOfHold[col1] = totalBeatsProcessed; // store when the hold starts
+					}
+					//*/
 				}
 				currentIndex++;
 			}
