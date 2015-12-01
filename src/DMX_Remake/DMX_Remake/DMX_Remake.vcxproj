@@ -63,7 +63,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PreBuildEvent>
-      <Command>del $(TargetDir)\debug\attractMode.obj</Command>
+      <Command>del $(ProjectDir)\debug\attractMode.obj</Command>
       <Message>touch the attract mode to update the __DATE__</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
