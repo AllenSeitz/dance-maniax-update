@@ -1380,8 +1380,8 @@ void updatePreview(UTIME dt)
 		loadPreview(previewSongID);
 		if ( isRandomSelect )
 		{
-			gs.playSongPreview(pickRandomInt(3,12,15,20)*100);
-			//play_sample(currentPreview, 255, 127, pickRandomInt(3,12,15,20)*100, 1); 
+			gs.playSongPreview(pickRandomInt(4, 5,6,7,8)*10000); 
+			//play_sample(currentPreview, 255, 127, pickRandomInt(3,12,15,20)*100, 1); // original coding when using wav files and Allegro 4 playback engine
 		}
 		else
 		{
