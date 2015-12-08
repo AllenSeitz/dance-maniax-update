@@ -379,7 +379,8 @@ void mainGameplayLoop(UTIME dt)
 			// where are we going?
 			if ( gs.player[0].useHazard||gs.player[1].useHazard )
 			{
-				if ( gs.currentStage+1 >= gs.numSongsPerSet )
+				bool shortList = gs.player[0].stagesPlayed[gs.currentStage + 1] <= 0; // true when, for any reason, not enough songs were picked to fill the setlist
+				if ( gs.currentStage+1 >= gs.numSongsPerSet || shortList )
 				{
 					gs.g_currentGameMode = FAILURE;
 					em.announcerQuip(GUY_STAGE_HAZARD_FAILED);
