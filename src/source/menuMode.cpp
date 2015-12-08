@@ -22,6 +22,7 @@ extern unsigned long int totalGameTime;
 
 extern int NUM_SONGS;
 extern int NUM_COURSES; 
+extern int NUM_PLAYABLE_SONGS;
 
 extern UTIME timeRemaining;
 extern void renderTimeRemaining(int xc, int yc);
@@ -633,7 +634,7 @@ void renderMenuLoop()
 		//numStagesDesc[0] = gs.numSongsPerSet + '0';
 		char numSongsDesc[16] = "";
 		char numCoursesDesc[16] = "";
-		sprintf_s(numSongsDesc, "%d songs", NUM_SONGS);
+		sprintf_s(numSongsDesc, "%d songs", NUM_PLAYABLE_SONGS);
 		sprintf_s(numCoursesDesc, "%d courses", NUM_COURSES);
 
 		sx = currentRow > 1 ? 420 : 210;

@@ -24,6 +24,7 @@
 SongEntry* songs; // used globally
 int NUM_SONGS = 0;
 int NUM_COURSES = 0;
+int NUM_PLAYABLE_SONGS = 0;
 int* songIDs;
 std::string* songTitles;
 std::string* songArtists;
@@ -1525,6 +1526,10 @@ int loadSongDB()
 		if ( version == 101 )
 		{
 			NUM_COURSES++;
+		}
+		else if ( version > 0 && version <= 5 )
+		{
+			NUM_PLAYABLE_SONGS++;
 		}
 		else if ( version < 0 || version > 5 )
 		{
