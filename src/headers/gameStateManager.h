@@ -41,6 +41,7 @@ public:
 	int     currentSongLength;
 	int     currentSongChannel; // used by FMOD hardware functions
 	int     bgmGap;             // how many ms early or late to start the bgm
+	bool	currentSongIsPreview;
 
 	// non-player game state data
 	bool isSolo;                // should not be used in this program
@@ -263,6 +264,7 @@ public:
 		currentSongSample = NULL;
 		currentSongLength = -1;
 		currentSongChannel = -1;
+		currentSongIsPreview = false;
 
 		// global game state
 		isSolo = false;
@@ -303,6 +305,7 @@ public:
 			filename[17] = (songID % 10) + '0';
 		}
 
+		currentSongIsPreview = preview;
 		killSong();
 		currentSongSample = FSOUND_Sample_Load(FSOUND_UNMANAGED, filename, FSOUND_NORMAL | FSOUND_MPEGACCURATE, 0, 0);
 		if ( currentSongSample == NULL )
@@ -341,6 +344,14 @@ public:
 			currentSong = -1;
 		}
 		currentSongSample = NULL;
+	}
+
+	void killSongIfPreview()
+	{
+		if ( currentSongIsPreview )
+		{
+			killSong();
+		}
 	}
 
 	void playSong()
