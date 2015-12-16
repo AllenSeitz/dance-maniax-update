@@ -1,5 +1,6 @@
 // extioManager.cpp implements programming the serial port for DMX
 // source file created by Allen Seitz 11/14/2013
+// NOTE: this implements a lights board build on an Arduino Mega, other boards are supported in other source files
 
 #include "extioManager.h"
 #include "inputManager.h"

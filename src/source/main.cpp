@@ -1,6 +1,7 @@
 // main.cpp defines the main entry point for DMX
 // file created by Allen Seitz on 7/18/2009
 // April 26, 2013: cleaned up many source files and moved into an svn repo
+// November 29, 2015: cleaned up a few source files and moved into a git repo
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,6 +15,7 @@
 #include "inputManager.h"
 #include "gameStateManager.h"
 #include "lightsManager.h"
+#include "pacdriveManager.h"
 #include "scoreManager.h"
 #include "videoManager.h"
 
@@ -81,6 +83,7 @@ VideoManager vm;
 EffectsManager em;
 LightsManager lm;
 extioManager extio;
+pacdriveManager pacio;
 DownloadManager dm;
 
 void firstSplashLoop();
@@ -1329,8 +1332,19 @@ void firstBootLoop()
 
 void mainBootLoop(UTIME dt)
 {
-	static char results[7][5] = { ".", "..", "...", "....", "OK", "BAD", "SKIP" };
+	static char results[8][5] = { ".", "..", "...", "....", "OK", "BAD", "SKIP", "PAC" };
 	int dotdotdot = (bootStepTime / 333) % 3;
+
+	// which board type to render?
+	int boardType = 6; // "SKIP"
+	if ( extio.isReady() )
+	{
+		boardType = 4; // "OK"
+	}
+	if ( pacio.isReady() )
+	{
+		boardType = 7; // "PAC"
+	}
 
 	bootStepTime += dt;
 	if ( currentBootStep <= 2 )
@@ -1346,7 +1360,7 @@ void mainBootLoop(UTIME dt)
 
 	if ( currentBootStep == 0 )
 	{
-		if ( extio.updateInitialize(dt) == false )
+		if ( extio.updateInitialize(dt) == false && pacio.updateInitialize(dt) == false )
 		{
 			textprintf(rm.m_backbuf, font, 154, 140, RED, results[5]); // hard fail
 			bootStepTime = 0;
@@ -1356,7 +1370,7 @@ void mainBootLoop(UTIME dt)
 		{
 			textprintf(rm.m_backbuf, font, 154, 140, WHITE, results[dotdotdot]);
 
-			if ( extio.isReady() )
+			if ( extio.isReady() || pacio.isReady() )
 			{
 				bootStepTime = 0;
 				currentBootStep = 1;
@@ -1365,7 +1379,7 @@ void mainBootLoop(UTIME dt)
 	}
 	else if ( currentBootStep == 1 )
 	{
-		textprintf(rm.m_backbuf, font, 154, 140, extio.isReady() ? GREEN : WHITE, extio.isReady() ? results[4] : results[6]);
+		textprintf(rm.m_backbuf, font, 154, 140, boardType == 6 ? WHITE : GREEN, results[boardType]);
 		textprintf(rm.m_backbuf, font, 154, 160, WHITE, results[dotdotdot]);
 
 		if ( bootStepTime >= 3000 )
@@ -1376,7 +1390,7 @@ void mainBootLoop(UTIME dt)
 	}
 	else if ( currentBootStep == 2 )
 	{
-		textprintf(rm.m_backbuf, font, 154, 140, extio.isReady() ? GREEN : WHITE, extio.isReady() ? results[4] : results[6]);
+		textprintf(rm.m_backbuf, font, 154, 140, boardType == 6 ? WHITE : GREEN, results[boardType]);
 		textprintf(rm.m_backbuf, font, 154, 160, GREEN, results[4]);
 		textprintf(rm.m_backbuf, font, 154, 180, WHITE, results[dotdotdot]);
 
@@ -1388,9 +1402,9 @@ void mainBootLoop(UTIME dt)
 	}
 	else
 	{
-		if ( extio.isReady() )
+		if ( boardType != 6 )
 		{
-			textprintf(rm.m_backbuf, font, 154, 140, (bootStepTime/75) %2 == 0 && bootStepTime < 2500 ? WHITE : GREEN, results[4]);
+			textprintf(rm.m_backbuf, font, 154, 140, (bootStepTime/75) %2 == 0 && bootStepTime < 2500 ? WHITE : GREEN, results[boardType]);
 		}
 		else
 		{

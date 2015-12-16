@@ -38,13 +38,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>DMX_Debug</TargetName>
-    <IncludePath>..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\lib\fmodapi375win\api\inc;..\..\lib\libpng\include\libpng12;..\..\lib\libpng\include;..\..\lib\loadpng;..\..\headers;..\..\lib\apeg\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\lib\fmodapi375win\api\lib;..\..\lib\libpng\lib;..\..\lib\apeg\lib\release;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\lib\fmodapi375win\api\inc;..\..\lib\libpng\include\libpng12;..\..\lib\libpng\include;..\..\lib\loadpng;..\..\headers;..\..\lib\apeg\include;..\..\lib\pacdrive\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\lib\fmodapi375win\api\lib;..\..\lib\libpng\lib;..\..\lib\apeg\lib\release;..\..\lib\pacdrive\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>DMX</TargetName>
-    <IncludePath>..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\lib\fmodapi375win\api\inc;..\..\lib\libpng\include\libpng12;..\..\lib\libpng\include;..\..\lib\loadpng;..\..\headers;..\..\lib\apeg\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\lib\fmodapi375win\api\lib;..\..\lib\libpng\lib;..\..\lib\apeg\lib\release;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\lib\fmodapi375win\api\inc;..\..\lib\libpng\include\libpng12;..\..\lib\libpng\include;..\..\lib\loadpng;..\..\headers;..\..\lib\apeg\include;..\..\lib\pacdrive\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\lib\fmodapi375win\api\lib;..\..\lib\libpng\lib;..\..\lib\apeg\lib\release;..\..\lib\pacdrive\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -97,6 +97,7 @@
     <ClInclude Include="..\..\headers\gameStateManager.h" />
     <ClInclude Include="..\..\headers\inputManager.h" />
     <ClInclude Include="..\..\headers\lightsManager.h" />
+    <ClInclude Include="..\..\headers\pacdriveManager.h" />
     <ClInclude Include="..\..\headers\particleSprites.h" />
     <ClInclude Include="..\..\headers\scoreManager.h" />
     <ClInclude Include="..\..\headers\songwheelMode.h" />
@@ -121,6 +122,7 @@
     <ClCompile Include="..\..\source\main.cpp" />
     <ClCompile Include="..\..\source\menuMode.cpp" />
     <ClCompile Include="..\..\source\nonstopMode.cpp" />
+    <ClCompile Include="..\..\source\pacdriveManager.cpp" />
     <ClCompile Include="..\..\source\particleSprites.cpp" />
     <ClCompile Include="..\..\source\render_ddr.cpp" />
     <ClCompile Include="..\..\source\render_dm.cpp" />
