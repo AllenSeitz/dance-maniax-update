@@ -283,6 +283,7 @@ int main()
 
 	im.updateKeyStates(1);
 	extio.initialize();
+	pacio.initialize();
 
 	// check options
 	if ( fileExists("revpolarityred") )
@@ -371,6 +372,7 @@ int main()
 			vm.update(dt);
 			lm.update(dt);
 			extio.update(dt);
+			pacio.update(dt);
 
 			if ( gs.g_gameModeTransition == 2 )
 			{

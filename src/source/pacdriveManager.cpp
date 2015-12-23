@@ -96,9 +96,9 @@ void pacdriveManager::updateLamps()
 	}
 
 	// tell the PacLED64
-	Pac64SetLEDStates(indexOfDevice, 1, upper);
-	Pac64SetLEDStates(indexOfDevice, 2, lowp1);
-	Pac64SetLEDStates(indexOfDevice, 3, lowp2);
-	Pac64SetLEDStates(indexOfDevice, 4, menu);
-	Pac64SetLEDStates(indexOfDevice, 5, spot);
+	Pac64SetLEDStates(indexOfDevice, 0, upper);
+	Pac64SetLEDStates(indexOfDevice, 1, lowp1);
+	Pac64SetLEDStates(indexOfDevice, 2, lowp2);
+	Pac64SetLEDStates(indexOfDevice, 3, menu);
+	Pac64SetLEDStates(indexOfDevice, 4, spot);
 }
