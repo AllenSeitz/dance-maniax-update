@@ -8,9 +8,11 @@
 #include "lightsManager.h"
 #include "extioManager.h"
 #include "pacdriveManager.h"
+#include "minimaidManager.h"
 
 extern extioManager extio;
 extern pacdriveManager pacio;
+extern minimaidManager minimaidio;
 
 bool LightsManager::initialize()
 {
@@ -55,6 +57,7 @@ void LightsManager::update(UTIME dt)
 	// update the IO board, whichever one is plugged in
 	extio.updateLamps();
 	pacio.updateLamps();
+	minimaidio.updateLamps();
 }
 
 void LightsManager::setLamp(PinACIO which, int milliseconds)

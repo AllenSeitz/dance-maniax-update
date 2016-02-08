@@ -8,6 +8,8 @@
 #include <process.h>
 #include <string>
 
+#include "hidapi.h"
+
 #include "common.h"
 #include "bookManager.h"
 #include "downloadManager.h"
@@ -16,6 +18,7 @@
 #include "gameStateManager.h"
 #include "lightsManager.h"
 #include "pacdriveManager.h"
+#include "minimaidManager.h"
 #include "scoreManager.h"
 #include "videoManager.h"
 
@@ -84,6 +87,7 @@ EffectsManager em;
 LightsManager lm;
 extioManager extio;
 pacdriveManager pacio;
+minimaidManager minimaidio;
 DownloadManager dm;
 
 void firstSplashLoop();
@@ -245,6 +249,12 @@ int main()
 	set_alpha_blender(); // the game assumes the graphics are left in this mode
 	register_bitmap_file_type("png", load_png, NULL);
 
+	// initialize the HID (Human Interface Device) library, used by the minimaid IO board
+	if ( hid_init() == 0 )
+	{
+		printf("Unable to initialize the HID library.\n");
+	}
+
 	if ( fileExists("allsongs") )
 	{
 		allsongsDebug = true;
@@ -371,6 +381,7 @@ int main()
 			vm.update(dt);
 			lm.update(dt);
 			extio.update(dt);
+			minimaidio.update(dt);
 
 			if ( gs.g_gameModeTransition == 2 )
 			{
@@ -588,6 +599,7 @@ int main()
 
 	// clean up
 	gs.killSong();
+	hid_exit();
 
 	return EXIT_SUCCESS;
 }
@@ -759,7 +771,7 @@ void renderCreditsDisplay()
 bool checkForUpdates()
 {
 	bool startedDownload = true;
-	if ( !fileExists(MANIFEST_FILENAME) )
+	if ( !fileExists(MANIFEST_FILENAME) ) // TODO: no don't use the cached one! redownload it every time!
 	{
 		dm.downloadFile(MANIFEST_FILENAME, MANIFEST_FILENAME);
 	}
@@ -1332,7 +1344,7 @@ void firstBootLoop()
 
 void mainBootLoop(UTIME dt)
 {
-	static char results[8][5] = { ".", "..", "...", "....", "OK", "BAD", "SKIP", "PAC" };
+	static char results[9][5] = { ".", "..", "...", "....", "OK", "BAD", "SKIP", "PAC", "MINI" };
 	int dotdotdot = (bootStepTime / 333) % 3;
 
 	// which board type to render?
@@ -1344,6 +1356,10 @@ void mainBootLoop(UTIME dt)
 	if ( pacio.isReady() )
 	{
 		boardType = 7; // "PAC"
+	}
+	if ( minimaidio.isReady() )
+	{
+		boardType = 8; // "MINI"
 	}
 
 	bootStepTime += dt;
@@ -1360,7 +1376,7 @@ void mainBootLoop(UTIME dt)
 
 	if ( currentBootStep == 0 )
 	{
-		if ( extio.updateInitialize(dt) == false && pacio.updateInitialize(dt) == false )
+		if ( extio.updateInitialize(dt) == false && pacio.updateInitialize(dt) == false && minimaidio.updateInitialize(dt) == false )
 		{
 			textprintf(rm.m_backbuf, font, 154, 140, RED, results[5]); // hard fail
 			bootStepTime = 0;
@@ -1370,7 +1386,7 @@ void mainBootLoop(UTIME dt)
 		{
 			textprintf(rm.m_backbuf, font, 154, 140, WHITE, results[dotdotdot]);
 
-			if ( extio.isReady() || pacio.isReady() )
+			if ( extio.isReady() || pacio.isReady() || minimaidio.isReady() )
 			{
 				bootStepTime = 0;
 				currentBootStep = 1;
