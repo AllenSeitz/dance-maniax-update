@@ -64,6 +64,7 @@ int testChartLevel = SINGLE_MILD;
 bool SHOW_LAMPS = true;
 bool held_printscreen = false;
 bool beginInitialInstall = false;
+bool redownloadManifest = true;
 
 BITMAP** m_banners; // used globally
 BITMAP* m_caution;
@@ -250,7 +251,7 @@ int main()
 	register_bitmap_file_type("png", load_png, NULL);
 
 	// initialize the HID (Human Interface Device) library, used by the minimaid IO board
-	if ( hid_init() == 0 )
+	if ( hid_init() != 0 )
 	{
 		printf("Unable to initialize the HID library.\n");
 	}
@@ -771,7 +772,7 @@ void renderCreditsDisplay()
 bool checkForUpdates()
 {
 	bool startedDownload = true;
-	if ( !fileExists(MANIFEST_FILENAME) ) // TODO: no don't use the cached one! redownload it every time!
+	if ( !fileExists(MANIFEST_FILENAME) || redownloadManifest )
 	{
 		dm.downloadFile(MANIFEST_FILENAME, MANIFEST_FILENAME);
 	}
@@ -1292,11 +1293,18 @@ void mainUpdateLoop(UTIME dt)
 		if ( dm.getCurrentDownloadFilename().find(".zip") == -1 )
 		{
 			dm.resetState();
+			redownloadManifest = false;
 
 			// non-zipped files are left as-is in the root folder. since this is only for "update.bat" and "unzip.exe" we should immediately check for a zip
 			if ( !checkForUpdates() )
 			{
 				updateInProgress = false;
+				redownloadManifest = true; // let the user try again without needing to restart the program
+				em.playSample(SFX_LOUD_BELL);
+			}
+			else
+			{
+				em.playSample(SFX_COURSE_APPEAR);
 			}
 		}
 		else
