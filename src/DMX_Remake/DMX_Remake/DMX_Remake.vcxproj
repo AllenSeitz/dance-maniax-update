@@ -40,6 +40,7 @@
     <TargetName>DMX_Debug</TargetName>
     <IncludePath>..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\lib\fmodapi375win\api\inc;..\..\lib\libpng\include\libpng12;..\..\lib\libpng\include;..\..\lib\loadpng;..\..\headers;..\..\lib\apeg\include;..\..\lib\pacdrive\include;..\..\lib\hidapi\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\lib\fmodapi375win\api\lib;..\..\lib\libpng\lib;..\..\lib\apeg\lib\release;..\..\lib\pacdrive\lib;..\..\lib\hidapi\lib;$(LibraryPath)</LibraryPath>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>DMX</TargetName>
