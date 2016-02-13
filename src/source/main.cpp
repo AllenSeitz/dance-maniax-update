@@ -294,6 +294,7 @@ int main()
 
 	im.updateKeyStates(1);
 	extio.initialize();
+	minimaidio.initialize();
 
 	// check options
 	if ( fileExists("revpolarityred") )

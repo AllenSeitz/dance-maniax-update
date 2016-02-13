@@ -25,13 +25,14 @@ struct mm_output {
 }; 
 
 // four molexes fit on the minimaid, each with up to 8 pins
-// I guess the menu buttons just don't fit?
+// the menu buttons go on ext_output
 int minimaidLampOrder[32] = {
 	lampBlue0, lampRed0, lampBlue1, lampRed1, lampBlue0+1, lampRed0+1, lampBlue1+1, lampRed1+1,
 	lampBlue2a, lampBlue2b, lampRed2a, lampRed2b, lampBlue3a, lampRed3b, lampRed3a, lampRed3b,
 	lampBlue2a+1, lampBlue2b+1, lampRed2a+1, lampRed2b+1, lampBlue3a+1, lampRed3b+1, lampRed3a+1, lampRed3b+1,
 	spotlightA, spotlightB, spotlightC, NULL, NULL, NULL, NULL, NULL
 }; 
+int minimaidExtraLampOrder[8] = { lampRight, lampLeft, lampStart, lampRight+1, lampLeft+1, lampStart+1, NULL, NULL };
 
 minimaidManager::minimaidManager()
 {
@@ -42,22 +43,40 @@ minimaidManager::minimaidManager()
 
 void minimaidManager::initialize()
 {
-	wchar_t wstr[256];
+	// enumerate every hid device in the system, look for a "Minimaid", and try to open it
+	struct hid_device_info* myDevices = hid_enumerate(0, 0); // vid = 0, pid = 0, matches everything 	
+	struct hid_device_info* p = myDevices;
+	int numDevice = 1;
+	while ( p != NULL )
+	{
+		al_trace("---------------------------------------------------------\n");
+		al_trace("DEVICE #%d = %ls\n", numDevice, p->product_string);
+		al_trace("VID: %d, PID: %d\n", p->vendor_id, p->product_id);
+		al_trace("PATH: %s\n", p->path);
+		al_trace("---------------------------------------------------------\n");
 
-	// Open the device using the VID, PID, and optionally the Serial number.
-	handle = hid_open(0x5730, 0x0000, NULL);
+		// since there can me multiple "devices" under Windows for a single IO board, try to open them all until one works
+		if ( handle == NULL && lstrcmpW(p->product_string, L"Minimaid JAMMA IO Board") == 0 )
+		{
+			handle = hid_open_path(p->path);
+		}
+
+		numDevice++;
+		p = p->next;
+	}
+	hid_free_enumeration(myDevices);
+
+	// this would be the simpler way to open a Minimaid, except for the duplicate devices problem
+	//handle = hid_open(0xBEEF, 0x5730, NULL);
 
 	// Read the Manufacturer String - sample code, not used for anything
-	int res = hid_get_manufacturer_string(handle, wstr, 256);
-	wprintf(L"Manufacturer String: %s\n", wstr);
+	if ( handle != NULL )
+	{
+		wchar_t wstr[256] = L"";
 
-	// Read the Product String - sample code, not used for anything
-	res = hid_get_product_string(handle, wstr, 256);
-	wprintf(L"Product String: %s\n", wstr);
-
-	// Read the Serial Number String - sample code, not used for anything
-	res = hid_get_serial_number_string(handle, wstr, 256);
-	wprintf(L"Serial Number String: (%d) %s\n", wstr[0], wstr);
+		int res = hid_get_manufacturer_string(handle, wstr, 256);
+		al_trace("MINIMAID DETECTED: Manufacturer = %ls\n", wstr);
+	}
 }
 
 bool minimaidManager::updateInitialize(UTIME dt)
@@ -101,12 +120,13 @@ void minimaidManager::updateLamps()
 	// prepare the output structure - I'm not sure what most of thse do to be honest
 	struct mm_output out;
 	out.report_id = 0;
-	out.ext_output = 0;
+	out.ext_output = 0; // set in the next code block
 	out.blue_led = 0;
-	out.aux_flags = 0;
-	out.kbd_enable = 0; // might be a good idea to see what the bindings are, and if that would be easier?
+	out.aux_flags = 0; // called "hax" in the original api? what for?
+	out.kbd_enable = 1; // might be a good idea to see what the bindings are, and if that would be easier?
 	out.lights = 0; // set in the next code block
 
+	// set lamp bits!
 	for ( int i = 0; i < 32; i++ )
 	{
 		if ( minimaidLampOrder[i] != 0 )
@@ -114,8 +134,15 @@ void minimaidManager::updateLamps()
 			out.lights |= lm.getLamp(minimaidLampOrder[i]) ? 1 << i : 0;
 		}
 	}
+	for ( int i = 0; i < 8; i++ )
+	{
+		if ( minimaidExtraLampOrder[i] != 0 )
+		{
+			out.ext_output |= lm.getLamp(minimaidExtraLampOrder[i]) ? 1 << i : 0;
+		}
+	}
 
-	al_trace("LAMP %d\n", out.lights);
+	//al_trace("LAMP %d\n", out.lights);
 
 	// move the mm_output struct into an array of chars for hid_write
 	unsigned char outstream[128];
