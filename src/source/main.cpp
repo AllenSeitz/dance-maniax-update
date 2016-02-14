@@ -295,6 +295,7 @@ int main()
 	im.updateKeyStates(1);
 	extio.initialize();
 	minimaidio.initialize();
+	pacio.initialize();
 
 	// check options
 	if ( fileExists("revpolarityred") )
@@ -384,6 +385,7 @@ int main()
 			lm.update(dt);
 			extio.update(dt);
 			minimaidio.update(dt);
+			pacio.update(dt);
 
 			if ( gs.g_gameModeTransition == 2 )
 			{
