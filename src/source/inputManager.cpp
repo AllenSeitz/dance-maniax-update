@@ -21,6 +21,16 @@ static int defaultKeyMapping[NUM_INPUTS] = { KEY_SPACE, KEY_Q, KEY_W, KEY_SPACE,
 											 KEY_LEFT, KEY_C, KEY_RIGHT, KEY_V  // 2P blue sensors
 };
 
+// the minimaid has a keyboard mode which uses these alternate mappings that make sense for a JAMMA harness
+static int minimaidKeyMapping[NUM_INPUTS] = { KEY_SPACE, KEY_S, KEY_U, KEY_SPACE, // 1P RED
+									         KEY_SPACE, KEY_T, KEY_V, KEY_SPACE, // 2P RED
+											 KEY_SPACE, KEY_SPACE, // unused
+											 KEY_K, KEY_M, KEY_L, KEY_N, KEY_I, KEY_J, // menu buttons
+											 KEY_B, KEY_A, KEY_D, // test service coin
+											 KEY_Y, KEY_O, KEY_Q, KEY_1, // 1P blue sensors
+											 KEY_P, KEY_Z, KEY_R, KEY_2  // 2P blue sensors
+};
+
 InputManager::InputManager()
 {
 	int i = 0;
@@ -54,7 +64,7 @@ void InputManager::updateKeyStates(UTIME dt)
 			thisKeyIsPressed = !thisKeyIsPressed;
 		}
 
-		if ( thisKeyIsPressed || (i == MENU_START_1P && key[KEY_ENTER]) || (i == MENU_START_2P && key[KEY_M]) ) // keyboard testing requires alternate start button
+		if ( thisKeyIsPressed || (i == MENU_START_1P && key[KEY_ENTER]) || (i == MENU_START_2P && key[KEY_SEMICOLON]) ) // keyboard testing requires alternate start button
 		{
 			if ( m_panelStates[i] < 1 ) // if the key was up
 			{
@@ -181,6 +191,14 @@ void InputManager::processInputFromExtio(unsigned char bytes[3])
 		{
 			m_ioBoardStates[pins2[i]] = bytes[2] & (1 << i) ? false : true;
 		}
+	}
+}
+
+void InputManager::switchToMinimaidKeys()
+{
+	for ( int i = 0; i < NUM_INPUTS; i++ )
+	{
+		m_keyMapping[i] = minimaidKeyMapping[i];
 	}
 }
 

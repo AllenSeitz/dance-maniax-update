@@ -84,6 +84,10 @@ public:
 	// postcondition: panelsDown and panelHoldLength are updated
 	// NOTE: the parameter is a specific array of 24 bits, directly from the IO board
 
+	void switchToMinimaidKeys();
+	// precondition: called once before the first call to updateKeyStates()
+	// postcondition: switches the keybindings to a hardcoded set for the Minimaid IO
+
 	// these functions and bools are for reversing the on/off logic for a PPP controller
 	bool isRedSensor(int i)
 	{

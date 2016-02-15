@@ -1401,6 +1401,10 @@ void mainBootLoop(UTIME dt)
 			{
 				bootStepTime = 0;
 				currentBootStep = 1;
+				if ( minimaidio.isReady() )
+				{
+					im.switchToMinimaidKeys();
+				}
 			}	
 		}
 	}
