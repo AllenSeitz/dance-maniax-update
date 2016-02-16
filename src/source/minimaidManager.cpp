@@ -14,11 +14,14 @@ struct mm_input {
     uint32_t jamma;                                                            
     uint8_t ext_in;                                                            
 };                                                                             
-                                                                               
+
 struct mm_output {                                                             
     uint8_t report_id;                                                         
-    uint8_t ext_output;                                                        
-    uint32_t lights;                                                           
+    uint8_t ext_output;
+    uint8_t lightsA;
+    uint8_t lightsB;
+    uint8_t lightsC;
+    uint8_t lightsD;
     uint8_t blue_led;                                                          
     uint8_t kbd_enable;                                                        
     uint8_t aux_flags;                                                         
@@ -26,13 +29,11 @@ struct mm_output {
 
 // four molexes fit on the minimaid, each with up to 8 pins
 // the menu buttons go on ext_output
-int minimaidLampOrder[32] = {
-	lampBlue0, lampRed0, lampBlue1, lampRed1, lampBlue0+1, lampRed0+1, lampBlue1+1, lampRed1+1,
-	lampBlue2a, lampBlue2b, lampRed2a, lampRed2b, lampBlue3a, lampRed3b, lampRed3a, lampRed3b,
-	lampBlue2a+1, lampBlue2b+1, lampRed2a+1, lampRed2b+1, lampBlue3a+1, lampRed3b+1, lampRed3a+1, lampRed3b+1,
-	spotlightA, spotlightB, spotlightC, NULL, NULL, NULL, NULL, NULL
-}; 
-int minimaidExtraLampOrder[8] = { lampRight, lampLeft, lampStart, lampRight+1, lampLeft+1, lampStart+1, NULL, NULL };
+int minimaidUpperLED[8] = { lampBlue0, lampRed0, lampBlue1, lampRed1, lampBlue0+1, lampRed0+1, lampBlue1+1, lampRed1+1 };
+int minimaidLeftLED[8] = { lampBlue2a, lampRed2a, lampBlue2b, lampRed2b, lampBlue3a, lampRed3a, lampBlue3b, lampRed3b };
+int minimaidRightLED[8] = { lampBlue2a+1, lampRed2a+1, lampBlue2b+1, lampRed2b+1, lampBlue3a+1, lampRed3a+1, lampBlue3b+1, lampRed3b+1 };
+int minimaidSpotLamps[8] = { spotlightA, spotlightB, spotlightC, NULL, NULL, NULL, NULL, NULL };
+int minimaidMenuLamps[8] = { lampRight, lampLeft, lampStart, lampRight+1, lampLeft+1, lampStart+1, NULL, NULL };
 
 minimaidManager::minimaidManager()
 {
@@ -108,9 +109,10 @@ void minimaidManager::update(UTIME dt)
 
 void minimaidManager::updateLamps()
 {
+	static int minUpdateTime = 50; // milliseconds minimum between updates sent to the board
 	char b0 = 0, b1 = 0, b2 = 0;
 
-	if ( timeSinceLastLampUpdate < 20 )
+	if ( timeSinceLastLampUpdate < minUpdateTime )
 	{
 		//al_trace("--STIFLED LAMP UPDATE-- too soon of an update.\r\n");
 		return; // don't do that
@@ -124,25 +126,36 @@ void minimaidManager::updateLamps()
 	out.blue_led = 0;
 	out.aux_flags = 0; // called "hax" in the original api? what for?
 	out.kbd_enable = 1; // might be a good idea to see what the bindings are, and if that would be easier?
-	out.lights = 0; // set in the next code block
+	out.lightsA = out.lightsB = out.lightsC = out.lightsD = 0; // set in the next code block
 
 	// set lamp bits!
-	for ( int i = 0; i < 32; i++ )
-	{
-		if ( minimaidLampOrder[i] != 0 )
-		{
-			out.lights |= lm.getLamp(minimaidLampOrder[i]) ? 1 << i : 0;
-		}
-	}
 	for ( int i = 0; i < 8; i++ )
 	{
-		if ( minimaidExtraLampOrder[i] != 0 )
+		out.lightsA |= lm.getLamp(minimaidUpperLED[i]) ? 1 << i : 0;
+		out.lightsB |= lm.getLamp(minimaidLeftLED[i]) ? 1 << i : 0;
+		out.lightsC |= lm.getLamp(minimaidRightLED[i]) ? 1 << i : 0;
+		if ( minimaidSpotLamps[i] != 0 )
 		{
-			out.ext_output |= lm.getLamp(minimaidExtraLampOrder[i]) ? 1 << i : 0;
+			out.lightsD |= lm.getLamp(minimaidSpotLamps[i]) ? 1 << i : 0; // these go on the short space
+		}
+		if ( minimaidMenuLamps[i] != 0 )
+		{
+			out.ext_output |= lm.getLamp(minimaidMenuLamps[i]) ? 1 << i : 0; // these go on the special side add-on
 		}
 	}
 
-	//al_trace("LAMP %d\n", out.lights);
+	/* dirty testing
+	static int numUpdates = 0;
+	int mmm = numUpdates % 8;
+	out.lightsA = 1 << mmm;
+	out.lightsB = 1 << mmm;
+	out.lightsC = 1 << mmm;
+	out.lightsD = 1 << mmm;
+	numUpdates++;
+	minUpdateTime = 1000;
+	//*/
+
+	//al_trace("LAMP %d\n", out.lightsA);
 
 	// move the mm_output struct into an array of chars for hid_write
 	unsigned char outstream[128];
