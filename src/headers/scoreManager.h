@@ -236,6 +236,14 @@ struct PLAYER_DATA
 
 		return bestStatus;
 	}
+
+	bool PLAYER_DATA::isSongUnlockedForPlayer( int songID, int chartID )
+	{		
+		int si = songID_to_listID(songID);
+		int ch = getChartIndexFromType(chartID);
+
+		return allTime[si][ch].unlockStatus > 0;
+	}
 };
 
 class ScoreManager

@@ -140,7 +140,7 @@ bool skippingSubmenu = false;
 char maniaxSelect[2] = {0,0};		// used to access the hidden Maniax difficulty
 
 bool isRandomSelect = false;        // set to true when random select begins
-
+int randomExtraStage = 101;			// used later, if needed
 
 //////////////////////////////////////////////////////////////////////////////
 // Assets
@@ -383,6 +383,11 @@ void firstSongwheelLoop()
 		gs.isVersus = false;
 		gs.isDoubles = false;
 	}
+
+	// pick a random extra stage and save it for later, just in case it is needed
+	// (it is easier to do this now instead of later, sinze we just built the list of elegible songs)
+	int randIndex = rand()%maxSongwheelIndex;
+	randomExtraStage = songlist[randIndex].songID;
 
 	lm.loadLampProgram("songwheel.txt");
 	im.setCooldownTime(0);

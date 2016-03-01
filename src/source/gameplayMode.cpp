@@ -103,6 +103,7 @@ int announcerTargetSpeak = 0; // how many "announcer points" are scored before h
 
 // songlist - for unlocks
 extern SongEntry* songs;
+extern int randomExtraStage;
 
 SAMPLE* assistClap = NULL;
 SAMPLE* shockSound = NULL;
@@ -1229,11 +1230,12 @@ int checkForExtraStages()
 		{
 			awardedExtra = true;
 
-			// count the number of full combos
-			int numFullComboP1 = sm.player[0].getNumStars(levelP1, STATUS_FULL_GOOD_COMBO);
-			int numFullComboP2 = sm.player[1].getNumStars(levelP2, STATUS_FULL_GOOD_COMBO);
+			// count the total number of full combos across all songs - unused
+			//int numFullComboP1 = sm.player[0].getNumStars(levelP1, STATUS_FULL_GOOD_COMBO);
+			//int numFullComboP2 = sm.player[1].getNumStars(levelP2, STATUS_FULL_GOOD_COMBO);
 
-			// count the number of EXTRA STAGE full combos
+			// count the number of full combos specifically on EXTRA STAGE songs - unused
+			/*
 			static int extraStages[10] = { 126, 230, 245, 246, 247, 248, 249, 250, 303, 324 };
 			int numSpecialP1 = 0;
 			int numSpecialP2 = 0;
@@ -1248,21 +1250,7 @@ int checkForExtraStages()
 					numSpecialP2++;
 				}
 			}
-
-			/* old logic - use the number of full combos to pick a stage
-			if ( (numFullComboP1 >= 15 && sm.player[0].getStatusOnSong(303, levelP1) >= STATUS_FULLCOMBO) || (numFullComboP2 >= 15 && sm.player[1].getStatusOnSong(303, levelP2) >= STATUS_FULLCOMBO) )
-			{
-				songToPlay = 324;
-				if ( songs[ songID_to_listID(324) ].version <= 0 )
-				{
-					songToPlay = 301; // TODO: finish Elemental Creation
-				}
-			}
-			else if ( (numFullComboP1 >= 5 && sm.player[0].getStatusOnSong(126, levelP1) >= STATUS_FULLCOMBO) || (numFullComboP2 >= 5 && sm.player[1].getStatusOnSong(126, levelP2) >= STATUS_FULLCOMBO) )
-			{
-				songToPlay = 303;
-			}
-			*/
+			//*/
 
 			// check for a full combo with miss count == 0
 			int numMissesP1 = 0;
@@ -1273,13 +1261,8 @@ int checkForExtraStages()
 				numMissesP2 += sm.player[1].currentSet[i].misses;
 			}
 
-			// give them something EXTREME if they nearly full comboed their set or averaged an 'S' rank
-			if ( numMissesP1 < gs.numSongsPerSet || sumP1 >= 950000 || (gs.isVersus && numMissesP2 < gs.numSongsPerSet) || sumP2 >= 950000 )
-			{
-				songToPlay = pickRandomInt(2, 303, 324); // POSSESSION, Elemental Creation
-			}
-			// ... or give them megamix 1 for sure if they picked 3 songs from 1st mix
-			else if ( gs.player[0].pickedAllFromVersion(1) || (gs.isVersus && gs.player[1].pickedAllFromVersion(1)) )
+			// give them megamix 1 for sure if they picked 3 songs from 1st mix
+			if ( gs.player[0].pickedAllFromVersion(1) || (gs.isVersus && gs.player[1].pickedAllFromVersion(1)) )
 			{
 				songToPlay = 126;
 			}
@@ -1294,10 +1277,45 @@ int checkForExtraStages()
 					songToPlay = pickRandomInt(7, 230, 245, 246, 247, 248, 249, 250);
 				}
 			}
-			// otherwise give them a random megamix
+			// ... or give the player a song that they haven't unlocked yet if they picked form mixed versions
 			else
 			{
-				songToPlay = pickRandomInt(2, 126, 230); // meh
+#define NUM_OLD_EXTRA_STAGES 8
+#define NUM_SPECIAL_EXTRA_STAGES 2
+				int oldExtraStages[NUM_OLD_EXTRA_STAGES] = { 126, 230, 245, 246, 247, 248, 249, 250 }; // megamix 1, megamix 2, and the edits for megamix 2
+				int premiumExtraStages[NUM_SPECIAL_EXTRA_STAGES] = { 303, 324 }; // POSSESSION, Elemental Creation
+				std::vector<int> usableExtraStages;
+
+				// add the old extra stages to the pool if the player hasn't unlocked them yet
+				for ( int i = 0; i < NUM_OLD_EXTRA_STAGES; i++ )
+				{
+					if ( !sm.player[0].isSongUnlockedForPlayer(oldExtraStages[i], levelP1) || (gs.isVersus && !sm.player[1].isSongUnlockedForPlayer(oldExtraStages[i], levelP2)) )
+					{
+						usableExtraStages.push_back(oldExtraStages[i]);
+					}
+				}
+
+				// the player did exceptionally well if they averaged one miss per stage or averaged an S rank
+				if ( numMissesP1 < gs.numSongsPerSet || sumP1 >= 950000 || (gs.isVersus && numMissesP2 < gs.numSongsPerSet) || sumP2 >= 950000 )
+				{
+					for ( int i = 0; i < NUM_SPECIAL_EXTRA_STAGES; i++ )
+					{
+						if ( !sm.player[0].isSongUnlockedForPlayer(premiumExtraStages[i], levelP1) || (gs.isVersus && !sm.player[1].isSongUnlockedForPlayer(premiumExtraStages[i], levelP2)) )
+						{
+							usableExtraStages.push_back(premiumExtraStages[i]);
+						}
+					}
+				}
+
+				// is everything unlocked? well good job you win the prize. enjoy machine random
+				if ( usableExtraStages.size() == 0 )
+				{
+					songToPlay = randomExtraStage; // from songwheel mode, picked randomly from songs that were shown last visit to songwheel mode
+				}
+				else
+				{
+					songToPlay = usableExtraStages[rand() % usableExtraStages.size()];
+				}
 			}
 
 			// make it happen
