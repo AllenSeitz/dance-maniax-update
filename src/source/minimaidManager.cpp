@@ -33,7 +33,8 @@ int minimaidUpperLED[8] = { lampBlue0, lampRed0, lampBlue1, lampRed1, lampBlue0+
 int minimaidLeftLED[8] = { lampBlue2a, lampRed2a, lampBlue2b, lampRed2b, lampBlue3a, lampRed3a, lampBlue3b, lampRed3b };
 int minimaidRightLED[8] = { lampBlue2a+1, lampRed2a+1, lampBlue2b+1, lampRed2b+1, lampBlue3a+1, lampRed3a+1, lampBlue3b+1, lampRed3b+1 };
 int minimaidSpotLamps[8] = { spotlightA, spotlightB, spotlightC, NULL, NULL, NULL, NULL, NULL };
-int minimaidMenuLamps[8] = { lampRight, lampLeft, lampStart, lampRight+1, lampLeft+1, lampStart+1, NULL, NULL };
+//int minimaidMenuLamps[8] = { lampRight, lampLeft, lampStart, lampRight+1, lampLeft+1, lampStart+1, NULL, NULL };
+int minimaidMenuLamps[8] = { NULL, NULL, lampRight, lampStart, lampLeft, lampRight+1, lampStart+1, lampLeft+1 };
 
 minimaidManager::minimaidManager()
 {
@@ -132,8 +133,8 @@ void minimaidManager::updateLamps()
 	for ( int i = 0; i < 8; i++ )
 	{
 		out.lightsA |= lm.getLamp(minimaidUpperLED[i]) ? 1 << i : 0;
-		out.lightsB |= lm.getLamp(minimaidLeftLED[i]) ? 1 << i : 0;
-		out.lightsC |= lm.getLamp(minimaidRightLED[i]) ? 1 << i : 0;
+		out.lightsC |= lm.getLamp(minimaidLeftLED[i]) ? 1 << i : 0;
+		out.lightsB |= lm.getLamp(minimaidRightLED[i]) ? 1 << i : 0;
 		if ( minimaidSpotLamps[i] != 0 )
 		{
 			out.lightsD |= lm.getLamp(minimaidSpotLamps[i]) ? 1 << i : 0; // these go on the short space

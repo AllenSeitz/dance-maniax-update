@@ -410,6 +410,15 @@ void mainGameplayLoop(UTIME dt)
 	{
 		lm.setOrbColor(0, orb, orbCycle[lampCycle%4], 100);
 		lm.setOrbColor(1, orb, orbCycle[lampCycle%4], 100);
+		if ( lampCycle % 2 == 0 )
+		{
+			lm.setLamp(spotlightA, gs.player[0].stepZoneTimePerBeat / 4);
+			lm.setLamp(spotlightC, gs.player[0].stepZoneTimePerBeat / 4);
+		}
+		else
+		{
+			lm.setLamp(spotlightB, gs.player[0].stepZoneTimePerBeat / 4);
+		}
 	}
 
 	// these should only work in debug mode
@@ -500,7 +509,10 @@ void doStepZoneLogic(UTIME dt, int p)
 	{
 		gs.player[p].stepZoneBeatTimer -= gs.player[p].stepZoneTimePerBeat;
 		gs.player[p].stepZoneBlinkTimer = gs.player[p].stepZoneTimePerBeat / 4;
-		lampCycle++;
+		if ( p == 0 )
+		{
+			lampCycle++;
+		}
 		gs.player[p].stepZoneTimePerBeat = BPM_TO_MSEC(gs.player[p].scrollRate);
 		gs.player[p].colorCycle = gs.player[p].colorCycle == 3 ? 0 : gs.player[p].colorCycle + 1; // used by DDR for the 4-frame DDR arrow animation
 	}
