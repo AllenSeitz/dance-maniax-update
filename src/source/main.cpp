@@ -62,6 +62,8 @@ bool isTestingChart = false;
 int testChartSongID = 101;
 int testChartLevel = SINGLE_MILD;
 bool SHOW_LAMPS = true;
+bool forceMinimaid = false;
+bool minimaidLightsOnly = false;
 bool held_printscreen = false;
 bool beginInitialInstall = false;
 bool redownloadManifest = true;
@@ -340,6 +342,14 @@ int main()
 	if ( fileExists("nomenutimer") )
 	{
 		gs.isEventMode = true;	// override this (intentionally unsaved) setting after the normal settings are loaded
+	}
+	if ( fileExists("forceminimaid") )
+	{
+		forceMinimaid = true; // reboot until we find one
+	}
+	if ( fileExists("minimaidLightsOnly") )
+	{
+		minimaidLightsOnly = true; // do not use the minimaid for input
 	}
 
 	// booting while holding service down? delete (overwrite) machine settings
@@ -1392,6 +1402,13 @@ void mainBootLoop(UTIME dt)
 			textprintf(rm.m_backbuf, font, 154, 140, RED, results[5]); // hard fail
 			bootStepTime = 0;
 			currentBootStep = 1;
+
+			// if the forceMinimaid flag is set then keep retrying until this type of io board appears
+			if ( forceMinimaid && boardType != 8 )
+			{
+				minimaidio.initialize();
+				currentBootStep = 0;
+			}
 		}
 		else
 		{
@@ -1401,7 +1418,7 @@ void mainBootLoop(UTIME dt)
 			{
 				bootStepTime = 0;
 				currentBootStep = 1;
-				if ( minimaidio.isReady() )
+				if ( minimaidio.isReady() && !minimaidLightsOnly )
 				{
 					im.switchToMinimaidKeys();
 				}
