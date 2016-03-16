@@ -146,7 +146,7 @@ void firstNonstopLoop()
 	{
 		if ( songs[i].version == 101 )
 		{
-			if ( songs[i].unlockFlag != UNLOCK_METHOD_NONE )
+			if ( songs[i].specialFlag != SPECIAL_FLAG_NONE )
 			{
 				continue; // course is locked
 			}

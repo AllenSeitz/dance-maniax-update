@@ -1144,8 +1144,18 @@ void loadNextSong()
 			arrangeChart(&gs.player[p].currentChart, &gs.player[p].freezeArrows, gs.player[p].arrangeModifier, gs.isDoubles);
 		}
 	}
+	
+	// check for alternate versions of songs? (used for maniax charts)
+	bool useAlternateMusic = false;
+	if ( (songs[songID_to_listID(gs.player[0].stagesPlayed[gs.currentStage])].specialFlag & SPECIAL_FLAG_HAS_ALTERNATE_MUSIC) != 0 )
+	{
+		if ( gs.player[0].stagesLevels[gs.currentStage] == SINGLE_ANOTHER || gs.player[0].stagesLevels[gs.currentStage] == DOUBLE_ANOTHER || (gs.isVersus && gs.player[1].stagesLevels[gs.currentStage] == SINGLE_ANOTHER) )
+		{
+			useAlternateMusic = true;
+		}
+	}
 
-	gs.loadSong(gs.player[0].stagesPlayed[gs.currentStage]);
+	gs.loadSong(gs.player[0].stagesPlayed[gs.currentStage], false, useAlternateMusic);
 	vm.loadScript(movieScripts[songID_to_listID(gs.player[0].stagesPlayed[gs.currentStage])].c_str()); // I love the "])]" on this line!!!
 	gs.playSong();
 	vm.play();
@@ -1372,7 +1382,7 @@ int checkForExtraStages()
 		{
 			songIndexError(gs.player[0].stagesPlayed[gs.numSongsPerSet]);
 		}
-		if ( awardedExtra && songs[songIndex].unlockFlag == UNLOCK_METHOD_EXTRA_STAGE )
+		if ( awardedExtra && songs[songIndex].specialFlag & SPECIAL_FLAG_UNLOCK_METHOD_EXTRA_STAGE )
 		{
 			if ( sm.player[0].currentSet[gs.numSongsPerSet].getScore() >= 900000 )
 			{

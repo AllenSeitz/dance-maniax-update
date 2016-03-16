@@ -406,7 +406,7 @@ struct SongEntry
 	char maniaxDouble;
 	char version;     // for sorting
 	int numPlays;     // the only non-static data in this structure
-	char unlockFlag;
+	char specialFlag; // 
 	bool isNew;
 
 	SongEntry::SongEntry()
@@ -428,7 +428,7 @@ struct SongEntry
 		maniaxDouble = xd;
 		version = v;
 		numPlays = 0;
-		unlockFlag = 0;
+		specialFlag = 0;
 	}
 };
 
@@ -439,11 +439,11 @@ struct SongEntry
 #define DOUBLE_WILD 11
 #define DOUBLE_ANOTHER 12 
 
-#define UNLOCK_METHOD_NONE 0
-#define UNLOCK_METHOD_EXTRA_STAGE 1
-#define UNLOCK_METHOD_CLEAR 2
-#define UNLOCK_METHOD_SPECIAL 3
-#define UNLOCK_METHOD_ROULETTE 4
+#define SPECIAL_FLAG_NONE 0
+#define SPECIAL_FLAG_UNLOCK_METHOD_EXTRA_STAGE 1
+#define SPECIAL_FLAG_HAS_ALTERNATE_MUSIC 2
+#define SPECIAL_FLAG_UNUSED_DELTA 4
+#define SPECIAL_FLAG_UNUSED_EPSILON 8
 
 int songID_to_listID(int songID);
 int listID_to_songID(int index);

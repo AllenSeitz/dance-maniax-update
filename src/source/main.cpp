@@ -1582,7 +1582,7 @@ int loadSongDB()
 		songArtists[i].assign(artist, strlen(artist));
 		movieScripts[i].assign(movie, strlen(movie));
 		songs[i].initialize(id, minbpm, maxbpm, sm, sw, sx, dm, dw, dx, version); // BROKEN MY HEART
-		songs[i].unlockFlag = flag;
+		songs[i].specialFlag = flag;
 		songs[i].isNew = isNew == 1;
 
 		if ( version == 101 )

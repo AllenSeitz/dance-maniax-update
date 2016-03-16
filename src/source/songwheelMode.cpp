@@ -189,7 +189,7 @@ bool isSongAvailable(int index)
 {
 	bool earnedIt = true;
 
-	if ( songs[index].unlockFlag != UNLOCK_METHOD_NONE )
+	if ( (songs[index].specialFlag & SPECIAL_FLAG_UNLOCK_METHOD_EXTRA_STAGE) != 0 )
 	{
 		earnedIt = false;
 
@@ -295,23 +295,26 @@ void firstSongwheelLoop()
 			songlist[nextIndex] = songs[i];
 
 			// certain charts may be locked
-			if ( songs[i].unlockFlag != UNLOCK_METHOD_NONE && !allsongsDebug )
+			if ( ((songs[i].specialFlag & SPECIAL_FLAG_UNLOCK_METHOD_EXTRA_STAGE) != 0) && !allsongsDebug )
 			{
-				if ( sm.player[0].allTime[i][3].unlockStatus == 0 )
+				bool hasWildChart = true; // if they have the wild chart, they get mild for free
+				if ( sm.player[0].allTime[i][SINGLE_WILD].unlockStatus == 0 && sm.player[1].allTime[i][SINGLE_WILD].unlockStatus == 0 )
 				{
-					songlist[nextIndex].mildDouble = 0;
+					songlist[nextIndex].wildSingle = 0;
+					hasWildChart = false;
 				}
 				if ( sm.player[0].allTime[i][4].unlockStatus == 0 )
 				{
 					songlist[nextIndex].wildDouble = 0;
+					hasWildChart = false;
 				}
-				if ( sm.player[0].allTime[i][SINGLE_MILD].unlockStatus == 0 && sm.player[1].allTime[i][SINGLE_MILD].unlockStatus == 0 )
+				if ( sm.player[0].allTime[i][3].unlockStatus == 0 && !hasWildChart )
+				{
+					songlist[nextIndex].mildDouble = 0;
+				}
+				if ( sm.player[0].allTime[i][SINGLE_MILD].unlockStatus == 0 && sm.player[1].allTime[i][SINGLE_MILD].unlockStatus == 0 && !hasWildChart )
 				{
 					songlist[nextIndex].mildSingle = 0;
-				}
-				if ( sm.player[0].allTime[i][SINGLE_WILD].unlockStatus == 0 && sm.player[1].allTime[i][SINGLE_WILD].unlockStatus == 0 )
-				{
-					songlist[nextIndex].wildSingle = 0;
 				}
 			}
 

@@ -291,38 +291,40 @@ public:
 		isFreestyleMode = false;
 	}
 
-	void loadSong(int songID, bool preview = false)
+	void loadSong(int songID, bool preview = false, bool useAlternateMusic = false)
 	{
 		char filename[64] = "DATA/audio/112.mp3";
-		filename[11] = (songID/100 % 10) + '0';
-		filename[12] = (songID/10 % 10) + '0';
-		filename[13] = (songID % 10) + '0';
+		int digitsOffset = 11;
+		int fileextOffset = 15;
+
 		if ( preview )
 		{
 			strcpy_s(filename, 64, "DATA/audio/pre_112.mp3");
-			filename[15] = (songID/100 % 10) + '0';
-			filename[16] = (songID/10 % 10) + '0';
-			filename[17] = (songID % 10) + '0';
+			digitsOffset = 15;
+			fileextOffset = 19;
 		}
+		if ( useAlternateMusic )
+		{
+			strcpy_s(filename, 64, "DATA/audio/112b.mp3");
+			digitsOffset = 11;
+			fileextOffset = 16;
+		}
+
+		// str replace the song id
+		filename[digitsOffset] = (songID/100 % 10) + '0';
+		filename[digitsOffset+1] = (songID/10 % 10) + '0';
+		filename[digitsOffset+2] = (songID % 10) + '0';
 
 		currentSongIsPreview = preview;
 		killSong();
 		currentSongSample = FSOUND_Sample_Load(FSOUND_UNMANAGED, filename, FSOUND_NORMAL | FSOUND_MPEGACCURATE, 0, 0);
 		if ( currentSongSample == NULL )
 		{
-			// try again as an ogg
-			if ( preview )
-			{
-				filename[19] = 'o';
-				filename[20] = 'g';
-				filename[21] = 'g';
-			}
-			else
-			{
-				filename[15] = 'o';
-				filename[16] = 'g';
-				filename[17] = 'g';
-			}
+			// str replace the file extension
+			filename[fileextOffset] = 'o';
+			filename[fileextOffset+1] = 'g';
+			filename[fileextOffset+2] = 'g';
+
 			currentSongSample = FSOUND_Sample_Load(FSOUND_UNMANAGED, filename, FSOUND_NORMAL, 0, 0);
 
 			if ( currentSongSample == NULL )
