@@ -1128,21 +1128,28 @@ void mainOperatorLoop(UTIME dt)
 			break;
 		case 8: // data options
 			renderDataOptions();
+
 			if ( im.isKeyDown(MENU_START_1P) )
 			{
-				if ( testMenuSubIndex == 0 ) // reset player's hits chart
+				if ( testMenuSubIndex == 0 ) // disallow name entry
 				{
-					for ( int i = 0; i < NUM_SONGS; i++ )
-					{
-						songs[i].numPlays = 0;
-					}			
 				}
-				if ( testMenuSubIndex == 1 ) // disallow name entry
+				if ( testMenuSubIndex == 1 ) // reset player's hits chart
 				{
+					if ( im.isKeyDown(MENU_START_2P) )
+					{
+						for ( int i = 0; i < NUM_SONGS; i++ )
+						{
+							songs[i].numPlays = 0;
+						}
+					}
 				}
 				if ( testMenuSubIndex == 2 ) // reset last logins
 				{
-					resetPrevNames();
+					if ( im.isKeyDown(MENU_START_2P) )
+					{
+						resetPrevNames();
+					}
 				}
 				if ( testMenuSubIndex == 3 ) // delete player
 				{
@@ -2027,7 +2034,7 @@ void renderSoundOptions()
 {
 	textprintf_centre(rm.m_backbuf, font, 320, 50, WHITE, "SOUND OPTIONS");
 
-	textprintf(rm.m_backbuf, font, 50, 100, testMenuSubIndex == 0 ? RED : WHITE, "SOUND IN ATTRACT");
+	textprintf(rm.m_backbuf, font, 50, 100, testMenuSubIndex == 0 ? RED : WHITE, "SOUND IN ATTRACT -- NOT IMPLEMENTED");
 	textprintf(rm.m_backbuf, font, 50, 130, testMenuSubIndex == 1 ? RED : WHITE, "SCALE CHECK 1");
 	textprintf(rm.m_backbuf, font, 50, 160, testMenuSubIndex == 2 ? RED : WHITE, "SCALE CHECK 2");
 	textprintf(rm.m_backbuf, font, 50, 310, testMenuSubIndex == 3 ? RED : WHITE, "FACTORY SETTINGS");
@@ -2048,12 +2055,19 @@ void renderDataOptions()
 	textprintf(rm.m_backbuf, font, 236, 100, gs.allowLogins ? GREEN : RED, gs.allowLogins ? "ON" : "OFF" );
 	textprintf(rm.m_backbuf, font, 50, 130, testMenuSubIndex == 1 ? RED : WHITE, "RESET PLAYERS HITS CHART");
 	textprintf(rm.m_backbuf, font, 50, 160, testMenuSubIndex == 2 ? RED : WHITE, "RESET PREVIOUS LOGIN LIST");
-	textprintf(rm.m_backbuf, font, 50, 190, testMenuSubIndex == 3 ? RED : WHITE, "DELETE PLAYER");
-	textprintf(rm.m_backbuf, font, 50, 220, testMenuSubIndex == 4 ? RED : WHITE, "MODIFY PLAYER PIN");
+	textprintf(rm.m_backbuf, font, 50, 190, testMenuSubIndex == 3 ? RED : WHITE, "DELETE PLAYER -- NOT IMPLEMENTED");
+	textprintf(rm.m_backbuf, font, 50, 220, testMenuSubIndex == 4 ? RED : WHITE, "MODIFY PLAYER PIN -- NOT IMPLEMENTED");
 	textprintf(rm.m_backbuf, font, 50, 260, testMenuSubIndex == 5 ? RED : WHITE, "UPDATE SOFTWARE");
 	textprintf(rm.m_backbuf, font, 50, 340, testMenuSubIndex == 6 ? RED : WHITE, "EXIT");
 
 	textprintf(rm.m_backbuf, font, 50, 400, makecol(196, 255, 255), "PRESS 1P LEFT / RIGHT = select item");
 	textprintf(rm.m_backbuf, font, 50, 420, makecol(196, 255, 255), "PRESS 2P LEFT / RIGHT = modify setting");
-	textprintf(rm.m_backbuf, font, 50, 440, makecol(196, 255, 255), "PRESS 1P START BUTTON = confirm selection");
+	if ( testMenuSubIndex == 1 || testMenuSubIndex == 2 )
+	{
+		textprintf(rm.m_backbuf, font, 50, 440, makecol(196, 255, 255), "PRESS BOTH START BUTTONS = confirm selection");
+	}
+	else
+	{
+		textprintf(rm.m_backbuf, font, 50, 440, makecol(196, 255, 255), "PRESS 1P START BUTTON = confirm selection");
+	}
 }
