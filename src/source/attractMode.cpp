@@ -61,6 +61,9 @@ void advanceToNextMode()
 		attractState = 3;
 	}
 
+	int randomAttractMovie = pickRandomInt(4, 0, 1, 2, 3);
+	char movies[4][32] = { "DATA/mov/E_PPETI0.seq", "DATA/mov/E_PSYNC0.seq", "DATA/mov/E_PIWIL0.seq", "DATA/mov/E_PCATS0.seq" };
+
 	switch ( attractState )
 	{
 	case 0: // movie
@@ -76,7 +79,8 @@ void advanceToNextMode()
 		lm.loadLampProgram("attract_2.txt");
 		break;
 	case 3: // how to
-		vm.loadScript("DATA/mov/A_HOWTO.seq");
+		//vm.loadScript("DATA/mov/A_HOWTO.seq");
+		vm.loadScript(movies[randomAttractMovie]);
 		vm.play();
 		lm.loadLampProgram("attract_3.txt");
 		break;
