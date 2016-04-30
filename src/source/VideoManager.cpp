@@ -49,7 +49,7 @@ void VideoManager::update(UTIME dt)
 	// check for the movie ending and loop the whole thing after 5 seconds
 	if ( script[currentStep+1].timing == -1 && currentStep > 1 && (currentTime/10 + 1500 >= script[currentStep].timing/3) )
 	{
-		currentStep = 0;
+		currentStep = 1;
 		currentTime = 0;
 		al_trace("Restarting video script.\r\n");
 		loadVideoAtCurrentStep();
@@ -135,7 +135,14 @@ void VideoManager::loadScript(const char* filename)
 void VideoManager::loadVideoAtCurrentStep()
 {
 	char filename[256] = "DATA/video/";
-	strcat_s(filename, 256, script[currentStep].filename);
+	if ( script[currentStep].filename[0] == '*' )
+	{
+		strcat_s(filename, 256, script[currentStep-1].filename); // check for videos named '*'. I think the original game used this to denote "play that video again"
+	}
+	else
+	{
+		strcat_s(filename, 256, script[currentStep].filename);
+	}
 	strcat_s(filename, 256, ".ogg");
 
 	// default case: show a placeholder texture
