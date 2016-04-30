@@ -46,6 +46,14 @@ void VideoManager::update(UTIME dt)
 		currentStep++;
 		loadVideoAtCurrentStep();
 	}
+	// check for the movie ending and loop the whole thing after 5 seconds
+	if ( script[currentStep+1].timing == -1 && currentStep > 1 && (currentTime/10 + 1500 >= script[currentStep].timing/3) )
+	{
+		currentStep = 0;
+		currentTime = 0;
+		al_trace("Restarting video script.\r\n");
+		loadVideoAtCurrentStep();
+	}
 
 	if ( cmov != NULL )
 	{
