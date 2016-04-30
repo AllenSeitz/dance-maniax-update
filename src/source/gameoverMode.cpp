@@ -21,6 +21,8 @@ extern unsigned long int totalGameTime;
 extern UTIME timeRemaining;
 extern void renderTimeRemaining(int xc, int yc);
 
+bool isSpecialGameOver = false;
+
 void renderGameoverLoop();
 //
 //
@@ -28,13 +30,15 @@ void renderGameoverLoop();
 void firstGameoverLoop()
 {
 	timeRemaining = 16000;
+	isSpecialGameOver = false;
 	gs.loadSong(BGM_GAMEOVER);
 	gs.playSong();
 	vm.loadScript("DATA/mov/gameover_0.seq");
-	if ( sm.player[0].currentSet[gs.numSongsPerSet].songID == 126 ) // got megamix 1 for an extra stage
+	if ( sm.player[0].currentSet[gs.numSongsPerSet].songID > 0 ) // got any extra stage at all
 	{
 		vm.loadScript("DATA/mov/gameover_1.seq");
 		em.announcerQuipChance(GUY_SPECIAL_GAMEOVER, 25);
+		isSpecialGameOver = true;
 	}
 	vm.play();
 }
@@ -68,7 +72,7 @@ void renderGameoverLoop()
 
 	renderArtistString("GAME OVER", 107, 240+135, 600, 40);
 	renderArtistString("DANCE MANIAX", 320+88, 86, 600, 40);
-	renderBoldString("THANK YOU FOR PLAYING!", 187, 227, 640, false, (timeRemaining/200)%3 + 1);
+	renderBoldString(isSpecialGameOver ? "YOU ARE A SUPER PLAYER" : "THANK YOU FOR PLAYING!", 187, 227, 640, false, (timeRemaining/200)%3 + 1);
 
 	if ( timeRemaining < 1000 )
 	{
