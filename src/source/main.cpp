@@ -830,6 +830,10 @@ void firstOperatorLoop()
 	testMenuMainIndex = 0;
 	testMenuSubIndex = -1;
 	gs.killSong();
+	sm.player[0].resetData();
+	sm.player[1].resetData();
+	sm.player[0].isLoggedIn = false;
+	sm.player[1].isLoggedIn = false;
 	gs.numCoins = 0; // might as well, just in case this needs to be done
 	im.setCooldownTime(0);
 }
