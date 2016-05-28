@@ -18,6 +18,7 @@ extern unsigned long int totalGameTime;
 #define DMX_STEP_ZONE_Y 70
 #define DMX_STEP_ZONE_REV_Y 380
 #define DMX_COMBO_Y 250
+const int USE_OLD_TEMPO_CHANGE_BEHAVIOR = 0;
 
 //////////////////////////////////////////////////////////////////////////////
 // BITMAPs
@@ -112,6 +113,49 @@ int getColorOfColumn(int column)
 	return 0;
 }
 
+int getYCoordOfNote(int playerIndex, int noteIndex, long currentTime, long pausedTime)
+{
+	int pps = gs.player[playerIndex].scrollRate * gs.player[playerIndex].speedMod / 10; // pixels per second
+	int y = (int(gs.player[playerIndex].currentChart[noteIndex].timing) - int(currentTime) - pausedTime) * pps / 1000;
+
+	if ( USE_OLD_TEMPO_CHANGE_BEHAVIOR )
+	{
+		return y; // if you like how PIU renders every arrow at the current bpm
+	}
+
+	// loop through every upcoming tempo change calculate the distance that the arrow would travel during each
+	int accumulateY = 0;
+	int lastY = y;
+	while ( y - (pausedTime * pps / 1000) < SCREEN_HEIGHT )
+	{
+		// implement the correct calculation of the distance between notes due to tempo stops
+		if ( gs.player[playerIndex].currentChart[noteIndex].type == SCROLL_STOP )
+		{
+			pausedTime += gs.player[playerIndex].currentChart[noteIndex].color;
+		}
+
+		// implement new pps (pixels per second) due to changing BPMs
+		if ( gs.player[playerIndex].currentChart[noteIndex].type == BPM_CHANGE )
+		{
+			int nowY = (int(gs.player[playerIndex].currentChart[noteIndex].timing) - int(currentTime) - pausedTime) * pps / 1000;
+			accumulateY += (nowY - lastY); // adding thousands, this is incorrect
+			lastY = nowY;
+
+			pps = gs.player[playerIndex].currentChart[noteIndex].color * gs.player[playerIndex].speedMod / 10; // pixels per second
+		}
+
+		// next item in the list
+		noteIndex++;
+		if ( noteIndex == (int)gs.player[playerIndex].currentChart.size() )
+		{
+			break;
+		}
+	}
+
+	al_trace("Y=%d ay=%d\n", y, accumulateY);
+	return y + accumulateY;
+}
+
 void renderDMXChart(int player)
 {
 	int n = gs.player[player].currentNote;	
@@ -156,10 +200,11 @@ void renderDMXChart(int player)
 	}
 	//al_trace("Num holds processed: %d\r\n", countHoldsProcessed);
 
-	int y = (int(gs.player[player].currentChart[n].timing) - int(time)) * pps / 1000;
+	int y = getYCoordOfNote(player, n, time, pausedTime);
 	while ( y - (pausedTime * pps / 1000) < SCREEN_HEIGHT )
 	{
-		y = (int(gs.player[player].currentChart[n].timing) - int(time) - pausedTime) * pps / 1000;
+		//y = (int(gs.player[player].currentChart[n].timing) - int(time) - pausedTime) * pps / 1000;
+		y = getYCoordOfNote(player, n, time, pausedTime);
 		renderDMXNote(player, gs.player[player].currentChart[n], y + DMX_STEP_ZONE_Y);
 
 		// implement the correct calculation of the distance between notes due to tempo stops
