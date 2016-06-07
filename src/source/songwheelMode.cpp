@@ -7,6 +7,7 @@
 #include "lightsManager.h"
 #include "ScoreManager.h"
 #include "songwheelMode.h"
+#include "analyticsManager.h"
 
 #include "gameplayRendering.h" // for renderGrade()
 
@@ -16,6 +17,7 @@ extern InputManager im;
 extern LightsManager lm;
 extern ScoreManager sm;
 extern EffectsManager em;
+extern AnalyticsManager am;
 
 extern SongEntry* songs;
 SongEntry* songlist = NULL;
@@ -627,6 +629,7 @@ void mainSongwheelLoop(UTIME dt)
 				gs.currentStage++;
 				int realIndex = songID_to_listID(songlist[songwheelIndex].songID);
 				songs[realIndex].numPlays++;
+				am.logEvent(TRACK_CAT_ACTIVITY, TRACK_EV_PICKSONG, songTitles[realIndex].c_str(), songs[realIndex].songID);
 
 				// fix maniax select for versus play
 				separateSubmenu[0] = separateSubmenu[0] == 3 ? 1 : separateSubmenu[0];

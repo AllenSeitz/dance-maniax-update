@@ -2,11 +2,13 @@
 // source file created by Allen Seitz 7/11/2012
 
 #include "common.h"
+#include "analyticsManager.h"
 #include "GameStateManager.h"
 #include "inputManager.h"
 #include "lightsManager.h"
 #include "scoreManager.h"
 #include "songwheelMode.h"
+#include "versionManager.h"
 #include "videoManager.h"
 
 extern GameStateManager gs;
@@ -16,6 +18,8 @@ extern LightsManager lm;
 extern ScoreManager sm;
 extern VideoManager vm;
 extern EffectsManager em;
+extern VersionManager version;
+extern AnalyticsManager am;
 
 extern unsigned long int frameCounter;
 extern unsigned long int totalGameTime;
@@ -38,8 +42,6 @@ UTIME submodeTimer = 0;
 int hitlist[20];
 int numplays[20];
 int newlist[10];
-
-char versionString[128] = "";
 
 BITMAP* m_title = NULL;
 BITMAP* m_tile = NULL;
@@ -168,8 +170,6 @@ void firstAttractLoop()
 		m_logo = loadImage("DATA/attract/logo.png");
 		m_mask = loadImage("DATA/attract/mask.png");
 		m_hitchart = loadImage("DATA/attract/hitchart.tga");
-
-		strcpy_s(versionString, 128, __DATE__);
 	}
 
 	calculateTop20();
@@ -216,6 +216,9 @@ void mainAttractLoop(UTIME dt)
 			gs.g_gameModeTransition = 1;
 			em.playSample(SFX_CREDIT_BEGIN);
 			em.announcerQuip(GUY_GAME_BEGIN);
+
+			// analytics
+			am.logEvent(TRACK_CAT_ACTIVITY, TRACK_EV_GAMESTART, gs.isFreeplay ? "FREEPLAY" : "CREDIT", gs.isFreeplay ? 1 : 0);
 		}
 
 		// blink the start buttons
@@ -257,7 +260,7 @@ void mainAttractLoop(UTIME dt)
 		break;
 	case 1: // title
 		blit(m_title, rm.m_backbuf, 0, 0, 0, 0, 640, 480);
-		renderWhiteString(versionString, 10, 10);
+		renderWhiteString(version.versionString, 10, 10);
 		if ( submodeTimer > 5000 )
 		{
 			advanceToNextMode();

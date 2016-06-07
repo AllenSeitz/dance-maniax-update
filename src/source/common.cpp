@@ -6,9 +6,11 @@
 #include <string.h>
 #include "gameStateManager.h" // for error mode, is all
 #include "loadpng.h" // for the RenderingManager initialization
+#include "analyticsManager.h"
 
 extern RenderingManager rm;
 extern GameStateManager gs;
+extern AnalyticsManager am;
 
 extern int NUM_SONGS;
 extern int* songIDs;
@@ -95,6 +97,8 @@ void globalError(long errorCode, const char* errorInfo)
 	gs.g_gameModeTransition = 1;
 	gs.g_errorCode = errorCode;
 	strcpy_s(gs.g_errorInfo, 256, errorInfo);
+
+	am.logEvent(TRACK_CAT_ERROR, TRACK_EV_ERROR, gs.g_errorInfo, gs.g_errorCode);
 }
 
 void songIndexError(int id)
