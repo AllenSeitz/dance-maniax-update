@@ -11,6 +11,7 @@
 #include "hidapi.h"
 
 #include "common.h"
+#include "analyticsManager.h"
 #include "bookManager.h"
 #include "downloadManager.h"
 #include "extioManager.h"
@@ -20,6 +21,7 @@
 #include "pacdriveManager.h"
 #include "minimaidManager.h"
 #include "scoreManager.h"
+#include "versionManager.h"
 #include "videoManager.h"
 
 
@@ -92,6 +94,8 @@ extioManager extio;
 pacdriveManager pacio;
 minimaidManager minimaidio;
 DownloadManager dm;
+AnalyticsManager am;
+VersionManager version;
 
 void firstSplashLoop();
 void mainSplashLoop(UTIME dt);
@@ -251,6 +255,7 @@ int main()
 	text_mode(-1);
 	set_alpha_blender(); // the game assumes the graphics are left in this mode
 	register_bitmap_file_type("png", load_png, NULL);
+	version.initialize();
 
 	// initialize the HID (Human Interface Device) library, used by the minimaid IO board
 	if ( hid_init() != 0 )
@@ -258,9 +263,16 @@ int main()
 		printf("Unable to initialize the HID library.\n");
 	}
 
+	// hax because sometimes players don't want to login and unlock the extra stages
 	if ( fileExists("allsongs") )
 	{
 		allsongsDebug = true;
+	}
+
+	// give players an option to disable tracking
+	if ( !fileExists("notracking") )
+	{
+		am.initialize();
 	}
 
 	if ( !fileExists("initial_install_complete.txt") )
@@ -1405,6 +1417,8 @@ void mainBootLoop(UTIME dt)
 	textprintf(rm.m_backbuf, font, 50, 140, WHITE, "I/O   CHECK:");
 	textprintf(rm.m_backbuf, font, 50, 160, WHITE, "DATA  CHECK:");
 	textprintf(rm.m_backbuf, font, 50, 180, WHITE, "SOUND CHECK:");
+	textprintf(rm.m_backbuf, font, 50, 410, WHITE, "This program reports non-personal usage data to Google Analytics.");
+	textprintf(rm.m_backbuf, font, 50, 420, WHITE, "You may disable tracking by creating a file named \"notracking\".");
 
 	if ( currentBootStep == 0 )
 	{

@@ -38,14 +38,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>DMX_Debug</TargetName>
-    <IncludePath>..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\lib\fmodapi375win\api\inc;..\..\lib\libpng\include\libpng12;..\..\lib\libpng\include;..\..\lib\loadpng;..\..\headers;..\..\lib\apeg\include;..\..\lib\pacdrive\include;..\..\lib\hidapi\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\lib\fmodapi375win\api\lib;..\..\lib\libpng\lib;..\..\lib\apeg\lib\release;..\..\lib\pacdrive\lib;..\..\lib\hidapi\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\lib\fmodapi375win\api\inc;..\..\lib\libpng\include\libpng12;..\..\lib\libpng\include;..\..\lib\loadpng;..\..\headers;..\..\lib\apeg\include;..\..\lib\pacdrive\include;..\..\lib\hidapi\include;..\..\lib\libcurl\\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\lib\fmodapi375win\api\lib;..\..\lib\libpng\lib;..\..\lib\apeg\lib\release;..\..\lib\pacdrive\lib;..\..\lib\hidapi\lib;..\..\lib\libcurl\lib;$(LibraryPath)</LibraryPath>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>DMX</TargetName>
-    <IncludePath>..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\lib\fmodapi375win\api\inc;..\..\lib\libpng\include\libpng12;..\..\lib\libpng\include;..\..\lib\loadpng;..\..\headers;..\..\lib\apeg\include;..\..\lib\pacdrive\include;..\..\lib\hidapi\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\lib\fmodapi375win\api\lib;..\..\lib\libpng\lib;..\..\lib\apeg\lib\release;..\..\lib\pacdrive\lib;..\..\lib\hidapi\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\lib\fmodapi375win\api\inc;..\..\lib\libpng\include\libpng12;..\..\lib\libpng\include;..\..\lib\loadpng;..\..\headers;..\..\lib\apeg\include;..\..\lib\pacdrive\include;..\..\lib\hidapi\include;..\..\lib\libcurl\\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\lib\fmodapi375win\api\lib;..\..\lib\libpng\lib;..\..\lib\apeg\lib\release;..\..\lib\pacdrive\lib;..\..\lib\hidapi\lib;..\..\lib\libcurl\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -57,7 +57,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>allegro-4.4.2-mt.lib;loadpng-1.5-mt.lib;logg-1.0-mt.lib;zlib-1.2.5-static-mt.lib;fmodvc.lib;apeg_r.lib;ogg_static.lib;vorbis_static.lib;libtheora.lib;winmm.lib;urlmon.lib;hidapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>allegro-4.4.2-mt.lib;loadpng-1.5-mt.lib;logg-1.0-mt.lib;zlib-1.2.5-static-mt.lib;fmodvc.lib;apeg_r.lib;ogg_static.lib;vorbis_static.lib;libtheora.lib;winmm.lib;urlmon.lib;hidapi.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
@@ -65,7 +65,7 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PreBuildEvent>
-      <Command>del $(ProjectDir)\debug\attractMode.obj</Command>
+      <Command>del $(ProjectDir)\debug\version.obj</Command>
       <Message>touch the attract mode to update the __DATE__</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -81,16 +81,17 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>allegro-4.4.2-mt.lib;loadpng-1.5-mt.lib;logg-1.0-mt.lib;zlib-1.2.5-static-mt.lib;fmodvc.lib;apeg_r.lib;ogg_static.lib;vorbis_static.lib;libtheora.lib;winmm.lib;urlmon.lib;hidapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>allegro-4.4.2-mt.lib;loadpng-1.5-mt.lib;logg-1.0-mt.lib;zlib-1.2.5-static-mt.lib;fmodvc.lib;apeg_r.lib;ogg_static.lib;vorbis_static.lib;libtheora.lib;winmm.lib;urlmon.lib;hidapi.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PreBuildEvent>
-      <Command>del $(ProjectDir)\release\attractMode.obj</Command>
+      <Command>del $(ProjectDir)\release\version.obj</Command>
       <Message>touch the attract mode to update the __DATE__</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\headers\analyticsManager.h" />
     <ClInclude Include="..\..\headers\bookManager.h" />
     <ClInclude Include="..\..\headers\common.h" />
     <ClInclude Include="..\..\headers\downloadManager.h" />
@@ -103,13 +104,16 @@
     <ClInclude Include="..\..\headers\minimaidManager.h" />
     <ClInclude Include="..\..\headers\pacdriveManager.h" />
     <ClInclude Include="..\..\headers\particleSprites.h" />
+    <ClInclude Include="..\..\headers\ppp_read.h" />
     <ClInclude Include="..\..\headers\scoreManager.h" />
     <ClInclude Include="..\..\headers\songwheelMode.h" />
     <ClInclude Include="..\..\headers\specialEffects.h" />
+    <ClInclude Include="..\..\headers\versionManager.h" />
     <ClInclude Include="..\..\headers\videoManager.h" />
     <ClInclude Include="..\..\headers\xsq_read.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\source\analyticsManager.cpp" />
     <ClCompile Include="..\..\source\attractMode.cpp" />
     <ClCompile Include="..\..\source\bookManager.cpp" />
     <ClCompile Include="..\..\source\common.cpp" />
@@ -129,6 +133,7 @@
     <ClCompile Include="..\..\source\nonstopMode.cpp" />
     <ClCompile Include="..\..\source\pacdriveManager.cpp" />
     <ClCompile Include="..\..\source\particleSprites.cpp" />
+    <ClCompile Include="..\..\source\ppp_read.cpp" />
     <ClCompile Include="..\..\source\render_ddr.cpp" />
     <ClCompile Include="..\..\source\render_dm.cpp" />
     <ClCompile Include="..\..\source\render_dmx.cpp" />
@@ -136,6 +141,7 @@
     <ClCompile Include="..\..\source\ScoreManager.cpp" />
     <ClCompile Include="..\..\source\songwheelMode.cpp" />
     <ClCompile Include="..\..\source\specialEffects.cpp" />
+    <ClCompile Include="..\..\source\versionManager.cpp" />
     <ClCompile Include="..\..\source\VideoManager.cpp" />
     <ClCompile Include="..\..\source\voteMode.cpp" />
     <ClCompile Include="..\..\source\xsq_read.cpp" />
