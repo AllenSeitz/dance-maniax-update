@@ -283,7 +283,7 @@ int main()
 		system("mkdir backup");
 		system("mkdir conf");
 		system("mkdir update");
-		system("mkdir PLAYER");
+		system("mkdir PLAYERS");
 		system("mkdir DATA");
 		rm.Initialize(true); // flag to skip loading fonts while the initial install is happening
 		checkForUpdates();
