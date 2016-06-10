@@ -46,21 +46,23 @@
     <TargetName>DMX</TargetName>
     <IncludePath>..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\lib\fmodapi375win\api\inc;..\..\lib\libpng\include\libpng12;..\..\lib\libpng\include;..\..\lib\loadpng;..\..\headers;..\..\lib\apeg\include;..\..\lib\pacdrive\include;..\..\lib\hidapi\include;..\..\lib\libcurl\\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\lib\fmodapi375win\api\lib;..\..\lib\libpng\lib;..\..\lib\apeg\lib\release;..\..\lib\pacdrive\lib;..\..\lib\hidapi\lib;..\..\lib\libcurl\lib;$(LibraryPath)</LibraryPath>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_MBCS;DMXDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;DMXDEBUG;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4701;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <StructMemberAlignment>Default</StructMemberAlignment>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>allegro-4.4.2-mt.lib;loadpng-1.5-mt.lib;logg-1.0-mt.lib;zlib-1.2.5-static-mt.lib;fmodvc.lib;apeg_r.lib;ogg_static.lib;vorbis_static.lib;libtheora.lib;winmm.lib;urlmon.lib;hidapi.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>allegro-4.4.2-mt.lib;loadpng-1.5-mt.lib;logg-1.0-mt.lib;zlib-1.2.5-static-mt.lib;fmodvc.lib;apeg_r.lib;ogg_static.lib;vorbis_static.lib;libtheora.lib;winmm.lib;urlmon.lib;hidapi.lib;libcurl.lib;Ws2_32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
-      <IgnoreSpecificDefaultLibraries>
-      </IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
@@ -76,14 +78,17 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <StructMemberAlignment>Default</StructMemberAlignment>
+      <PreprocessorDefinitions>_MBCS;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>allegro-4.4.2-mt.lib;loadpng-1.5-mt.lib;logg-1.0-mt.lib;zlib-1.2.5-static-mt.lib;fmodvc.lib;apeg_r.lib;ogg_static.lib;vorbis_static.lib;libtheora.lib;winmm.lib;urlmon.lib;hidapi.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>allegro-4.4.2-mt.lib;loadpng-1.5-mt.lib;logg-1.0-mt.lib;zlib-1.2.5-static-mt.lib;fmodvc.lib;apeg_r.lib;ogg_static.lib;vorbis_static.lib;libtheora.lib;winmm.lib;urlmon.lib;hidapi.lib;libcurl.lib;Ws2_32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PreBuildEvent>
       <Command>del $(ProjectDir)\release\version.obj</Command>
