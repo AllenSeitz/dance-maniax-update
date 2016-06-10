@@ -280,11 +280,15 @@ int main()
 		beginInitialInstall = true; // a special flag that prevents gameplay and just downloads files
 		NUM_SONGS = 0;
 
-		system("mkdir backup");
-		system("mkdir conf");
-		system("mkdir update");
-		system("mkdir PLAYERS");
-		system("mkdir DATA");
+		// do this once at the very start
+		if ( !fileExists("DATA/etc/white_font.bmp") )
+		{
+			system("mkdir backup");
+			system("mkdir conf");
+			system("mkdir update");
+			system("mkdir PLAYERS");
+			system("mkdir DATA");
+		}
 		rm.Initialize(true); // flag to skip loading fonts while the initial install is happening
 		checkForUpdates();
 	}
@@ -1338,10 +1342,6 @@ void mainUpdateLoop(UTIME dt)
 				redownloadManifest = true; // let the user try again without needing to restart the program
 				em.playSample(SFX_LOUD_BELL);
 			}
-			else
-			{
-				em.playSample(SFX_COURSE_APPEAR);
-			}
 		}
 		else
 		{
@@ -1373,9 +1373,9 @@ void alternateMainUpdateLoop()
 	framesElapsed++;
 	clear_to_color(rm.m_backbuf, 0);
 
-	textprintf_centre(rm.m_backbuf, font, 320, 50, WHITE, "DanceManiax System Update");
+	textprintf_centre(rm.m_backbuf, font, 320, 50, WHITE, "DanceManiax System Update %s", beginInitialInstall ? " - Install In Progress" : " - Update Program");
 	textprintf(rm.m_backbuf, font, 50, 140, WHITE, "FILE: %s", dm.getCurrentDownloadFilename().c_str());
-	textprintf(rm.m_backbuf, font, 50, 160, WHITE, "PROGRESS: %d", dm.getCurrentDownloadProgress());
+	textprintf(rm.m_backbuf, font, 50, 160, WHITE, "PROGRESS: %d%%", dm.getCurrentDownloadProgress());
 	textprintf(rm.m_backbuf, font, 50, 180, WHITE, "TIME ELAPSED: %ld", framesElapsed);
 }
 
