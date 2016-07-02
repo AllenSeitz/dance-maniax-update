@@ -40,6 +40,10 @@ private:
 	// precondition: loads client_id.bin if it exists, or creates it if it does not
 	// postcondition: clientID is initialized
 
+	void logEventToServer(const char* serverURL, const char* eventCategory, const char* eventType, const char* eventLabel = "", int eventValue = -1);
+	//
+	//
+
 	char versionString[32]; // set to the date the program was compiled "YYMMDD"
 	bool initialized;
 	char clientID[17]; // this install's random 16 byte client id, created at rnadom if it does not exist
