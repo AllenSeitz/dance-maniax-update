@@ -91,7 +91,7 @@
       <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PreBuildEvent>
-      <Command>del $(ProjectDir)\release\version.obj</Command>
+      <Command>del $(ProjectDir)\release\versionManager.obj</Command>
       <Message>touch the attract mode to update the __DATE__</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
