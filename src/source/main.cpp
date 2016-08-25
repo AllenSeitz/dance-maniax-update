@@ -315,6 +315,14 @@ int main()
 	minimaidio.initialize();
 	pacio.initialize();
 
+	// dedicab mode
+	if ( fileExists("nominimize") )
+	{
+		DWORD timeout = 0;
+		LockSetForegroundWindow(LSFW_LOCK);
+		SystemParametersInfo(SPI_SETFOREGROUNDLOCKTIMEOUT, 0, &timeout, 0);
+	}
+
 	// check options
 	if ( fileExists("revpolarityred") )
 	{
