@@ -130,7 +130,7 @@ void renderLoginMessage(int xcoord, char* string);
 //
 //
 
-void temporaryNonstopModeEasterEgg(int songid);
+void easterEggNameFunction(int songid);
 // precondition: called before pin entry
 // postcondition: leaves the login mode and jumps directly or almost directly to gameplay
 
@@ -489,7 +489,7 @@ void mainLoginLoop(UTIME dt)
 			/*
 			if ( isUse[0] && tempNames[0][0] == 'P' && tempNames[0][1] == 'A' && tempNames[0][2] == 'R' && tempNames[0][3] == 'A' )
 			{
-				temporaryNonstopModeEasterEgg(390);
+				easterEggNameFunction(390);
 			}
 			// TESTING: why not allow the xmixes to be playable with their DDR charts? kind of weird but hey its four columns
 			if ( isUse[0] && tempNames[0][0] == 'X' && tempNames[0][1] == 'M' && tempNames[0][2] == 'I' && tempNames[0][3] == 'X' )
@@ -1084,8 +1084,7 @@ int getIndexOfPrevName(char* name)
 	return i;
 }
 
-// TODO: make more than one of these courses, and make nonstop mode select them
-void temporaryNonstopModeEasterEgg(int songid)
+void easterEggNameFunction(int songid)
 {
 	gs.g_currentGameMode = GAMEPLAY;
 	gs.g_gameModeTransition = 1;
