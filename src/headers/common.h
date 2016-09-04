@@ -54,6 +54,7 @@
 
 #define DEFAULT_SONGS_PER_SET 3
 #define DEFAULT_COINS_PER_CREDIT 2
+#define MAX_SONGS_PER_SET 50
 
 // generally useful functions
 #define SUBTRACT_TO_ZERO(x,y) (x = y > x ? 0 : x - y)

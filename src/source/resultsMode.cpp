@@ -79,7 +79,7 @@ void firstResultsLoop()
 	blit(rm.m_backbuf, rm.m_backbuf2, 0, 0, 0, 0, 640, 480);
 
 	// calculate how many stages were actually played
-	for ( int i = 0; i < 7; i++ )
+	for ( int i = 0; i < MAX_SONGS_PER_SET; i++ )
 	{
 		if ( sm.player[currentPlayer].currentSet[i].songID < 100 )
 		{
@@ -119,7 +119,7 @@ void mainResultsLoop(UTIME dt)
 		// the announcer has a few words for you
 		int averageScore = 0;
 		int numStages = 0;
-		for ( int i = 0; i < 7; i++ )
+		for ( int i = 0; i < MAX_SONGS_PER_SET; i++ )
 		{
 			if ( sm.player[currentPlayer].currentSet[i].songID >= 100 )
 			{
@@ -185,7 +185,7 @@ void mainResultsLoop(UTIME dt)
 	// render the song results
 	scrollX = getValueFromRange(targetScrollX, originalX, scrollTweenTime*100/400 ); // quickly slide the results in from the right
 	SUBTRACT_TO_ZERO(scrollTweenTime, dt);
-	for ( int i = 0; i < 7; i++ )
+	for ( int i = 0; i < MAX_SONGS_PER_SET; i++ )
 	{
 		renderResult(i, scrollX + (192*i));
 	}

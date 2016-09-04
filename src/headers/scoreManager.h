@@ -142,7 +142,7 @@ struct PLAYER_DATA
 	bool isLoggedIn;
 	char displayName[8];
 	char pinDigits[4];
-	SONG_RECORD currentSet[7];		   // these are the songs which have been played during just this credit
+	SONG_RECORD currentSet[MAX_SONGS_PER_SET]; // these are the songs which have been played during just this credit
 	SONG_RECORD** allTime; // these are the records, all-time, for this player (or blank)
 	long numPlaysSP;
 	long numPlaysDP;
@@ -171,7 +171,7 @@ struct PLAYER_DATA
 		isLoggedIn = false;
 		displayName[0] = 0;
 
-		for ( int i = 0; i < 7; i++ )
+		for ( int i = 0; i < MAX_SONGS_PER_SET; i++ )
 		{
 			currentSet[i].resetData();
 		}
@@ -201,7 +201,7 @@ struct PLAYER_DATA
 			else
 			{
 				// see if this song was full combo'd (or whatever for min status) during this set instead
-				for ( int c = 0; c < 7; c++ )
+				for ( int c = 0; c < MAX_SONGS_PER_SET; c++ )
 				{
 					if ( (currentSet[c].songID == allTime[i][ch].songID) && (currentSet[c].chartID == chartID) && (currentSet[c].calculateStatus() >= minStatus) )
 					{
@@ -226,7 +226,7 @@ struct PLAYER_DATA
 		}
 
 		// check whatever was played during this set, too
-		for ( int c = 0; c < 7; c++ )
+		for ( int c = 0; c < MAX_SONGS_PER_SET; c++ )
 		{
 			if ( (currentSet[c].songID == songID) && currentSet[c].chartID == chartID )
 			{

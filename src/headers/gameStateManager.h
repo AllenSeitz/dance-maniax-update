@@ -128,8 +128,8 @@ public:
 		bool isCenter() { return !centerLeft && !centerRight; }
 
 		// segment choosing logic
-		int stagesPlayed[7];			// stages picked by the player
-		int stagesLevels[7];
+		int stagesPlayed[MAX_SONGS_PER_SET];			// stages picked by the player
+		int stagesLevels[MAX_SONGS_PER_SET];
 
 		PLAYER::PLAYER()
 		{
@@ -207,7 +207,7 @@ public:
 
 		void resetStages()
 		{
-			for ( int i = 0; i < 7; i++ )
+			for ( int i = 0; i < MAX_SONGS_PER_SET; i++ )
 			{
 				stagesPlayed[i] = -1;
 				stagesLevels[i] = 0;
@@ -225,7 +225,7 @@ public:
 
 		bool pickedAllFromVersion( int version )
 		{
-			for ( int i = 0; i < 7; i++ )
+			for ( int i = 0; i < MAX_SONGS_PER_SET; i++ )
 			{
 				if ( stagesPlayed[i] <= 0 )
 				{

@@ -1265,7 +1265,7 @@ int checkForExtraStages()
 			// check for a full combo with miss count == 0
 			int numMissesP1 = 0;
 			int numMissesP2 = 0;
-			for ( int i = 0; i < 5; i++ )
+			for ( int i = 0; i < gs.numSongsPerSet; i++ )
 			{
 				numMissesP1 += sm.player[0].currentSet[i].misses;
 				numMissesP2 += sm.player[1].currentSet[i].misses;
@@ -1291,9 +1291,9 @@ int checkForExtraStages()
 			else
 			{
 #define NUM_OLD_EXTRA_STAGES 8
-#define NUM_SPECIAL_EXTRA_STAGES 2
+#define NUM_SPECIAL_EXTRA_STAGES 3
 				int oldExtraStages[NUM_OLD_EXTRA_STAGES] = { 126, 230, 245, 246, 247, 248, 249, 250 }; // megamix 1, megamix 2, and the edits for megamix 2
-				int premiumExtraStages[NUM_SPECIAL_EXTRA_STAGES] = { 303, 324 }; // POSSESSION, Elemental Creation
+				int premiumExtraStages[NUM_SPECIAL_EXTRA_STAGES] = { 303, 324, 357 }; // POSSESSION, Elemental Creation, MAX 300
 				std::vector<int> usableExtraStages;
 
 				// add the old extra stages to the pool if the player hasn't unlocked them yet

@@ -202,7 +202,7 @@ void ScoreManager::savePlayersToDisk()
 void ScoreManager::mergeCurrentScores(PLAYER_DATA &p, int side)
 {
 	UNUSED(side);
-	for ( int i = 0; i < 7; i++ )
+	for ( int i = 0; i < MAX_SONGS_PER_SET; i++ )
 	{
 		if ( p.currentSet[i].songID < 100 )
 		{
