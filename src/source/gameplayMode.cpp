@@ -1290,12 +1290,13 @@ int checkForExtraStages()
 			// ... or give the player a song that they haven't unlocked yet if they picked form mixed versions
 			else
 			{
-#define NUM_OLD_EXTRA_STAGES 8
+//#define NUM_OLD_EXTRA_STAGES 2
 #define NUM_SPECIAL_EXTRA_STAGES 3
-				int oldExtraStages[NUM_OLD_EXTRA_STAGES] = { 126, 230, 245, 246, 247, 248, 249, 250 }; // megamix 1, megamix 2, and the edits for megamix 2
+				//int oldExtraStages[NUM_OLD_EXTRA_STAGES] = { 126, 230, 245, 246, 247, 248, 249, 250 }; // megamix 1, megamix 2, and the edits for megamix 2
 				int premiumExtraStages[NUM_SPECIAL_EXTRA_STAGES] = { 303, 324, 357 }; // POSSESSION, Elemental Creation, MAX 300
 				std::vector<int> usableExtraStages;
 
+				/*
 				// add the old extra stages to the pool if the player hasn't unlocked them yet
 				for ( int i = 0; i < NUM_OLD_EXTRA_STAGES; i++ )
 				{
@@ -1304,9 +1305,10 @@ int checkForExtraStages()
 						usableExtraStages.push_back(oldExtraStages[i]);
 					}
 				}
+				*/
 
 				// the player did exceptionally well if they averaged one miss per stage or averaged an S rank
-				if ( numMissesP1 < gs.numSongsPerSet || sumP1 >= 950000 || (gs.isVersus && numMissesP2 < gs.numSongsPerSet) || sumP2 >= 950000 )
+				//if ( numMissesP1 < gs.numSongsPerSet || sumP1 >= 950000 || (gs.isVersus && numMissesP2 < gs.numSongsPerSet) || sumP2 >= 950000 )
 				{
 					for ( int i = 0; i < NUM_SPECIAL_EXTRA_STAGES; i++ )
 					{
