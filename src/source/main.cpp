@@ -157,6 +157,7 @@ void alternateMainUpdateLoop();
 
 void renderCreditsDisplay();
 bool checkForUpdates();
+bool checkForExperimentalUpdates();
 void giveUpAndRestart();
 void renderDebugOverlay();
 
@@ -441,8 +442,8 @@ int main()
 				{
 					gs.numCoins++;
 					bm.logCoin(im.getKeyState(MENU_SERVICE) == JUST_DOWN);
+					em.playSample(SFX_CREDIT);
 				}
-				em.playSample(SFX_CREDIT);
 			}
 
 			// switch between modes
@@ -803,6 +804,22 @@ void renderCreditsDisplay()
 			renderWhiteNumber(gs.numCoinsPerCredit, x+12, y);
 		}
 	}
+}
+
+// update.bat is exepected to relaunch this program. The point is that this program may be modified.
+bool checkForExperimentalUpdates()
+{
+	bool startedDownload = true;
+
+	// do this to cause the game to want experimental.zip every single time
+	dm.downloadFile(MANIFEST_BETA_FILENAME, MANIFEST_FILENAME);
+
+	// always enter the update mode, either to show a progress bar or to say "up to date"
+	gs.g_currentGameMode = UPDATEMODE;
+	gs.g_gameModeTransition = 1;
+	updateInProgress = startedDownload;
+
+	return startedDownload;
 }
 
 // update.bat is exepected to relaunch this program. The point is that this program may be modified.
@@ -1187,7 +1204,14 @@ void mainOperatorLoop(UTIME dt)
 				}
 				if ( testMenuSubIndex == 5 ) // update software
 				{
-					checkForUpdates();
+					if ( im.getHoldLength(MENU_SERVICE) > 5000 )
+					{
+						checkForExperimentalUpdates();
+					}
+					else
+					{
+						checkForUpdates();
+					}
 				}
 				if ( testMenuSubIndex == 6 )
 				{
@@ -2060,7 +2084,7 @@ void renderSoundOptions()
 {
 	textprintf_centre(rm.m_backbuf, font, 320, 50, WHITE, "SOUND OPTIONS");
 
-	textprintf(rm.m_backbuf, font, 50, 100, testMenuSubIndex == 0 ? RED : WHITE, "SOUND IN ATTRACT -- NOT IMPLEMENTED");
+	textprintf(rm.m_backbuf, font, 50, 100, testMenuSubIndex == 0 ? RED : WHITE, "SOUND IN ATTRACT");
 	textprintf(rm.m_backbuf, font, 50, 130, testMenuSubIndex == 1 ? RED : WHITE, "SCALE CHECK 1");
 	textprintf(rm.m_backbuf, font, 50, 160, testMenuSubIndex == 2 ? RED : WHITE, "SCALE CHECK 2");
 	textprintf(rm.m_backbuf, font, 50, 310, testMenuSubIndex == 3 ? RED : WHITE, "FACTORY SETTINGS");
@@ -2083,7 +2107,14 @@ void renderDataOptions()
 	textprintf(rm.m_backbuf, font, 50, 160, testMenuSubIndex == 2 ? RED : WHITE, "RESET PREVIOUS LOGIN LIST");
 	textprintf(rm.m_backbuf, font, 50, 190, testMenuSubIndex == 3 ? RED : WHITE, "DELETE PLAYER -- NOT IMPLEMENTED");
 	textprintf(rm.m_backbuf, font, 50, 220, testMenuSubIndex == 4 ? RED : WHITE, "MODIFY PLAYER PIN -- NOT IMPLEMENTED");
-	textprintf(rm.m_backbuf, font, 50, 260, testMenuSubIndex == 5 ? RED : WHITE, "UPDATE SOFTWARE");
+	if ( im.getHoldLength(MENU_SERVICE) >= 5000 )
+	{
+		textprintf(rm.m_backbuf, font, 50, 260, testMenuSubIndex == 5 ? RED : WHITE, "UPDATE SOFTWARE - EXPERIMENTAL");
+	}
+	else
+	{
+		textprintf(rm.m_backbuf, font, 50, 260, testMenuSubIndex == 5 ? RED : WHITE, "UPDATE SOFTWARE");
+	}
 	textprintf(rm.m_backbuf, font, 50, 340, testMenuSubIndex == 6 ? RED : WHITE, "EXIT");
 
 	textprintf(rm.m_backbuf, font, 50, 400, makecol(196, 255, 255), "PRESS 1P LEFT / RIGHT = select item");

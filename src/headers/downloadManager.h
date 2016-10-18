@@ -9,6 +9,7 @@
 #include "common.h"
 
 #define MANIFEST_FILENAME "manifest.txt"
+#define MANIFEST_BETA_FILENAME "manifest_beta.txt"
 
 // used during async downloading
 extern void alternateMainUpdateLoop();
