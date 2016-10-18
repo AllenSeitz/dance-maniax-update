@@ -172,12 +172,12 @@ void firstGameplayLoop()
 		if ( gs.currentStage == 0 )
 		{
 			gs.player[p].displayCombo = 0;
-			gs.player[p].comboColor = 0;
 			announcerQuipCycle = rand()%4;
 			retireTimer = fullComboAnimTimer = fullComboAnimStep = 0;
 			fullComboP1 = fullComboP2 = false;
 			gs.player[p].stepZoneTimePerBeat = BPM_TO_MSEC(gs.player[p].scrollRate);
 		}
+		gs.player[p].comboColor = COMBO_PERFECT;
 	}
 	rememberedCurrentStage = gs.currentStage; // this won't change during the transition. for most of the song it will remain the same
 	announcerPlusPoints = 0;
@@ -1032,7 +1032,7 @@ void scoreNote(int p, int judgement, int column)
 	// set the combo color
 	if ( judgement == MARVELLOUS && gs.player[p].displayCombo == 1 )
 	{
-		gs.player[p].comboColor = COMBO_MARVELOUS;
+		gs.player[p].comboColor = COMBO_PERFECT;
 	}
 	if ( judgement == PERFECT && (gs.player[p].comboColor == COMBO_MARVELOUS || gs.player[p].displayCombo == 1) )
 	{
@@ -1041,6 +1041,10 @@ void scoreNote(int p, int judgement, int column)
 	if ( judgement == GREAT && (gs.player[p].comboColor == COMBO_MARVELOUS || gs.player[p].comboColor == COMBO_PERFECT || gs.player[p].displayCombo == 1) )
 	{
 		gs.player[p].comboColor = COMBO_GREAT;
+	}
+	if ( judgement == GOOD && (gs.player[p].comboColor == COMBO_MARVELOUS || gs.player[p].comboColor == COMBO_PERFECT || gs.player[p].comboColor == COMBO_GREAT || gs.player[p].displayCombo == 1) )
+	{
+		gs.player[p].comboColor = COMBO_GOOD;
 	}
 
 	// did a full combo happen? start the animation

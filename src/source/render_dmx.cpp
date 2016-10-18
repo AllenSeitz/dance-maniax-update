@@ -559,7 +559,7 @@ void renderDMXCombo(int combo, int time, int centerX, int color)
 	// this is for the white flash animation
 	flash = time >= 100 ? 5 : time/25;
 	//color = (combo/100) % 5;
-	frame = flash < 5 ? 4 + flash : color;
+	frame = flash < 5 ? 4 + flash : color; // frames 5-8 are for the white combo flash, fromes 0-4 are the colored combos
 
 	// how many digits to render? Note: the official game renders combos starting at 004
 	if ( combo >= 1000 )

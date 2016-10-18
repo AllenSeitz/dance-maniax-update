@@ -486,11 +486,11 @@ int getSampleLength(SAMPLE* sample);
 
 // different combo colors
 #define COMBO_SHADOW    0
-#define COMBO_GREAT     1
+#define COMBO_MARVELOUS 0 // kinda purple-y but also unused so whatever
 #define COMBO_PERFECT   2
-#define COMBO_MARVELOUS 3
+#define COMBO_GREAT     1
+#define COMBO_GOOD		3
 #define COMBO_MISS      4
-
 
 //////////////////////////////////////////////////////////////////////////////
 // score related
