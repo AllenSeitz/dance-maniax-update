@@ -257,7 +257,7 @@ void LightsManager::loadLampProgram(const char* filename)
 		else
 		{
 			struct LAMP_STEP lamp;
-			sscanf_s(temp, "%d, %d, %d, %d, %c", &lamp.timing, &lamp.group, &lamp.addDuration, &lamp.color, &lamp.option);
+			sscanf_s(temp, "%d, %d, %d, %d, %c", &lamp.timing, &lamp.group, &lamp.addDuration, &lamp.color, &lamp.option, sizeof(char));
 			lampProgram.push_back(lamp);
 		}
 

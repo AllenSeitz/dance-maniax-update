@@ -341,8 +341,8 @@ int main()
 		FILE* tfp = NULL;
 		fopen_s(&tfp, "testchart.txt", "rt");
 		fscanf_s(tfp, "%d", &testChartSongID);
-		fscanf_s(tfp, " %c", &tempch[0]);
-		fscanf_s(tfp, "%c", &tempch[1]);
+		fscanf_s(tfp, " %c", &tempch[0], sizeof(char));
+		fscanf_s(tfp, "%c", &tempch[1], sizeof(char));
 		fclose(tfp);
 
 		if ( tempch[1] == 'm' )

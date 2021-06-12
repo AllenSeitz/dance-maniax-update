@@ -4,6 +4,11 @@
 #ifndef _COMMONDMXH_H_
 #define _COMMONDMXH_H_
 
+#include <stdarg.h>
+#include <stdio.h>
+#include <time.h>
+#include <string>
+
 #pragma warning(disable : 4312)
 #include "../lib/allegro/include/allegro.h"	// allegro library
 #include "../lib/allegro/include/winalleg.h"
@@ -13,11 +18,6 @@
 
 #include "../lib/fmodapi375win/api/inc/fmod.h" // an audio library used for playing keysounds
 #pragma warning(default : 4312)
-
-#include <stdarg.h>
-#include <stdio.h>
-#include <time.h>
-#include <string>
 
 #define UTIME unsigned long int
 

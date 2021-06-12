@@ -59,7 +59,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_MBCS;ALLEGRO_HAVE_STDINT_H;DMXDEBUG;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;CURL_STATICLIB;DMXDEBUG;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4701;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <BufferSecurityCheck>true</BufferSecurityCheck>
@@ -74,16 +74,26 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>allegro-4.4.2-mt.lib;loadpng-1.5-mt.lib;logg-1.0-mt.lib;zlib-1.2.5-static-mt.lib;fmodvc.lib;apeg_r.lib;ogg_static.lib;vorbis_static.lib;libtheora.lib;winmm.lib;urlmon.lib;hidapi.lib;libcurl.lib;Ws2_32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>allegro-4.4.2-mt.lib;loadpng-1.5-mt.lib;logg-1.0-mt.lib;zlib-1.2.5-static-mt.lib;fmodvc.lib;apeg_r.lib;ogg_static.lib;vorbis_static.lib;libtheora.lib;winmm.lib;urlmon.lib;hidapi.lib;libcurl.lib;Ws2_32.lib;wldap32.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
-      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AddModuleNamesToAssembly>
+      </AddModuleNamesToAssembly>
+      <ImportLibrary>
+      </ImportLibrary>
+      <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PreBuildEvent>
       <Command>del $(ProjectDir)\debug\version.obj</Command>
       <Message>touch the attract mode to update the __DATE__</Message>
     </PreBuildEvent>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -92,7 +102,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <StructMemberAlignment>Default</StructMemberAlignment>
-      <PreprocessorDefinitions>_MBCS;ALLEGRO_HAVE_STDINT_H;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;CURL_STATICLIB;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
@@ -100,12 +110,14 @@
       <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
       <UndefinePreprocessorDefinitions>
       </UndefinePreprocessorDefinitions>
+      <UseStandardPreprocessor>false</UseStandardPreprocessor>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>allegro-4.4.2-mt.lib;loadpng-1.5-mt.lib;logg-1.0-mt.lib;zlib-1.2.5-static-mt.lib;fmodvc.lib;apeg_r.lib;ogg_static.lib;vorbis_static.lib;libtheora.lib;winmm.lib;urlmon.lib;hidapi.lib;libcurl.lib;Ws2_32.lib;wldap32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>allegro-4.4.2-mt.lib;loadpng-1.5-mt.lib;logg-1.0-mt.lib;zlib-1.2.5-static-mt.lib;fmodvc.lib;apeg_r.lib;ogg_static.lib;vorbis_static.lib;libtheora.lib;winmm.lib;urlmon.lib;hidapi.lib;libcurl.lib;Ws2_32.lib;wldap32.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
@@ -114,6 +126,9 @@
       <Command>del $(ProjectDir)\release\versionManager.obj</Command>
       <Message>touch the attract mode to update the __DATE__</Message>
     </PreBuildEvent>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\headers\analyticsManager.h" />

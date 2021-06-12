@@ -14,3 +14,8 @@ src/DMX_Remake/DMX_Remake/Release/DMX.exe.intermediate.manifest
 src/DMX_Remake/Debug/DMX_Debug.exe
 src/DMX_Remake/Release/DMX.exe
 *.opensdf
+src/DMX_Remake/.vs/DMX_Remake/v16/Browse.VC.db-shm
+src/DMX_Remake/.vs/DMX_Remake/v16/Browse.VC.db-wal
+src/DMX_Remake/.vs/DMX_Remake/v16/Browse.VC.opendb
+src/DMX_Remake/.vs/DMX_Remake/v16/Browse.VC.db
+src/DMX_Remake/.vs/DMX_Remake/v16/Browse.VC.db
