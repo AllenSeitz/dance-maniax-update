@@ -1,10 +1,10 @@
 // render_dmx.cpp holds refactored code for "DMX mode"
 // source file created by Allen Seitz 12/26/2011
 
-#include "gameStateManager.h"
-#include "inputManager.h"
-#include "gameplayRendering.h"
-#include "specialEffects.h"
+#include "../headers/gameStateManager.h"
+#include "../headers/inputManager.h"
+#include "../headers/gameplayRendering.h"
+#include "../headers/specialEffects.h"
 
 extern RenderingManager rm;
 extern GameStateManager gs;

@@ -1,8 +1,8 @@
 // version.cpp implements a function for telling the compile tile version of the program
 // source file created by Allen Seitz 6/6/2016
 
-#include "common.h"
-#include "versionManager.h"
+#include "../headers/common.h"
+#include "../headers/versionManager.h"
 
 void VersionManager::initialize()
 {

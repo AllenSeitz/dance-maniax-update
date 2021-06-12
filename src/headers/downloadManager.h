@@ -6,7 +6,7 @@
 
 #pragma comment(lib, "urlmon.lib")
 
-#include "common.h"
+#include "../headers/common.h"
 
 #define MANIFEST_FILENAME "manifest.txt"
 #define MANIFEST_BETA_FILENAME "manifest_beta.txt"

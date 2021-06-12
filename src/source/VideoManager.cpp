@@ -2,7 +2,7 @@
 // source file created by Allen Seitz 6/27/2012
 
 #include <string>
-#include "videoManager.h"
+#include "../headers/videoManager.h"
 
 // include ffmpeg
 //#include <libavcodec/avcodec.h>

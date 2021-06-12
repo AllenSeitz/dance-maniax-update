@@ -13,18 +13,21 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A8D1503A-D533-4888-ADAE-1F6F0AC667B6}</ProjectGuid>
     <RootNamespace>DMX_Remake</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -38,25 +41,36 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>DMX_Debug</TargetName>
-    <IncludePath>..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\lib\fmodapi375win\api\inc;..\..\lib\libpng\include\libpng12;..\..\lib\libpng\include;..\..\lib\loadpng;..\..\headers;..\..\lib\apeg\include;..\..\lib\pacdrive\include;..\..\lib\hidapi\include;..\..\lib\libcurl\\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\lib\fmodapi375win\api\inc;..\..\lib\libpng\include\libpng12;..\..\lib\libpng\include;..\..\lib\loadpng;..\..\lib\apeg\include;..\..\lib\pacdrive\include;..\..\lib\hidapi\include;..\..\lib\libcurl\\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\lib\fmodapi375win\api\lib;..\..\lib\libpng\lib;..\..\lib\apeg\lib\release;..\..\lib\pacdrive\lib;..\..\lib\hidapi\lib;..\..\lib\libcurl\lib;$(LibraryPath)</LibraryPath>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+    <PublicIncludeDirectories>
+    </PublicIncludeDirectories>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>DMX</TargetName>
-    <IncludePath>..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\lib\fmodapi375win\api\inc;..\..\lib\libpng\include\libpng12;..\..\lib\libpng\include;..\..\lib\loadpng;..\..\headers;..\..\lib\apeg\include;..\..\lib\pacdrive\include;..\..\lib\hidapi\include;..\..\lib\libcurl\\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\lib\allegro-4.4.2-msvc-10.0\include;..\..\lib\fmodapi375win\api\inc;..\..\lib\libpng\include\libpng12;..\..\lib\libpng\include;..\..\lib\loadpng;..\..\lib\apeg\include;..\..\lib\pacdrive\include;..\..\lib\hidapi\include;..\..\lib\libcurl\\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\lib\allegro-4.4.2-msvc-10.0\lib;..\..\lib\fmodapi375win\api\lib;..\..\lib\libpng\lib;..\..\lib\apeg\lib\release;..\..\lib\pacdrive\lib;..\..\lib\hidapi\lib;..\..\lib\libcurl\lib;$(LibraryPath)</LibraryPath>
     <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <PublicIncludeDirectories>
+    </PublicIncludeDirectories>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_MBCS;DMXDEBUG;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;ALLEGRO_HAVE_STDINT_H;DMXDEBUG;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4701;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard_C>stdc11</LanguageStandard_C>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions>
+      </UndefinePreprocessorDefinitions>
+      <UseStandardPreprocessor>false</UseStandardPreprocessor>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -78,8 +92,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <StructMemberAlignment>Default</StructMemberAlignment>
-      <PreprocessorDefinitions>_MBCS;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;ALLEGRO_HAVE_STDINT_H;CURL_STATICLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <UndefinePreprocessorDefinitions>
+      </UndefinePreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

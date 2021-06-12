@@ -7,7 +7,7 @@
 
 #include <vector>
 
-#include "common.h"
+#include "../headers/common.h"
 
 bool doesExistPPP(int songID);
 //

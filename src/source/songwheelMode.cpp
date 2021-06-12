@@ -1,15 +1,15 @@
 // songwheelMode.cpp implements the old "2nd Mix" style songwheel
 // source file created by Allen Seitz 7/18/2009
 
-#include "common.h"
-#include "GameStateManager.h"
-#include "inputManager.h"
-#include "lightsManager.h"
-#include "ScoreManager.h"
-#include "songwheelMode.h"
-#include "analyticsManager.h"
+#include "../headers/common.h"
+#include "../headers/GameStateManager.h"
+#include "../headers/inputManager.h"
+#include "../headers/lightsManager.h"
+#include "../headers/ScoreManager.h"
+#include "../headers/songwheelMode.h"
+#include "../headers/analyticsManager.h"
 
-#include "gameplayRendering.h" // for renderGrade()
+#include "../headers/gameplayRendering.h" // for renderGrade()
 
 extern GameStateManager gs;
 extern RenderingManager rm;

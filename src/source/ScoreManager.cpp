@@ -4,9 +4,9 @@
 #include <stdio.h>
 #include <string>
 
-#include "scoreManager.h"
+#include "../headers/scoreManager.h"
 
-#include "GameStateManager.h"
+#include "../headers/GameStateManager.h"
 extern GameStateManager gs;
 
 ScoreManager::ScoreManager()

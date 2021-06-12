@@ -4,7 +4,7 @@
 #ifndef _SCOREMANAGER_H_
 #define _SCOREMANAGER_H_
 
-#include "common.h"
+#include "../headers/common.h"
 
 extern int NUM_SONGS;
 

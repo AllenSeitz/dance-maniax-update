@@ -4,7 +4,7 @@
 #ifndef _LIGHTSMANAGER_H_
 #define _LIGHTSMANAGER_H_
 
-#include "common.h"
+#include "../headers/common.h"
 #include <vector>
 
 // Lamp Numbering

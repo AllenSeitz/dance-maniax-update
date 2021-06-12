@@ -1,13 +1,13 @@
 // menuMode.cpp implements the mode select screen
 // source file created by Allen Seitz 2/8/2012
 
-#include "common.h"
-#include "GameStateManager.h"
-#include "inputManager.h"
-#include "bookManager.h"
-#include "lightsManager.h"
-#include "scoreManager.h"
-#include "songwheelMode.h"
+#include "../headers/common.h"
+#include "../headers/GameStateManager.h"
+#include "../headers/inputManager.h"
+#include "../headers/bookManager.h"
+#include "../headers/lightsManager.h"
+#include "../headers/scoreManager.h"
+#include "../headers/songwheelMode.h"
 
 extern GameStateManager gs;
 extern RenderingManager rm;

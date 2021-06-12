@@ -4,7 +4,7 @@
 #ifndef _PARTICLESPRITES_H_
 #define _PARTICLESPRITES_H_
 
-#include "common.h"
+#include "../headers/common.h"
 
 struct PARTICLE_INFO
 {

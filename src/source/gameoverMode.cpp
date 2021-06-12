@@ -1,12 +1,12 @@
 // gameoverMode.cpp implements the transition between the results screen and the attract loop
 // source file created by Allen Seitz 6/15/2012
 
-#include "common.h"
-#include "GameStateManager.h"
-#include "inputManager.h"
-#include "scoreManager.h"
-#include "songwheelMode.h"
-#include "videoManager.h"
+#include "../headers/common.h"
+#include "../headers/GameStateManager.h"
+#include "../headers/inputManager.h"
+#include "../headers/scoreManager.h"
+#include "../headers/songwheelMode.h"
+#include "../headers/videoManager.h"
 
 extern GameStateManager gs;
 extern RenderingManager rm;

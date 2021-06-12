@@ -4,7 +4,7 @@
 #ifndef _SONGWHEELMODE_H_
 #define _SONGWHEELMODE_H_
 
-#include "common.h"
+#include "../headers/common.h"
 
 //////////////////////////////////////////////////////////////////////////////
 // Constants

@@ -1,13 +1,13 @@
 // loginMode.cpp implements the login/pass screen for Dance Maniax
 // source file created 4/26/2012 by Allen Seitz
 
-#include "common.h"
-#include "bookManager.h"
-#include "GameStateManager.h"
-#include "inputManager.h"
-#include "lightsManager.h"
-#include "scoreManager.h"
-#include "songwheelMode.h"
+#include "../headers/common.h"
+#include "../headers/bookManager.h"
+#include "../headers/GameStateManager.h"
+#include "../headers/inputManager.h"
+#include "../headers/lightsManager.h"
+#include "../headers/scoreManager.h"
+#include "../headers/songwheelMode.h"
 
 extern GameStateManager gs;
 extern RenderingManager rm;

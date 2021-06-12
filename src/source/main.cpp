@@ -10,19 +10,19 @@
 
 #include "hidapi.h"
 
-#include "common.h"
-#include "analyticsManager.h"
-#include "bookManager.h"
-#include "downloadManager.h"
-#include "extioManager.h"
-#include "inputManager.h"
-#include "gameStateManager.h"
-#include "lightsManager.h"
-#include "pacdriveManager.h"
-#include "minimaidManager.h"
-#include "scoreManager.h"
-#include "versionManager.h"
-#include "videoManager.h"
+#include "../headers/common.h"
+#include "../headers/analyticsManager.h"
+#include "../headers/bookManager.h"
+#include "../headers/downloadManager.h"
+#include "../headers/extioManager.h"
+#include "../headers/inputManager.h"
+#include "../headers/gameStateManager.h"
+#include "../headers/lightsManager.h"
+#include "../headers/pacdriveManager.h"
+#include "../headers/minimaidManager.h"
+#include "../headers/scoreManager.h"
+#include "../headers/versionManager.h"
+#include "../headers/videoManager.h"
 
 
 //////////////////////////////////////////////////////////////////////////////

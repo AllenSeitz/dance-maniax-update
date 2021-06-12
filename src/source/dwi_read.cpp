@@ -6,8 +6,8 @@
 #include <vector>
 #include <stdio.h>
 
-#include "common.h"
-#include "dwi_read.h"
+#include "../headers/common.h"
+#include "../headers/dwi_read.h"
 
 // these are only written to by readNextTag(). This is cleaner than 5 reference parameters
 char tagName[32];

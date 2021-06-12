@@ -4,9 +4,9 @@
 #include "common.h"
 #include <stdio.h>
 #include <string.h>
-#include "gameStateManager.h" // for error mode, is all
-#include "loadpng.h" // for the RenderingManager initialization
-#include "analyticsManager.h"
+#include "../headers/gameStateManager.h" // for error mode, is all
+#include "../lib/allegro-4.4.2-msvc-10.0/include/loadpng.h"	// extra functions for PNG support
+#include "../headers/analyticsManager.h"
 
 extern RenderingManager rm;
 extern GameStateManager gs;

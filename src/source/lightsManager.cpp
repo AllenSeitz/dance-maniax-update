@@ -5,10 +5,10 @@
 #include <string>
 #include <algorithm>
 
-#include "lightsManager.h"
-#include "extioManager.h"
-#include "pacdriveManager.h"
-#include "minimaidManager.h"
+#include "../headers/lightsManager.h"
+#include "../headers/extioManager.h"
+#include "../headers/pacdriveManager.h"
+#include "../headers/minimaidManager.h"
 
 extern extioManager extio;
 extern pacdriveManager pacio;

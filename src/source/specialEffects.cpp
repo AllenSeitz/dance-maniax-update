@@ -1,11 +1,11 @@
 // specialEffects.cpp implements functions to do some special rendering tasks
 // file created by Allen Seitz 12-02-09
 
-#include "specialEffects.h"
-#include "common.h"
-#include "gameplayRendering.h"
-#include "gameStateManager.h"
-#include "particleSprites.h"
+#include "../headers/specialEffects.h"
+#include "../headers/common.h"
+#include "../headers/gameplayRendering.h"
+#include "../headers/gameStateManager.h"
+#include "../headers/particleSprites.h"
 
 extern RenderingManager rm;
 extern GameStateManager gs;

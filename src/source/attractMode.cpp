@@ -1,15 +1,15 @@
 // attractMode.cpp implements the attract loop
 // source file created by Allen Seitz 7/11/2012
 
-#include "common.h"
-#include "analyticsManager.h"
-#include "GameStateManager.h"
-#include "inputManager.h"
-#include "lightsManager.h"
-#include "scoreManager.h"
-#include "songwheelMode.h"
-#include "versionManager.h"
-#include "videoManager.h"
+#include "../headers/common.h"
+#include "../headers/analyticsManager.h"
+#include "../headers/GameStateManager.h"
+#include "../headers/inputManager.h"
+#include "../headers/lightsManager.h"
+#include "../headers/scoreManager.h"
+#include "../headers/songwheelMode.h"
+#include "../headers/versionManager.h"
+#include "../headers/videoManager.h"
 
 extern GameStateManager gs;
 extern RenderingManager rm;

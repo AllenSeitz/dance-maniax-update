@@ -5,7 +5,7 @@
 #include <vector>
 #include <stdio.h>
 
-#include "common.h"
+#include "../headers/common.h"
 
 bool sortArrowsFunction(struct ARROW a, struct ARROW b)
 {

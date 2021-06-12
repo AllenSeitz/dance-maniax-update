@@ -1,7 +1,7 @@
 // downloadManager.cpp implements a class to find and download software updates
 // source file created by Allen Seitz 11/02/2015
 
-#include "downloadManager.h"
+#include "../headers/downloadManager.h"
 
 DownloadManager::DownloadManager()
 {

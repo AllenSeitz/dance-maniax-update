@@ -1,7 +1,7 @@
 #ifndef APEG_H
 #define APEG_H
 
-#include <allegro.h>
+#include "../../allegro-4.4.2-msvc-10.0/include/allegro.h"
 
 
 #define APEG_MAKE_VERSION(a, b, c)	(((a)<<16) | ((b)<<8) | (c))

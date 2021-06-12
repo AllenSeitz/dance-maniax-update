@@ -6,7 +6,7 @@
 #include <vector>
 #include <stdio.h>
 
-#include "common.h"
+#include "../headers/common.h"
 
 // after the 32 byte header, the chart is a sequence of these 12 byte structs
 struct PPP_RECORD

@@ -4,9 +4,9 @@
 #ifndef _MINIMAIDMANAGER_H_
 #define _MINIMAIDMANAGER_H_
 
-#include "hidapi.h"
+#include "../lib/hidapi/include/hidapi.h"
 
-#include "common.h"
+#include "../headers/common.h"
 
 class minimaidManager
 {

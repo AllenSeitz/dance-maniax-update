@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "particleSprites.h"
+#include "../headers/particleSprites.h"
 
 std::vector<struct PARTICLE_INFO> mainParticles;
 

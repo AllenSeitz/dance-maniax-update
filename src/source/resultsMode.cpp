@@ -3,11 +3,11 @@
 
 #include "common.h"
 
-#include "gameStateManager.h"
-#include "inputManager.h"
-#include "lightsManager.h"
-#include "scoreManager.h"
-#include "songwheelMode.h"
+#include "../headers/gameStateManager.h"
+#include "../headers/inputManager.h"
+#include "../headers/lightsManager.h"
+#include "../headers/scoreManager.h"
+#include "../headers/songwheelMode.h"
 
 extern RenderingManager rm;
 extern GameStateManager gs;

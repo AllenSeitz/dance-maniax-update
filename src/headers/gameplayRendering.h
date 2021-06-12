@@ -4,7 +4,7 @@
 #ifndef _GAMEPLAYRENDERING_H_
 #define _GAMEPLAYRENDERING_H_
 
-#include "common.h"
+#include "../headers/common.h"
 
 //////////////////////////////////////////////////////////////////////////////
 // Constants

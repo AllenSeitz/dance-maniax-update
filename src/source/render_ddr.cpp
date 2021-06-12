@@ -1,9 +1,9 @@
 // render_ddr.cpp holds refactored code for "DDR mode"
 // source file created by Allen Seitz 12/26/2011
 
-#include "gameStateManager.h"
-#include "gameplayRendering.h"
-#include "specialEffects.h"
+#include "../headers/gameStateManager.h"
+#include "../headers/gameplayRendering.h"
+#include "../headers/specialEffects.h"
 
 extern RenderingManager rm;
 extern GameStateManager gs;

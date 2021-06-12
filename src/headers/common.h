@@ -5,13 +5,13 @@
 #define _COMMONDMXH_H_
 
 #pragma warning(disable : 4312)
-#include "allegro.h"			// allegro library
-#include "winalleg.h"
-#include "loadpng.h"            // extra functions for PNG support
+#include "../lib/allegro/include/allegro.h"	// allegro library
+#include "../lib/allegro/include/winalleg.h"
+#include "../lib/allegro-4.4.2-msvc-10.0/include/loadpng.h"	// extra functions for PNG support
 
-#include "mmsystem.h"			// high resolution Windows specific timers
+#include "mmsystem.h"	// high resolution Windows specific timers
 
-#include "fmod.h"				// an audio library used for playing keysounds
+#include "../lib/fmodapi375win/api/inc/fmod.h" // an audio library used for playing keysounds
 #pragma warning(default : 4312)
 
 #include <stdarg.h>

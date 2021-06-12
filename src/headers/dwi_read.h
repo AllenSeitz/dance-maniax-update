@@ -6,7 +6,7 @@
 
 #include <vector>
 
-#include "common.h"
+#include "../headers/common.h"
 
 int readDWI(std::vector<struct ARROW> *chart, std::vector<struct FREEZE> *holds, int songID, int chartType);
 // precondition: it is safe to overwrite chart and holds, and songID and chartType exist

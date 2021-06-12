@@ -6,7 +6,7 @@
 
 #include <vector>
 
-#include "common.h"
+#include "../headers/common.h"
 
 bool doesExistXSQ(int songID);
 // precondition: songID is in the song database and is three digits or less

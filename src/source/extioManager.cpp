@@ -2,9 +2,9 @@
 // source file created by Allen Seitz 11/14/2013
 // NOTE: this implements a lights board build on an Arduino Mega, other boards are supported in other source files
 
-#include "extioManager.h"
-#include "inputManager.h"
-#include "lightsManager.h"
+#include "../headers/extioManager.h"
+#include "../headers/inputManager.h"
+#include "../headers/lightsManager.h"
 
 #define ARDUINO_WAIT_TIME 4000
 #define ARDUINO_TIMEOUT 8000

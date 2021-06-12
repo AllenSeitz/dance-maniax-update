@@ -4,9 +4,9 @@
 #ifndef _VIDEOMANAGER_H_
 #define _VIDEOMANAGER_H_
 
-#include <apeg.h>
+#include "../lib/apeg/include/apeg.h"
 
-#include "common.h"
+#include "../headers/common.h"
 
 // this structure is borrowed from DMX2ja directly and has not been fully reverse engineered
 struct MOVIE_SEQ_STEP

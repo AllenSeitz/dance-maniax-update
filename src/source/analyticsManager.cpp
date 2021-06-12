@@ -2,8 +2,8 @@
 // source file created by Allen Seitz 5/30/2016
 // v1 - implements Google Analytics
 
-#include "analyticsManager.h"
-#include "versionManager.h"
+#include "../headers/analyticsManager.h"
+#include "../headers/versionManager.h"
 
 #include "curl.h"
 

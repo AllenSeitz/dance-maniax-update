@@ -4,7 +4,7 @@
 #ifndef _PACDRIVEMANAGER_H_
 #define _PACDRIVEMANAGER_H_
 
-#include "common.h"
+#include "../headers/common.h"
 
 // meh always use the 32 bit version, it doesn't matter, and makes distibution so much easier
 //#ifdef _WIN64

@@ -2,19 +2,19 @@
 // source file created by Allen Seitz 7/18/2009
 // 12-21-09: major refactoring to move all rendering and proceedurally generated graphics to gameplayRendering
 
-#include "common.h"
+#include "../headers/common.h"
 
-#include "dwi_read.h"
-#include "xsq_read.h"
+#include "../headers/dwi_read.h"
+#include "../headers/xsq_read.h"
 
-#include "gameStateManager.h"
-#include "inputManager.h"
-#include "lightsManager.h"
-#include "scoreManager.h"
-#include "gameplayRendering.h"
-#include "particleSprites.h"
-#include "specialEffects.h"
-#include "videoManager.h"
+#include "../headers/gameStateManager.h"
+#include "../headers/inputManager.h"
+#include "../headers/lightsManager.h"
+#include "../headers/scoreManager.h"
+#include "../headers/gameplayRendering.h"
+#include "../headers/particleSprites.h"
+#include "../headers/specialEffects.h"
+#include "../headers/videoManager.h"
 
 extern int* songIDs;
 extern std::string* songTitles;

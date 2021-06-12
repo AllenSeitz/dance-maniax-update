@@ -2,10 +2,10 @@
 // source file created by Allen Seitz 12/15/2013
 // NOTE: this implements lights control using a PacLED64, other boards are supported in other source files
 
-#include "lightsManager.h"
-#include "pacdriveManager.h"
+#include "../headers/lightsManager.h"
+#include "../headers/pacdriveManager.h"
 
-#include "pacdrive.h"
+#include "../lib/pacdrive/include/PacDrive.h"
 
 extern LightsManager lm;
 

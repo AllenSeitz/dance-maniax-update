@@ -1,12 +1,12 @@
 // voteMode.cpp implements the post-game weekly vote screen
 // source file created by Allen Seitz 7/21/2013
 
-#include "common.h"
-#include "GameStateManager.h"
-#include "inputManager.h"
-#include "scoreManager.h"
-#include "songwheelMode.h"
-#include "videoManager.h"
+#include "../headers/common.h"
+#include "../headers/GameStateManager.h"
+#include "../headers/inputManager.h"
+#include "../headers/scoreManager.h"
+#include "../headers/songwheelMode.h"
+#include "../headers/videoManager.h"
 
 extern GameStateManager gs;
 extern RenderingManager rm;

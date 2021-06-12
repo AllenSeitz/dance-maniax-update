@@ -1,8 +1,8 @@
 // inputManger.cpp implements a class that handles all types of user input
 // file created by Allen Seitz 10/12/2009
 
-#include "inputManager.h"
-#include "gameStateManager.h"
+#include "../headers/inputManager.h"
+#include "../headers/gameStateManager.h"
 
 extern GameStateManager gs;
 

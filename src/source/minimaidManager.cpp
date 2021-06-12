@@ -1,9 +1,9 @@
 // minimaidManager.h implements HID support for a certain custom IO board
 // source file created by Allen Seitz 02/07/2016
 
-#include "minimaidManager.h"
-#include "inputManager.h"
-#include "lightsManager.h"
+#include "../headers/minimaidManager.h"
+#include "../headers/inputManager.h"
+#include "../headers/lightsManager.h"
 
 extern InputManager im;
 extern LightsManager lm;

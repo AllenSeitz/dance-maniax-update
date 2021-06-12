@@ -4,10 +4,10 @@
 #ifndef _GAMESTATEVARS_H_
 #define _GAMESTATEVARS_H_
 
-#include "common.h"
+#include "../headers/common.h"
 #include <vector>
 
-#include "fmod.h"				// an audio library used for playing keysounds
+#include "../lib/fmodapi375win/api/inc/fmod.h"				// an audio library used for playing keysounds
 
 /*
 #ifdef __cplusplus

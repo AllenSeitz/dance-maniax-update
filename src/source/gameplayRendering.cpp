@@ -3,12 +3,12 @@
 // 12-22-09: major refactoring to isolate DDR specific functions
 // 12-26-11: yet again, even more refactoring for each game mode (as well as adding DMX)
 
-#include "gameStateManager.h"
-#include "gameplayRendering.h"
-#include "particleSprites.h"
-#include "scoreManager.h"
-#include "specialEffects.h"
-#include "videoManager.h"
+#include "../headers/gameStateManager.h"
+#include "../headers/gameplayRendering.h"
+#include "../headers/particleSprites.h"
+#include "../headers/scoreManager.h"
+#include "../headers/specialEffects.h"
+#include "../headers/videoManager.h"
 
 extern RenderingManager rm;
 extern GameStateManager gs;

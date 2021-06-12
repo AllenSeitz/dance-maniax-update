@@ -6,7 +6,7 @@
 #include <vector>
 #include <stdio.h>
 
-#include "common.h"
+#include "../headers/common.h"
 
 // the chart in memory is a sequence of these. I'm not sure what each field is for
 struct XSQ_RECORD

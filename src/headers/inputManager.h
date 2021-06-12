@@ -4,7 +4,7 @@
 #ifndef _INPUTMANAGER_H_
 #define _INPUTMANAGER_H_
 
-#include "common.h"
+#include "../headers/common.h"
 
 // key states for the panelStates array
 #define HELD_UP 0

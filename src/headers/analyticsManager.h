@@ -5,7 +5,7 @@
 #ifndef _ANALYTICSMANAGER_H_
 #define _ANALYTICSMANAGER_H_
 
-#include "common.h"
+#include "../headers/common.h"
 
 #define TRACK_CAT_DEBUG "Debug"
 #define TRACK_CAT_SYSTEM "System"
