@@ -5,13 +5,16 @@
 
 DownloadManager::DownloadManager()
 {
-	// Thank you Dan for hosting these. I won't leave your server in plaintext on GitHub where bots will find it.
-	serverUrl = "huvs>45ziolq}ƒt~ŠAvŠ‘}‰‰’L‚Q";
-	for ( unsigned int i = 0; i < serverUrl.length(); i++ )
+	serverUrl = "";
+	char buffer[512] = "";
+	FILE* fp = NULL;
+	fopen_s(&fp, "serverurl.txt", "rt");
+	if (fp != NULL)
 	{
-		serverUrl[i] = serverUrl[i] - i;
+		fgets(buffer, 512, fp);
+		fclose(fp);
+		serverUrl = buffer;
 	}
-
 	resetState();
 }
 
@@ -68,6 +71,12 @@ void DownloadManager::downloadFile(std::string url, std::string filename)
 {
 	if ( isDownloadInProgress )
 	{
+		return;
+	}
+
+	if (serverUrl.length() == 0)
+	{
+		globalError(UPDATE_MISSING_SERVERURL, "check serverurl.txt and restart");
 		return;
 	}
 

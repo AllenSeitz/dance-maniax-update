@@ -132,6 +132,7 @@ struct AL_POINT
 #define UPDATE_FAILED            6001
 #define REBOOT_FAILED            6002
 #define UPDATE_MISSING_MANIFEST  6003
+#define UPDATE_MISSING_SERVERURL 6004
 #define EXTIO_ERROR              7001
 
 void globalError(long errorCode, const char* errorInfo);

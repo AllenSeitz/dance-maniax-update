@@ -827,9 +827,12 @@ bool checkForExperimentalUpdates()
 	dm.downloadFile(MANIFEST_BETA_FILENAME, MANIFEST_FILENAME);
 
 	// always enter the update mode, either to show a progress bar or to say "up to date"
-	gs.g_currentGameMode = UPDATEMODE;
-	gs.g_gameModeTransition = 1;
-	updateInProgress = startedDownload;
+	if (gs.g_currentGameMode != ERRORMODE)
+	{
+		gs.g_currentGameMode = UPDATEMODE;
+		gs.g_gameModeTransition = 1;
+		updateInProgress = startedDownload;
+	}
 
 	return startedDownload;
 }
@@ -860,9 +863,12 @@ bool checkForUpdates()
 	}
 
 	// always enter the update mode, either to show a progress bar or to say "up to date"
-	gs.g_currentGameMode = UPDATEMODE;
-	gs.g_gameModeTransition = 1;
-	updateInProgress = startedDownload;
+	if (gs.g_currentGameMode != ERRORMODE)
+	{
+		gs.g_currentGameMode = UPDATEMODE;
+		gs.g_gameModeTransition = 1;
+		updateInProgress = startedDownload;
+	}
 
 	return startedDownload;
 }
