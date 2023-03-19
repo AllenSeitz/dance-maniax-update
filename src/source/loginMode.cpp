@@ -246,13 +246,13 @@ void mainLoginLoop(UTIME dt)
 			}
 			if ( isRightPress[side] )
 			{
-				isSkip[side] = true;
-				em.playSample(SFX_NAME_ENTRY_BACKSPACE);
+				isUse[side] = true;
+				em.playSample(SFX_EAMUSE_DIAL);
 			}
 			if ( isStartPress[side] )
 			{
-				isUse[side] = true;
-				em.playSample(SFX_EAMUSE_DIAL);
+				isSkip[side] = true;
+				em.playSample(SFX_NAME_ENTRY_BACKSPACE);
 			}
 		}
 	}
@@ -717,7 +717,8 @@ void renderLoginLoop()
 	// RENDER LOWER LOGIN AREA
 	if ( currentStatusP1 == LOGIN_CHOOSE_LOGIN )
 	{
-		renderBoldString("Press start to enter your name.", 140, 180, 400, false);
+		renderBoldString("Press       to enter your name.", 140, 180, 400, false);
+		masked_blit(m_triangles, rm.m_backbuf, 32, 0, 210, 176, 32, 32);
 		renderArtistString("Entering your name allows you", 160, 215, 360, 20);
 		renderArtistString("to save high scores.", 160, 235, 360, 20);
 
@@ -730,7 +731,7 @@ void renderLoginLoop()
 		{
 			renderPrompt(248, isUse[0], isSkip[0]);
 		}
-		masked_blit(m_triangles, rm.m_backbuf, 32, 0, 246, 370, 32, 32);
+		masked_blit(m_startButton, rm.m_backbuf, 0, 0, 246, 370, 45, 32);
 		renderArtistString("to skip", 318, 375, 200, 32);
 	}
 	// render the alphabet - enter your name (10/20 - no longer displays an alphabet)
@@ -866,7 +867,8 @@ void renderPrompt(int x, bool isUse, bool isPass)
 	else
 	{
 		renderBoldString("PRESS START", x, 280+yoff, 400, false);
-		masked_blit(m_startButton, rm.m_backbuf, 0, 0, x, 310+yoff, 45, 32);
+		//masked_blit(m_startButton, rm.m_backbuf, 0, 0, x, 310+yoff, 45, 32);
+		masked_blit(m_triangles, rm.m_backbuf, 32, 0, x, 310 + yoff, 32, 32);
 		renderTimeRemaining(x+70, 310+yoff);
 	}
 }
