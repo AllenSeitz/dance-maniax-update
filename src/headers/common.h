@@ -175,7 +175,7 @@ void renderNameLetter(char letter, int x, int y, int color);
 class RenderingManager
 {
 public:
-	void Initialize(bool installMode);
+	void Initialize(bool installMode, int windowWidth, int windowHeight, bool widescreenPillars);
 	// NOTE: set installMode to true to skip loading fonts which are still being downloaded
 
 	BITMAP* m_backbuf;
@@ -194,6 +194,10 @@ public:
 	bool useAlphaLanes;
 
 	int currentPage;
+
+	int screenWidth;
+	int screenHeight;
+	bool pillarboxMode;
 
 	void flip();
 	void screenshot();

@@ -18,13 +18,19 @@ extern std::string* songTitles;
 extern std::string* songArtists;
 extern std::string* movieScripts;
 
-void RenderingManager::Initialize(bool installMode)
+void RenderingManager::Initialize(bool installMode, int windowWidth, int windowHeight, bool widescreenPillars)
 {
 	useAlphaLanes = true;
 
+	screenWidth = windowWidth;
+	screenHeight = windowHeight;
+	pillarboxMode = widescreenPillars;
+
 	// set up double buffering
-	m_backbuf1 = create_system_bitmap(640, 480);
-	m_backbuf2 = create_system_bitmap(640, 480);
+	m_backbuf1 = create_system_bitmap(SCREEN_WIDTH, SCREEN_HEIGHT); // source material is still 640x480, so use the old constants
+	m_backbuf2 = create_system_bitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
+	clear_to_color(m_backbuf1, 0);
+	clear_to_color(m_backbuf2, 0);
 
 	m_temp64 = create_bitmap(64, 64);
 	currentPage = 1;
@@ -339,7 +345,9 @@ void renderWhiteLetter(char letter, int x, int y)
 
 void RenderingManager::flip()
 {
-	blit(m_backbuf, screen, 0, 0, 0, 0, 640, 480);
+	// center the X and Y (parameters 4 and 5 become 0 in 640x480 original mode)
+	blit(m_backbuf, screen, 0, 0,  (screenWidth-SCREEN_WIDTH)/2 , (screenHeight - SCREEN_HEIGHT) / 2, rm.screenWidth, rm.screenHeight);
+	
 	if ( currentPage == 1 )
 	{
 		m_backbuf = m_backbuf2;	

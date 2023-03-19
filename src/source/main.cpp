@@ -81,6 +81,7 @@ bool minimaidLightsOnly = false;
 bool held_printscreen = false;
 bool beginInitialInstall = false;
 bool redownloadManifest = true;
+bool pillarBoxMode = false;
 
 BITMAP** m_banners; // used globally
 BITMAP* m_caution;
@@ -253,11 +254,19 @@ int main()
 	// initialize graphics resources
 	set_color_depth(32);
 	int windowOrFullscreen = GFX_AUTODETECT_WINDOWED;
+	int chosenWidth = 640;
+	int chosenHeight = 480;
 	if ( fileExists("fullscreen") )
 	{
 		windowOrFullscreen = GFX_AUTODETECT_FULLSCREEN;
 	}
-	if ( set_gfx_mode(windowOrFullscreen, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0) != 0 )
+	if (fileExists("pillarboxmode"))
+	{
+		pillarBoxMode = true;
+		chosenWidth = 1280;
+		chosenHeight = 720;
+	}
+	if ( set_gfx_mode(windowOrFullscreen, chosenWidth, chosenHeight, 0, 0) != 0 )
 	{
 		allegro_message("Video Initalization Failed!");
 		return EXIT_FAILURE;
@@ -302,13 +311,13 @@ int main()
 			system("mkdir PLAYERS");
 			system("mkdir DATA");
 		}
-		rm.Initialize(true); // flag to skip loading fonts while the initial install is happening
+		rm.Initialize(true, chosenWidth, chosenHeight, pillarBoxMode); // flag to skip loading fonts while the initial install is happening
 		checkForUpdates();
 	}
 	else
 	{
 		// normal initialization happens when the game is properly installed
-		rm.Initialize(false);
+		rm.Initialize(false, chosenWidth, chosenHeight, pillarBoxMode);
 		em.initialize();
 		lm.initialize();
 		vm.initialize();
@@ -615,7 +624,7 @@ int main()
 					{
 						rectfill(rm.m_backbuf, 0, 460, 640, 480, 0); // burn-in protection
 					}
-					blit(rm.m_backbuf, screen, 0, 460, 0, 460, 640, 20);
+					//blit(rm.m_backbuf, screen, 0, 460, 0, 460, 640, 20);
 				}
 				SUBTRACT_TO_ZERO(hideCreditsTimer, dt);
 
@@ -668,7 +677,7 @@ void renderDebugOverlay()
 	{
 		//al_trace("FPS = %d (%d %ld)\n", (int)(frameCounter/((float)timeElapsed/1000.0f)), frameCounter, timeElapsed);
 		renderWhiteNumber(frameCounter / (totalGameTime/1000), 0, 0);
-		renderWhiteString("DEBUG MODE", 0, 12);
+		renderWhiteString("DEBUG MODE", 0, 36);
 	}
 	//*/
 
@@ -742,8 +751,10 @@ void firstFailureLoop()
 
 void mainFailureLoop(UTIME dt)
 {
+	static unsigned int screen_height_constant = 480; // used even in higher resolutions, because the source material is still basically 480p
+
 	// play this sound effect once right as the timer reaches this threshold
-	if ( failureTimer < SCREEN_HEIGHT && failureTimer+dt >= SCREEN_HEIGHT )
+	if ( failureTimer < 480 && failureTimer+dt >= screen_height_constant)
 	{
 		em.playSample(SFX_FAILURE_ANIMATION);
 	}
@@ -751,7 +762,7 @@ void mainFailureLoop(UTIME dt)
 	failureTimer += dt;
 
 	// implement the black "wipe down"
-	if ( failureTimer < SCREEN_HEIGHT ) // typically 480? and 480ms?
+	if ( failureTimer < screen_height_constant) // typically 480? and 480ms?
 	{
 		rectfill(rm.m_backbuf, 0, 0, SCREEN_WIDTH, failureTimer, 0);
 	}
@@ -762,13 +773,13 @@ void mainFailureLoop(UTIME dt)
 
 	// render the digital "FAILED_"
 	int frame = 7;
-	if ( failureTimer < 1000+SCREEN_HEIGHT )
+	if ( failureTimer < 1000+ screen_height_constant)
 	{
-		frame = MIN(7, getValueFromRange(0, 7, (failureTimer-SCREEN_HEIGHT)*100/(1000-SCREEN_HEIGHT)));
+		frame = MIN(7, getValueFromRange(0, 7, (failureTimer- screen_height_constant)*100/(1000- screen_height_constant)));
 	}
-	if ( failureTimer > SCREEN_HEIGHT )
+	if ( failureTimer > screen_height_constant)
 	{
-		blit(m_failure, rm.m_backbuf, 0, frame*30, (SCREEN_WIDTH-148)/2, (SCREEN_HEIGHT-30)/2, 176, 30);
+		blit(m_failure, rm.m_backbuf, 0, frame*30, (SCREEN_WIDTH-148)/2, (screen_height_constant -30)/2, 176, 30);
 	}
 
 	// done forever?
