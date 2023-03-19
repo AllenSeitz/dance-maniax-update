@@ -170,10 +170,10 @@
     <ClCompile Include="..\..\source\ppp_read.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\analyticsManager.cpp">
+    <ClCompile Include="..\..\source\versionManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\versionManager.cpp">
+    <ClCompile Include="..\..\source\analyticsManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

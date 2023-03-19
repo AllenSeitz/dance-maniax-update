@@ -2,6 +2,7 @@
 // file created by Allen Seitz on 7/18/2009
 // April 26, 2013: cleaned up many source files and moved into an svn repo
 // November 29, 2015: cleaned up a few source files and moved into a git repo
+// March 18, 2023: ported to Visual Studio 2019 but left the target platform x86
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,6 +24,17 @@
 #include "../headers/scoreManager.h"
 #include "../headers/versionManager.h"
 #include "../headers/videoManager.h"
+
+
+//////////////////////////////////////////////////////////////////////////////
+// ugly hack for compiling in 32 bit I guess (added in 2023)
+//////////////////////////////////////////////////////////////////////////////
+#define stdin  (__acrt_iob_func(0))
+#define stdout (__acrt_iob_func(1))
+#define stderr (__acrt_iob_func(2))
+
+FILE _iob[] = { *stdin, *stdout, *stderr };
+extern "C" FILE * __cdecl __iob_func(void) { return _iob; }
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -273,7 +285,7 @@ int main()
 	// give players an option to disable tracking
 	if ( !fileExists("notracking") )
 	{
-		am.initialize();
+		//am.initialize();
 	}
 
 	if ( !fileExists("initial_install_complete.txt") )
@@ -1449,8 +1461,8 @@ void mainBootLoop(UTIME dt)
 	textprintf(rm.m_backbuf, font, 50, 140, WHITE, "I/O   CHECK:");
 	textprintf(rm.m_backbuf, font, 50, 160, WHITE, "DATA  CHECK:");
 	textprintf(rm.m_backbuf, font, 50, 180, WHITE, "SOUND CHECK:");
-	textprintf(rm.m_backbuf, font, 50, 410, WHITE, "This program reports non-personal usage data to Google Analytics.");
-	textprintf(rm.m_backbuf, font, 50, 420, WHITE, "You may disable tracking by creating a file named \"notracking\".");
+	//textprintf(rm.m_backbuf, font, 50, 410, WHITE, "This program reports non-personal usage data to Google Analytics.");
+	//textprintf(rm.m_backbuf, font, 50, 420, WHITE, "You may disable tracking by creating a file named \"notracking\".");
 
 	if ( currentBootStep == 0 )
 	{
