@@ -1,3 +1,18 @@
+# THIS PROJECT IS NO LONGER BEING UPDATED
+For many years I was updating the source code here with new features, compatibility
+for new and different io boards, and bugfixes. Mostly bugfixes.
+
+But now the engine is starting to show its age and it needs a lot of work to remain
+useful. I've been putting off updates to the window resolution, the song selection,
+the background videos, nonstop mode, and more. And honestly Stepmania just does a
+better job now. I don't have much motivation to continue to update my code when
+Stepmania is just simply a better engine and a better choice.
+
+In the future I may start a new project, such as a curated Stepmania theme plus
+songpack which would be designed for modern rhythm game fans. Such a project likely
+would not be allowed on GitHub. In the meantime besides Stepmania I also recommend
+running the original game in MAME!
+
 # dance-maniax-update
 This repo is for my fan-made recreation of Konami's 1999 arcade game, Dance Maniax.
 
