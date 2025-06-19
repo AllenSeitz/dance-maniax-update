@@ -29,10 +29,14 @@ Permission is granted to run the software and play the game however you like
 without restriction.
 
 The installation instructions have been UPDATED as of September 7th, 2022.
+Installing the game is now easier than ever!
 
 To install the game download the file "install.ps1" above and run it. This is a
 Windows PowerShell script that will download 7 zip files (about 775 MB total),
-extract them (about 2 GB total), and then delete the zip files.
+extract them (about 2 GB total), and then delete the zip files. To run a
+Powershell file, first open a Powershell prompt, then type
+.\install.ps1
 
 To run the game simply run DMX.exe after a successful install. The first run of
 the program will prompt you to change the default settings.
+It will also download even more songs!
