@@ -34,7 +34,8 @@ Installing the game is now easier than ever!
 To install the game download the file "install.ps1" above and run it. This is a
 Windows PowerShell script that will download 7 zip files (about 775 MB total),
 extract them (about 2 GB total), and then delete the zip files. To run a
-Powershell file, first open a Powershell prompt, then type ".\install.ps1"
+Powershell file, first open a Powershell prompt, then type "./" followed by the
+name of the file.
 
 To run the game simply run DMX.exe after a successful install. The first run of
 the program will prompt you to change the default settings.
